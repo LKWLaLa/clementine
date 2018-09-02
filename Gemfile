@@ -35,6 +35,7 @@ gem 'turbolinks', '~> 5'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'devise'
 
 group :development, :test do
   # Call 'pry' anywhere in the code to stop execution and get a debugger console
