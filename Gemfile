@@ -39,6 +39,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 group :development, :test do
   # Call 'pry' anywhere in the code to stop execution and get a debugger console
   gem 'pry'
+  gem 'rails-erd'
 end
 
 group :development do
