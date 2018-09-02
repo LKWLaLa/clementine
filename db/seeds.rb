@@ -225,19 +225,19 @@ payments = Payment.create([
  	# Jane Doe paid for a Full Pass at Tier 1 and one Weekday Workshop
    user: users[0],
    amount: 220,
-   #method: 'PayPal'
+   method: 'PayPal'
  },
  {
  	# Jack Black paid for a Dance Pass via Paypal
  	user: users[1],
  	amount: 75,
- 	#method: 'PayPal'
+ 	method: 'PayPal'
  },
  {
  	# Jack Black paid for a contest entry in Cash
  	user: users[1],
  	amount: 15,
- 	#method: 'Cash'
+ 	method: 'Cash'
  }
 ])
 
