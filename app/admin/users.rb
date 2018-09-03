@@ -5,6 +5,20 @@ ActiveAdmin.register User do
 actions :index, :show, :edit, :update
 permit_params :first_name, :last_name, :email
 
+preserve_default_filters!
+  remove_filter :encrypted_password
+  remove_filter :reset_password_token
+  remove_filter :reset_password_sent_at
+  remove_filter :remember_created_at
+  remove_filter :address_line_1
+  remove_filter :address_line_2
+  remove_filter :postal_code
+  remove_filter :updated_at
+  filter :country, as: :select
+  filter :city, as: :select
+  filter :state, as: :select
+  
+
   index do |user|
     column :id
     column :first_name
