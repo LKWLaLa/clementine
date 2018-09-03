@@ -14,6 +14,9 @@ preserve_default_filters!
   remove_filter :address_line_2
   remove_filter :postal_code
   remove_filter :updated_at
+  remove_filter :payments
+  remove_filter :sales
+  filter :items, as: :select, label: "Registration item"
   filter :country, as: :select
   filter :city, as: :select
   filter :state, as: :select
