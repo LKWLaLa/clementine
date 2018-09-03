@@ -27,13 +27,29 @@ permit_params :first_name, :last_name, :email
       panel "Payments" do
         table_for user.payments do
           column "amount" do |payment|
-            payment.amount
+            number_to_currency(payment.amount)
           end
           column "method" do |payment|
             payment.method
           end
           column "date" do |payment|
             payment.created_at
+          end
+        end
+      end
+      panel "Registered Items" do
+        table_for user.sales do
+          column "item" do |sale|
+            sale.item.name
+          end
+          column "description" do |sale|
+            sale.item.description
+          end
+          column "price_type" do |sale|
+            sale.price.price_type
+          end
+          column "amount" do |sale|
+            number_to_currency(sale.price.amount)
           end
         end
       end
