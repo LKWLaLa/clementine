@@ -272,6 +272,232 @@ sales = Sale.create([
  }
 ])
 
+exclusions = Exclusion.create([
+ {
+   excluder_item: items[0],
+   excluded_item: items[0]
+ },
+ {
+   excluder_item: items[0],
+   excluded_item: items[1]
+ },
+ {
+   excluder_item: items[0],
+   excluded_item: items[2]
+ },
+ {
+   excluder_item: items[0],
+   excluded_item: items[3]
+ },
+ {
+   excluder_item: items[0],
+   excluded_item: items[4]
+ },
+ {
+   excluder_item: items[0],
+   excluded_item: items[5]
+ },
+ {
+   excluder_item: items[0],
+   excluded_item: items[6]
+ },
+ {
+   excluder_item: items[1],
+   excluded_item: items[0]
+ },
+ {
+   excluder_item: items[1],
+   excluded_item: items[1]
+ },
+ {
+   excluder_item: items[1],
+   excluded_item: items[2]
+ },
+ {
+   excluder_item: items[1],
+   excluded_item: items[3]
+ },
+ {
+   excluder_item: items[1],
+   excluded_item: items[4]
+ },
+ {
+   excluder_item: items[1],
+   excluded_item: items[5]
+ },
+ {
+   excluder_item: items[1],
+   excluded_item: items[6]
+ },
+ {
+   excluder_item: items[2],
+   excluded_item: items[0]
+ },
+ {
+   excluder_item: items[2],
+   excluded_item: items[1]
+ },
+ {
+   excluder_item: items[2],
+   excluded_item: items[2]
+ },
+ {
+   excluder_item: items[2],
+   excluded_item: items[3]
+ },
+ {
+   excluder_item: items[2],
+   excluded_item: items[4]
+ },
+ {
+   excluder_item: items[2],
+   excluded_item: items[5]
+ },
+ {
+   excluder_item: items[2],
+   excluded_item: items[6]
+ },
+ {
+   excluder_item: items[3],
+   excluded_item: items[0]
+ },
+ {
+   excluder_item: items[3],
+   excluded_item: items[1]
+ },
+ {
+   excluder_item: items[3],
+   excluded_item: items[2]
+ },
+ {
+   excluder_item: items[3],
+   excluded_item: items[3]
+ },
+ {
+   excluder_item: items[3],
+   excluded_item: items[4]
+ },
+ {
+   excluder_item: items[3],
+   excluded_item: items[5]
+ },
+ {
+   excluder_item: items[3],
+   excluded_item: items[6]
+ },
+ {
+   excluder_item: items[4],
+   excluded_item: items[0]
+ },
+ {
+   excluder_item: items[4],
+   excluded_item: items[1]
+ },
+ {
+   excluder_item: items[4],
+   excluded_item: items[2]
+ },
+ {
+   excluder_item: items[4],
+   excluded_item: items[3]
+ },
+ {
+   excluder_item: items[4],
+   excluded_item: items[4]
+ },
+ {
+   excluder_item: items[4],
+   excluded_item: items[5]
+ },
+ {
+   excluder_item: items[4],
+   excluded_item: items[6]
+ },
+ {
+   excluder_item: items[5],
+   excluded_item: items[0]
+ },
+ {
+   excluder_item: items[5],
+   excluded_item: items[1]
+ },
+ {
+   excluder_item: items[5],
+   excluded_item: items[2]
+ },
+ {
+   excluder_item: items[5],
+   excluded_item: items[3]
+ },
+ {
+   excluder_item: items[5],
+   excluded_item: items[4]
+ },
+ {
+   excluder_item: items[5],
+   excluded_item: items[5]
+ },
+ {
+   excluder_item: items[5],
+   excluded_item: items[6]
+ },
+ {
+   excluder_item: items[6],
+   excluded_item: items[6]
+ },
+ {
+   excluder_item: items[7],
+   excluded_item: items[7]
+ },
+ {
+   excluder_item: items[8],
+   excluded_item: items[8]
+ },
+ {
+   excluder_item: items[9],
+   excluded_item: items[9]
+ },
+ {
+   excluder_item: items[10],
+   excluded_item: items[10]
+ },
+ {
+   excluder_item: items[11],
+   excluded_item: items[11]
+ },
+ {
+   excluder_item: items[12],
+   excluded_item: items[12]
+ },
+ {
+   excluder_item: items[13],
+   excluded_item: items[13]
+ },
+ {
+   excluder_item: items[7],
+   excluded_item: items[8]
+ },
+ {
+   excluder_item: items[8],
+   excluded_item: items[7]
+ },
+ {
+   excluder_item: items[9],
+   excluded_item: items[10]
+ },
+ {
+   excluder_item: items[10],
+   excluded_item: items[9]
+ },
+ {
+   excluder_item: items[11],
+   excluded_item: items[12]
+ },
+ {
+   excluder_item: items[12],
+   excluded_item: items[11]
+ }
+])
 
 
 
