@@ -499,6 +499,64 @@ exclusions = Exclusion.create([
  }
 ])
 
+qualifications = Qualification.create([
+   {
+      qualifier_item: items[0],
+      qualified_item: items[13]
+   },
+   {
+      qualifier_item: items[1],
+      qualified_item: items[13]
+   },
+   {
+      qualifier_item: items[2],
+      qualified_item: items[13]
+   },
+   {
+      qualifier_item: items[3],
+      qualified_item: items[13]
+   },
+   {
+      qualifier_item: items[4],
+      qualified_item: items[13]
+   },
+   {
+      qualifier_item: items[5],
+      qualified_item: items[13]
+   },
+   {
+      qualifier_item: items[6],
+      qualified_item: items[13]
+   }
+])
+
+upgrades = Upgrade.create([
+   {
+      upgrade_from_item: items[6],
+      upgrade_to_item: items[0]
+   },
+   {
+      upgrade_from_item: items[6],
+      upgrade_to_item: items[1]
+   },
+   {
+      upgrade_from_item: items[6],
+      upgrade_to_item: items[2]
+   },
+   {
+      upgrade_from_item: items[6],
+      upgrade_to_item: items[3]
+   },
+   {
+      upgrade_from_item: items[6],
+      upgrade_to_item: items[4]
+   },
+   {
+      upgrade_from_item: items[6],
+      upgrade_to_item: items[5]
+   }
+])
+
 
 
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?

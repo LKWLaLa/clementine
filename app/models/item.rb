@@ -15,6 +15,29 @@ class Item < ApplicationRecord
   has_many :excluded_items, through: :excluder_excludeds
 
   # Viewed as an excluded_item, an item can have many excluder_items
-  has_many :timmy, foreign_key: :excluded_item_id, class_name: "Exclusion"
-  has_many :excluder_items, through: :timmy
+  has_many :excluded_excluders, foreign_key: :excluded_item_id, class_name: "Exclusion"
+  has_many :excluder_items, through: :excluded_excluders
+
+  # qualifications are analogous to exclusions
+  # Viewed as a qualifier_item, an item can have many qualified_items
+  has_many :qualifier_qualifieds, foreign_key: :qualifier_item_id, class_name: "Qualification"
+  has_many :qualified_items, through: :qualifier_qualifieds
+
+  # Viewed as a qualified_item, an item can have many qualifier_items
+  has_many :qualified_qualifiers, foreign_key: :qualified_item_id, class_name: "Qualification"
+  has_many :qualifier_items, through: :qualified_qualifiers
+
+  # upgrades are analogous to exclusions
+  # Viewed as an upgrade_from_item, an item can have many upgrade_to_items
+  has_many :upgrade_from_to, foreign_key: :upgrade_from_item_id, class_name: "Upgrade"
+  has_many :upgrade_to_items, through: :upgrade_from_to
+
+  # Viewed as an upgrade_to_item, an item can have many upgrade_from_items
+  has_many :upgrade_to_from, foreign_key: :upgrade_to_item_id, class_name: "Upgrade"
+  has_many :upgrade_from_items, through: :upgrade_to_from
+
+  # items that do not require a qualifying purchase
+  def self.no_qualifier_item_required
+  	Item.where.not(:id => Qualification.all.pluck(:qualified_item_id).uniq)
+  end
 end
