@@ -1,4 +1,59 @@
 <h1> Welcome to Clementine! </h1>  
-<h3>Hi there, <%= current_user.email %>! This will be the dashboard.</h3>
+<h3>Hi there, <%= current_user.email %>!</h3>
 
+<h4>Your Purchases</h4>
+<% if current_user.sales.any? %>
+	<table>
+	<thead>
+		<th>Item</th>
+		<th>Price</th>
+	</thead>
+	<% current_user.sales.each do |sale| %>
+		<tr>
+			<td><%= sale.item.name%></td>
+			<td><%= sale.price.amount%></td>
+		</tr>
+	<% end %>
+</table>
+<% else %>
+	<p> You have not made any purchases yet. </p>
+<% end %>
+
+<h4>Available Items</h4>
+<table>
+	<thead>
+		<th>Select</th>
+		<th>Item</th>
+		<th>Price</th>
+	</thead>
+	<% current_user.purchaseable_items.each do |item| %>
+		<tr>
+			<td><input type="checkbox"></td>
+			<td><%= item.name %></td>
+			<td><%= item.current_price %></td>
+		</tr>
+		<% end %>
+</table>
+
+<h4>Available Upgrades</h4>
+<% if current_user.upgrade_to_items.any? %>
+	<table>
+		<thead>
+			<th>Select</th>
+			<th>Upgrade From Item</th>
+			<th>To Item</th>
+			<th>Upgrade Price</th>
+		</thead>
+		<% current_user.upgrade_from_to.each do |u| %>
+			<tr>
+				<td><input type="checkbox"></td>
+				<td><%= u.upgrade_from_item.name %></td>
+				<td><%= u.upgrade_to_item.name %></td>
+				<td><%= u.upgrade_to_item.current_price - current_user.price_paid(u.upgrade_from_item) %></td>
+			</tr>
+		<% end %>
+	</table>
+<% else %>
+	<p>You do not have any available upgrades at this time</p>
+<% end %>
 <%= link_to "Log Out", destroy_user_session_path, method: :delete %>

@@ -40,4 +40,8 @@ class Item < ApplicationRecord
   def self.no_qualifier_item_required
   	Item.where.not(:id => Qualification.all.pluck(:qualified_item_id).uniq)
   end
+
+  def current_price
+  	self.item_type.current_price.amount
+  end
 end
