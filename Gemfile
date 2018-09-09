@@ -37,6 +37,8 @@ gem 'turbolinks', '~> 5'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'activeadmin'
+gem 'webpacker', '~> 3.3' 
+gem 'react-rails'
 
 
 group :development, :test do

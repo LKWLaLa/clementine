@@ -1,7 +1,9 @@
 <h1> Welcome to Clementine! </h1>  
 <h3>Hi there, <%= current_user.email %>!</h3>
 
-<h4>Your Purchases</h4>
+<%= react_component("App", { greeting: "Hello there." }) %>
+
+<!-- <h4>Your Purchases</h4>
 <% if current_user.sales.any? %>
 	<table>
 	<thead>
@@ -55,5 +57,5 @@
 	</table>
 <% else %>
 	<p>You do not have any available upgrades at this time</p>
-<% end %>
+<% end %> -->
 <%= link_to "Log Out", destroy_user_session_path, method: :delete %>
