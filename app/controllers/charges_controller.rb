@@ -1,8 +1,6 @@
-class ChargesController < ApplicationController
+class Api::ChargesController < ApplicationController
   before_action :authenticate_user!
 
-  def new
-  end
 
   def create
     # Amount in cents
@@ -23,7 +21,6 @@ class ChargesController < ApplicationController
 
     binding.pry
 
-    flash[:notice] = "Thank you for your payment!" 
     redirect_to root_path
 
   rescue Stripe::CardError => e
