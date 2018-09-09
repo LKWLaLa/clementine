@@ -1,20 +1,21 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import DashboardContainer from './DashboardContainer'
-
+import {StripeProvider} from 'react-stripe-elements';
 
 class App extends Component {
 
   render() {
     return (
-      <Router>
-        <div className="App">
-        {this.props.greeting}
-          <Switch>
-            <Route exact path= '/' render={(props)=><DashboardContainer {...props} /> } />          
-          </Switch>
-        </div>
-      </Router>
+      <StripeProvider apiKey={process.env.PUBLISHABLE_KEY}>
+        <Router>
+          <div className="App">
+            <Switch>
+              <Route exact path= '/' render={(props)=><DashboardContainer {...props} /> } />          
+            </Switch>
+          </div>
+        </Router>
+      </StripeProvider>
     );
   }
 }
