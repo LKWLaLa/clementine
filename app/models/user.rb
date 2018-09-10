@@ -18,6 +18,11 @@ class User < ApplicationRecord
 
   def price_paid(item)
   	# todo:  assert that there is only one sale of a given item to a user
-  	self.sales.find_by(:item_id => item.id).price.amount
+  	sale = self.sales.find_by(:item_id => item.id)
+  	if (sale)
+  		return sale.price.amount 
+  	else
+  		return nil
+  	end
   end
 end

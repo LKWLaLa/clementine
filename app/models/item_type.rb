@@ -3,6 +3,6 @@ class ItemType < ApplicationRecord
   has_many :prices
 
   def current_price
-  	self.prices.select{|price| price.inventory > 0}.min_by(&:priority)
+  	self.prices.select{|price| price.supply > Sale.where(:price_id => price.id).count}.min_by(&:priority)
   end
 end

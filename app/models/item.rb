@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
   belongs_to :item_type
+  has_many :prices, through: :item_type
   has_many :sales
   has_many :users, through: :sales
 
@@ -42,6 +43,10 @@ class Item < ApplicationRecord
   end
 
   def current_price
-  	self.item_type.current_price.amount
+  	price = self.item_type.current_price
+    if (price)
+      return price.amount
+    end
+    return nil
   end
 end

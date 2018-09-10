@@ -44,6 +44,9 @@ group :development, :test do
   gem 'pry'
   gem 'rails-erd'
   gem 'dotenv-rails', require: 'dotenv/rails-now'
+  gem 'rspec-rails', '~> 3.8'
+  gem 'factory_bot', "~> 4.0"
+  gem 'factory_bot_rails', "~> 4.0"
 end
 
 group :development do
