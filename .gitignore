@@ -28,3 +28,6 @@
 
 #Ignore environment variables
 .env
+
+# dummy spec
+/spec/dummy_spec.rb
