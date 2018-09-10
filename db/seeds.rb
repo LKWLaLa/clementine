@@ -57,98 +57,84 @@ items = Item.create(
    name: "Full Pass Intermediate Follow",
    item_type: item_types[0],
    description: "Includes admission to one workshop track (8 hours of instruction) on Saturday and Sunday.  Also includes admission to Friday, Saturday, and Sunday evening dances.",
-   inventory: 20,
    supply: 20
  },
  {
    name: "Full Pass Intermediate Lead",
    item_type: item_types[0],
    description: "Includes admission to one workshop track (8 hours of instruction) on Saturday and Sunday.  Also includes admission to Friday, Saturday, and Sunday evening dances.",
-   inventory: 20,
    supply: 20
  },
  {
    name: "Full Pass Advanced Follow",
    item_type: item_types[0],
    description: "Includes admission to one workshop track (8 hours of instruction) on Saturday and Sunday.  Also includes admission to Friday, Saturday, and Sunday evening dances.",
-   inventory: 20,
    supply: 20
  },
  {
    name: "Full Pass Advanced Lead",
    item_type: item_types[0],
    description: "Includes admission to one workshop track (8 hours of instruction) on Saturday and Sunday.  Also includes admission to Friday, Saturday, and Sunday evening dances.",
-   inventory: 20,
    supply: 20
  },
  {
    name: "Full Pass Masters Follow",
    item_type: item_types[0],
    description: "Includes admission to one workshop track (8 hours of instruction) on Saturday and Sunday.  Also includes admission to Friday, Saturday, and Sunday evening dances.",
-   inventory: 19,
    supply: 20
  },
  {
    name: "Full Pass Masters Lead",
    item_type: item_types[0],
    description: "Includes admission to one workshop track (8 hours of instruction) on Saturday and Sunday.  Also includes admission to Friday, Saturday, and Sunday evening dances.",
-   inventory: 20,
    supply: 20
  },
  {
    name: "Dance Pass",
    item_type: item_types[2],
    description: "Admission to the Friday, Saturday, and Sunday evening dances",
-   inventory: 59,
    supply: 60
  },
  {
    name: "Tuesday Workshop Lead",
    item_type: item_types[1],
    description: "Admission to the Tuesday workshop",
-   inventory: 20,
    supply: 20
  },
  {
    name: "Tuesday Workshop Follow",
    item_type: item_types[1],
    description: "Admission to the Tuesday workshop",
-   inventory: 20,
    supply: 20
  },
  {
    name: "Wednesday Workshop Lead",
    item_type: item_types[1],
    description: "Admission to the Wednesday workshop",
-   inventory: 20,
    supply: 20
  },
  {
    name: "Wednesday Workshop Follow",
    item_type: item_types[1],
    description: "Admission to the Wednesday workshop",
-   inventory: 20,
    supply: 20
  },
  {
    name: "Thursday Workshop Lead",
    item_type: item_types[1],
    description: "Admission to the Thursday workshop",
-   inventory: 20,
    supply: 20
  },
  {
    name: "Thursday Workshop Follow",
    item_type: item_types[1],
    description: "Admission to the Thursday workshop",
-   inventory: 19,
    supply: 20
  },
  {
    name: "Contest Entry",
    item_type: item_types[3],
    description: "Entry into the weekend contest",
-   inventory: 59,
    supply: 60
  }
 ])
@@ -159,7 +145,6 @@ prices = Price.create([
    price_type: "Tier 1",
    priority: 1,
    amount: 180,
-   inventory: 39,
    supply: 40
  },
  {
@@ -167,7 +152,6 @@ prices = Price.create([
    price_type: "Tier 2",
    priority: 2,
    amount: 200,
-   inventory: 40,
    supply: 40
  },
  {
@@ -175,7 +159,6 @@ prices = Price.create([
    price_type: "Tier 3",
    priority: 3,
    amount: 220,
-   inventory: 40,
    supply: 40
  },
  {
@@ -183,7 +166,6 @@ prices = Price.create([
    price_type: "Comp",
    priority: 100,
    amount: 0,
-   inventory: 0,
    supply: 0
  },
  {
@@ -191,7 +173,6 @@ prices = Price.create([
    price_type: "Volunteer Level 1",
    priority: 101,
    amount: 50,
-   inventory: 0,
    supply: 0
  },
  {
@@ -199,7 +180,6 @@ prices = Price.create([
    price_type: "Default",
    priority: 1,
    amount: 75,
-   inventory: 49,
    supply: 50
  },
  {
@@ -207,7 +187,6 @@ prices = Price.create([
    price_type: "Default",
    priority: 1,
    amount: 40,
-   inventory: 119,
    supply: 120
  },
  {
@@ -215,7 +194,6 @@ prices = Price.create([
    price_type: "Default",
    priority: 1,
    amount: 15,
-   inventory: 59,
    supply: 60
  }
 ])

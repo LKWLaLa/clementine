@@ -23,7 +23,6 @@ FactoryBot.define do
 		price_type {"regular"}
 		amount {1.00}
 		supply {100}
-		inventory {100}
 		priority {1}
 		
 		item_type #makes a default item_type and associates it with the price under construction

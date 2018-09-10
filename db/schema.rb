@@ -58,7 +58,6 @@ ActiveRecord::Schema.define(version: 2018_09_06_191807) do
     t.string "name"
     t.integer "item_type_id"
     t.string "description"
-    t.integer "inventory"
     t.integer "supply"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -77,7 +76,6 @@ ActiveRecord::Schema.define(version: 2018_09_06_191807) do
     t.decimal "amount", precision: 10, scale: 2
     t.integer "priority"
     t.integer "item_type_id"
-    t.integer "inventory"
     t.integer "supply"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
