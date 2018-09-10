@@ -44,6 +44,7 @@ gem 'react-rails'
 group :development, :test do
   # Call 'pry' anywhere in the code to stop execution and get a debugger console
   gem 'pry'
+  gem 'pry-remote-auto'
   gem 'rails-erd'
   gem 'dotenv-rails', require: 'dotenv/rails-now'
 end
