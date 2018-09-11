@@ -37,11 +37,14 @@ gem 'turbolinks', '~> 5'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'activeadmin'
+gem 'webpacker', '~> 3.3' 
+gem 'react-rails'
 
 
 group :development, :test do
   # Call 'pry' anywhere in the code to stop execution and get a debugger console
   gem 'pry'
+  gem 'pry-remote-auto'
   gem 'rails-erd'
   gem 'dotenv-rails', require: 'dotenv/rails-now'
   gem 'rspec-rails', '~> 3.8'
