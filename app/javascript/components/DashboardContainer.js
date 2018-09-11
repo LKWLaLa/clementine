@@ -8,9 +8,10 @@ class DashboardContainer extends Component {
   render(){
     return (
       <div className="dashboard-container">
-        <h3>Checkout Form: </h3> 
+        <h2>Welcome to your registration dashboard, {this.props.name}! </h2>
+        <h3>Checkout: </h3> 
           <Elements>
-            <CheckoutForm />
+            <CheckoutForm name={this.props.name}/>
           </Elements>
       </div>
     )

@@ -11,7 +11,7 @@ class App extends Component {
         <Router>
           <div className="App">
             <Switch>
-              <Route exact path= '/' render={(props)=><DashboardContainer {...props} /> } />          
+              <Route exact path= '/' render={(props)=><DashboardContainer {...props} name={this.props.name} /> } />          
             </Switch>
           </div>
         </Router>

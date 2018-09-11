@@ -1,32 +1,28 @@
 class Api::ChargesController < ApplicationController
 
   def create
-    # Amount in cents
-    @amount = 500
+    # Amount must be in cents
+    # Description will be the items purchased
 
-    #not sending any params over - structure?  What needs to be here?
-
-    #We need to log customer out of stripe when they log out of clementine
-   
     charge = Stripe::Charge.create(
       :source      => params[:source],
-      :amount      => @amount,
-      :description => 'Rails Stripe customer',
+      :amount      => params[:amount],
+      :description => params[:description],
       :currency    => 'usd'
     )
 
-    binding.remote_pry
+    #binding.remote_pry
 
     render json: {ok: true}, status: 201 
 
   rescue Stripe::CardError => e
-    render json: {error: e}    
+    render json: {error: e}, status: 500    
   end 
  
  private
 
     def charge_params
-      params.permit(:source)
+      params.require(:charge).permit(:source, :amount, :description)
     end
 
 end
