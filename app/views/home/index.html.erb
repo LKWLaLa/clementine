@@ -1,7 +1,9 @@
-<h1> Welcome to Clementine! </h1>  
-<h3>Hi there, <%= current_user.email %>!</h3>
 
-<%= react_component 'App' %>
+<%= react_component 'App', name: current_user.full_name %>
+
+
+<!-- <h1> Welcome to Clementine! </h1>  
+<h3>Hi there, <%= current_user.email %>!</h3> -->
 
 <!-- <h4>Your Purchases</h4>
 <% if current_user.sales.any? %>

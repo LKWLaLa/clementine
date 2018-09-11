@@ -20,4 +20,8 @@ class User < ApplicationRecord
   	# todo:  assert that there is only one sale of a given item to a user
   	Sale.where(:user_id => self.id, :item_id => item.id).first.price.amount
   end
+
+  def full_name
+    first_name + ' ' + last_name
+  end
 end
