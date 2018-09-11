@@ -11,6 +11,13 @@ class Api::ChargesController < ApplicationController
       :currency    => 'usd'
     )
 
+    payment = Payment.new(
+      user_id: current_user.id,
+      amount: params[:amount] / 100,
+      method: 'credit card'
+    )
+    payment.save if payment.valid?
+
     #binding.remote_pry
 
     render json: {ok: true}, status: 201 
