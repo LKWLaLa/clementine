@@ -5,11 +5,11 @@ class Price < ApplicationRecord
   validates_presence_of :price_type, :amount
 
   def quantity_sold
-  	this.sales.count
+  	self.sales.count
   end
 
   def quantity_remaining
-  	this.supply - this.quantity_sold
+  	self.supply - self.quantity_sold
   end
 
 end
