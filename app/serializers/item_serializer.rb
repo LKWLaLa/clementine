@@ -3,11 +3,7 @@ class ItemSerializer < ActiveModel::Serializer
   :current_price, :current_price_type, :item_type
 
   def current_price
-    price = object.item_type.current_price
-    if (price)
-      return price.amount
-    end
-    return "not available"
+    object.current_price || "sold out"
   end
 
   def current_price_type
