@@ -49,4 +49,12 @@ class Item < ApplicationRecord
     end
     return nil
   end
+
+  def quantity_sold
+    this.sales.count
+  end
+
+  def quantity_remaining
+    this.supply - this.quantity_sold
+  end
 end
