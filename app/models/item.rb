@@ -44,17 +44,17 @@ class Item < ApplicationRecord
 
   def current_price
   	price = self.item_type.current_price
-    if (price)
+    if (price && self.quantity_sold < self.supply)
       return price.amount
-    end
+    end 
     return nil
   end
 
   def quantity_sold
-    this.sales.count
+    self.sales.count
   end
 
   def quantity_remaining
-    this.supply - this.quantity_sold
+    self.supply - self.quantity_sold
   end
 end

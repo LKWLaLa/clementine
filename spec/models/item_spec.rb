@@ -27,8 +27,8 @@ end
 
 RSpec.describe 'Item', '#current_price' do
 	let!(:type) {create(:item_type)}
-	let!(:item1) {create(:item,item_type: type)}
-	let!(:item2) {create(:item,item_type: type)}
+	let!(:item1) {create(:item,item_type: type,supply: 10)}
+	let!(:item2) {create(:item,item_type: type,supply: 10)}
 
 	let!(:tier1) {create(:price,priority: 1, item_type: type,amount: 180,supply: 3)}
 	let!(:tier2) {create(:price,priority: 1, item_type: type,amount: 200,supply: 1)}
@@ -62,4 +62,15 @@ RSpec.describe 'Item', '#current_price' do
 			expect(item2.current_price).to be_nil
 		end
 	end
+
+	context 'item is sold out, but tier is not' do
+		let!(:item3) {create(:item, item_type: type, supply: 1)}
+		let!(:sale5) {create(:sale, item: item3, price: tier1)}
+
+		it 'returns nil' do
+			expect(item3.current_price).to be_nil
+		end
+	end
 end
+
+RSpec.describe ''
