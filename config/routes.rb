@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     resources :qualifications, only: [:index]
     resources :upgrades, only: [:index]
     resources :item_types, only: [:index]
+    get '/current_info', to: 'users#current_info'
   end
   
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
