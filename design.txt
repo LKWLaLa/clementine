@@ -1,0 +1,27 @@
+Assumptions about the structure of the relationships between
+exclusions, upgrades and qualifications
+(1) if item i excludes item j, then
+    (1a) you cannot upgrade from i to j
+    (1b) i isn't a qualifier for j
+(2) if you can upgrade from i to j, then
+	(2a) i isn't a qualifier for j
+(3) if i is a qualifier for j, then
+	(3a) you cannot upgrade from i to j
+
+
+Could anything the user selects or deselects on the purchaseableItemsTable affect what upgrades are available?
+In our case, Bal Week 2019:
+No.  The only upgrades available will be from dance pass to weekend pass, or from one kind of weekend pass to another.  Once a user has purchased a dance pass or weekend pass, no weekend passes will appear in the purchaseableItemsTable.  Purchasing a weekday workshop or contest entry will not exclude a weekend pass, nor can one upgrade from a weekday workshop or contest entry to a weekend pass, nor does the purchase of a weekday workshop or contest entry qualify one for any new items.
+Furthermore, upgrades are only available from items you have already completely purchased, not just selected for purchase.  So even if the user has only purchased some weekday workshops, and logs back in to purchase a dance pance (selecting the dance pass in the purchaseableItemsTable), the full passes should not become visible in the upgrades table.
+
+More general
+(1) Item i is selected on the purchaseableItemsTable.  Could the selection of i...
+	(a) exclude any item that was previously an upgradeTo?
+	(b) trigger an upgradeto?
+		no, because 
+	(c) qualify the user for a new item to upgrade to?
+
+(2) Item i is deselected on the purchaseableItemsTable.  Could the deselection of i...
+	(a) remove an exclusion that opens up a new upgrade?
+	(b) remove an upgradeTo?
+	(c) disqualify the user for an item she previous qualified for?
