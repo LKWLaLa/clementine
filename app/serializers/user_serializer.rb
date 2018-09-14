@@ -6,6 +6,7 @@ class UserSerializer < ActiveModel::Serializer
 
   def purchased_items
     sales = object.sales.map{|sale| {
+      id: sale.item.id,
       item: sale.item.name,
       purchase_price: sale.price.amount,
       price_type: sale.price.price_type
