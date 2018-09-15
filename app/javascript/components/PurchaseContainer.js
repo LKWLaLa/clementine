@@ -49,11 +49,21 @@ class PurchaseContainer extends Component {
 	handlePurchaseableSelection(e) {
 	    let id = parseInt(e.target.getAttribute('id'),10)
 	    let newSelectedItemIds = new Set(this.state.selectedPurchaseableItemIds) 
-	    e.target.checked ? newSelectedItemIds.add(id) : newSelectedItemIds.delete(id)
-	    newSelectedItemIds.forEach(id => console.log(id))
+	    if (e.target.checked) {
+	    	newSelectedItemIds.add(id)	
+	    } else {
+	    	newSelectedItemIds.delete(id)
 
-	    //debug
-	    console.log(newSelectedItemIds)
+		    // deselecting an item may make other already selected items ineligible
+		    // if so, deselect the ineligible items automatically
+		    let eligibleItemIds = Filter.eligibleItems(
+		    	new Set([...newSelectedItemIds,...this.props.purchasedItemIds]),
+		    	this.props.itemIds,
+		    	this.props.qualifications)
+		    newSelectedItemIds = new Set([...newSelectedItemIds]
+		    	.filter(i => eligibleItemIds.has(i)))
+	    }
+
 	    this.setState({
 	    	enabledPurchaseableItemIds: this.enabledPurchaseableItems(newSelectedItemIds),
 	    	selectedPurchaseableItemIds : newSelectedItemIds
