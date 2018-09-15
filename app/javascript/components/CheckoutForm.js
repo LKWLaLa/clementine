@@ -16,7 +16,7 @@ class CheckoutForm extends Component {
   }
 
 
-  handleSubmit = (e) => {
+  handleSubmit(e) {
     e.preventDefault()
     let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     // Within the context of `Elements`, this call to createToken knows which Element to
