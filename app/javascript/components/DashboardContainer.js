@@ -42,6 +42,19 @@ class DashboardContainer extends Component {
 
 			let itemIds = new Set(items.map(i => i.id))
 			let purchasedItemIds = new Set(currentUser.purchasedItems.map(i => i.id))
+			let purchaseableItemIds = Filter.purchaseableItems(
+					purchasedItemIds,
+					itemIds,
+					exclusions,
+					upgrades)
+
+			let purchaseableItemsByType = itemTypes
+				.map(oldType => {
+					let type = {...oldType} // shallow copy
+					type.items = oldType.items.filter(item => purchaseableItemIds.has(item.id))
+					return type
+				})
+				.filter(type => type.items.length > 0)
 
 			this.setState({
 				currentUser: currentUser,
@@ -49,13 +62,11 @@ class DashboardContainer extends Component {
 				exclusions: exclusions,
 				upgrades: upgrades,
 				qualifications: qualifications,
+				items: items,
 				itemIds: itemIds,
 				purchasedItemIds: purchasedItemIds,
-				purchaseableItemIds: Filter.purchaseableItems(
-					purchasedItemIds,
-					itemIds,
-					exclusions,
-					upgrades)
+				purchaseableItemIds: purchaseableItemIds,
+				purchaseableItemsByType: purchaseableItemsByType
 			})
 		})
 	}
@@ -71,9 +82,11 @@ class DashboardContainer extends Component {
 						exclusions = {this.state.exclusions}
 						upgrades = {this.state.upgrades}
 						qualifications = {this.state.qualifications}
+						items = {this.state.items}
 						itemIds = {this.state.itemIds}
 						purchasedItemIds = {this.state.purchasedItemIds}
 						purchaseableItemIds = {this.state.purchaseableItemIds}
+						purchaseableItemsByType = {this.state.purchaseableItemsByType}
 				    />
 			    </div>
 			)
