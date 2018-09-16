@@ -31,6 +31,21 @@ class Filter {
 	  return new Set([...qualifiedItemIds,...unrestrictedItemIds])
 	}
 
+	// Items that require a qualifying purchase, where none of priorItems
+	// qualify the user for the purchase
+	static ineligibleItems(priorItems,qualifications) {
+		// items that require a qualifying purchase
+		let restrictedItemIds = new Set(qualifications
+	    	.map(q => q.qualifiedItemId))
+
+		return new Set([...restrictedItemIds].filter(rId => qualifications
+				.filter(q => q.qualifiedItemId == rId)
+				.filter(q => priorItems.has(q.qualifierItemId))
+				.length == 0
+			)
+		)
+	}
+
 	// Items that are not excluded or upgrade_to items (but may not be qualified for yet)
 	// These are the items that should be displayed on the purchaseableItems Table, given
 	// that the user has purchased prior_items.

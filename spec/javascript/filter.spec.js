@@ -1,4 +1,4 @@
-import Filter from 'helpers/Filter.js'
+import Filter from '../../app/javascript/helpers/Filter.js'
 
 let itemIds = new Set()
 let exclusions = []
@@ -131,5 +131,38 @@ describe('enabledPurchaseableItems', () => {
 		expect(wrapEnabledPurchaseableItems(new Set([1,3,4]), new Set())).toEqual([])
 		expect(wrapEnabledPurchaseableItems(new Set(), new Set([1,3,4]))).toEqual([1,3,4])
 		expect(wrapEnabledPurchaseableItems(new Set(), new Set([1,4]))).toEqual([1,3,4])
+	})
+})
+
+describe('ineligibleItems', () => {
+	beforeEach(() => {
+		qualifications = [
+			{qualifierItemId: 1, qualifiedItemId: 4},
+			{qualifierItemId: 2, qualifiedItemId: 4},
+			{qualifierItemId: 5, qualifiedItemId: 6},
+			{qualifierItemId: 8, qualifiedItemId: 10},
+			{qualifierItemId: 9, qualifiedItemId: 10}
+		]
+	})
+
+	it('should return all restricted items if the user has not made a purchase', () => {
+		expect([...Filter.ineligibleItems(new Set(),qualifications)]
+			.sort((a,b) => a-b))
+			.toEqual([4,6,10])
+	})
+
+	it('should return all restricted items if the user has not made a qualifier purchase', () => {
+		expect([...Filter.ineligibleItems(new Set([3,7]),qualifications)]
+			.sort((a,b) => a-b))
+			.toEqual([4,6,10])
+	})
+	
+	it('should return those restricted items for which the user has not purchased a qualifier item', () => {
+		expect([...Filter.ineligibleItems(new Set([8]),qualifications)]
+			.sort((a,b) => a-b))
+			.toEqual([4,6])
+		expect([...Filter.ineligibleItems(new Set([2,8]),qualifications)]
+			.sort((a,b) => a-b))
+			.toEqual([6])
 	})
 })
