@@ -13,6 +13,12 @@
     "react_ujs": "^2.4.4"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.6.0",
+    "jest": "^23.6.0",
     "webpack-dev-server": "2.11.2"
+  },
+  "jest": {
+    "testRegex": "(/__tests__/.*|(\\.|/)(spec))\\.jsx?$"
   }
 }
