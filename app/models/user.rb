@@ -7,9 +7,9 @@ class User < ApplicationRecord
   has_many :upgrade_to_items, through: :purchased_items
   has_many :upgrade_from_to, through: :purchased_items
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+  # :trackable and :omniauthable
+  devise :database_authenticatable, :registerable, :confirmable,
+         :recoverable, :rememberable, :validatable, :timeoutable, :lockable
 
   def purchaseable_items
   	# for now, all the items except those on the excluded list for the items the user has already purchased
@@ -27,6 +27,6 @@ class User < ApplicationRecord
   end
 
   def full_name
-    first_name + ' ' + last_name
+    first_name + ' ' + last_name if first_name && last_name
   end
 end
