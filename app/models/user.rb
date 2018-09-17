@@ -11,6 +11,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :validatable, :timeoutable, :lockable
 
+  validates_presence_of :first_name, :last_name
+  
   def purchaseable_items
   	# for now, all the items except those on the excluded list for the items the user has already purchased
   	(Item.no_qualifier_item_required + self.qualified_items) - self.excluded_items - self.upgrade_to_items
@@ -27,6 +29,6 @@ class User < ApplicationRecord
   end
 
   def full_name
-    first_name + ' ' + last_name if first_name && last_name
+    first_name + ' ' + last_name
   end
 end
