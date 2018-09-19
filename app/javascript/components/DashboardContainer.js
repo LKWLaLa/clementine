@@ -26,7 +26,6 @@ class DashboardContainer extends Component {
 			fetch('/api/items',init)]
 		
 		Promise.all(promises).then(values => {
-			// debug
 			let jsonPromises = []
 			values.forEach(value => {
 				jsonPromises.push(value.json())
@@ -39,6 +38,26 @@ class DashboardContainer extends Component {
 			let upgrades = values[3]
 			let qualifications = values[4]
 			let items = values[5]
+			
+			let item = {}
+			items.forEach(i => {
+				item[i.id] = i
+			})
+
+			let exclusion = {}
+			exclusions.forEach(e => {
+				exclusion[e.id] = e
+			})
+
+			let upgrade = {}
+			upgrades.forEach(u => {
+				upgrade[u.id] = u
+			})
+
+			let qualification = {}
+			qualifications.forEach(q => {
+				qualification[q.id] = q
+			})
 
 			let itemIds = new Set(items.map(i => i.id))
 			let purchasedItemIds = new Set(currentUser.purchasedItems.map(i => i.id))
@@ -56,23 +75,39 @@ class DashboardContainer extends Component {
 				})
 				.filter(type => type.items.length > 0)
 
+			let availableUpgrades = upgrades.filter(u => 
+				purchasedItemIds.has(u.upgradeFromItemId)
+				&& item[u.upgradeFromItemId].itemTypeId != item[u.upgradeToItemId].itemTypeId
+			)	
+
+			let availableExchanges = upgrades.filter(u =>
+				purchasedItemIds.has(u.upgradeFromItemId)
+				&& item[u.upgradeFromItemId].itemTypeId == item[u.upgradeToItemId].itemTypeId
+			)
+
 			this.setState({
 				currentUser: currentUser,
 				itemTypes: itemTypes,
 				exclusions: exclusions,
 				upgrades: upgrades,
 				qualifications: qualifications,
-				items: items,
+				exclusion: exclusion,
+				upgrade: upgrade,
+				qualification: qualification,
+				item: item,
 				itemIds: itemIds,
 				purchasedItemIds: purchasedItemIds,
 				purchaseableItemIds: purchaseableItemIds,
-				purchaseableItemsByType: purchaseableItemsByType
+				purchaseableItemsByType: purchaseableItemsByType,
+				availableExchanges: availableExchanges,
+				availableUpgrades: availableUpgrades
 			})
 		})
 	}
 
 	render(){
 		if (this.state) {
+									
 			return (
 			  	<div className="dashboard-container">
 				    <h2>Welcome to your registration dashboard</h2>
@@ -82,11 +117,17 @@ class DashboardContainer extends Component {
 						exclusions = {this.state.exclusions}
 						upgrades = {this.state.upgrades}
 						qualifications = {this.state.qualifications}
-						items = {this.state.items}
+						item = {this.state.item}
+						exclusion = {this.state.exclusion}
+						upgrade = {this.state.upgrade}
+						qualification = {this.state.qualification}
 						itemIds = {this.state.itemIds}
+						purchasedItems = {this.state.purchasedItems}
 						purchasedItemIds = {this.state.purchasedItemIds}
 						purchaseableItemIds = {this.state.purchaseableItemIds}
 						purchaseableItemsByType = {this.state.purchaseableItemsByType}
+						availableUpgrades = {this.state.availableUpgrades}
+						availableExchanges = {this.state.availableExchanges}
 				    />
 			    </div>
 			)

@@ -1,12 +1,36 @@
-import React, {Component} from 'react'
+import React from 'react'
 import ItemRow from './ItemRow.js'
 import ItemTypeRow from './ItemTypeRow.js'
 
 class PurchaseableItemsTable extends React.Component {
 	constructor(props) {
 		super(props)
+	}
 
-		console.log(props)
+	enabled(itemId) {
+		let s = this.props.status[itemId]
+		return this.props.selectedItemIds.has(itemId)
+			|| (!(s.ineligible || s.excluded || s.upgradeOnly))
+	}
+
+	tipData(itemId) {
+		let s = this.props.status[itemId]
+		if (s.ineligible) {
+			return {
+				message: "requires one of the following:",
+				limitingItems: s.qualifierItemIds
+			}
+		}
+		if (s.excluded || s.upgradeOnly) {
+			return {
+				message: "unavailable because you have selected:",
+				limitingItems: new Set([...(s.excluderItemIds || []),...(s.upgradeFromItemIds || [])])
+			}
+		}
+		return {
+			message: null,
+			limitingItems: null
+		}
 	}
   
 	render() {
@@ -15,16 +39,16 @@ class PurchaseableItemsTable extends React.Component {
 		this.props.purchaseableItemsByType.forEach((itemType) => {
 			rows.push(<ItemTypeRow itemType = {itemType} key = {itemType.name}/>)
 			itemType.items.forEach(item => {
-				let status = this.props.status[item.id]
+				let tipData = this.tipData(item.id)
 				rows.push(
 					<ItemRow
-						item={item}
-						enabled={status.enabled}
+						itemId = {item.id}
+						item={this.props.item}
+						enabled={this.enabled(item.id)}
 						selected = {this.props.selectedItemIds.has(item.id)}
 						handleSelection = {this.props.handleSelection}
-						items={this.props.items}
-						message = {status.enabled ? null : status.message}
-						limitingItems = {status.limitingItems}
+						message = {tipData.message}
+						limitingItems = {tipData.limitingItems}
 						key={item.id} />)
 			})
 		})
@@ -34,7 +58,7 @@ class PurchaseableItemsTable extends React.Component {
 				<thead>
 					<tr>
 						<th colSpan="3">
-              Items available for purchase
+              				Items available for purchase
 						</th>
 					</tr>
 					<tr>

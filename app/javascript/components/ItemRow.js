@@ -1,15 +1,16 @@
-import React, {Component} from 'react'
+import React from 'react'
 
 class ItemRow extends React.Component {
 	render() {
-		const item = this.props.item
+		const id = this.props.itemId
+    const item = this.props.item
     const limitingItems = this.props.limitingItems
 		const color = this.props.enabled ? 'black' : 'grey'
-		const nameSpan = <span style={{color: color}}>{item.name}</span>
-		const priceSpan = <span style={{color: color}}>{item.currentPrice}</span>
-    const limitingItemDivs = limitingItems ? limitingItems.map(itemId => {
-        let limitingItem = this.props.items.find(item => item.id == itemId)
-        return <div key = {itemId}>{limitingItem.name}</div>
+		const nameSpan = <span style={{color: color}}>{item[id].name}</span>
+		const priceSpan = <span style={{color: color}}>{item[id].currentPrice}</span>
+    const limitingItemDivs = limitingItems ? [...limitingItems].map(i => {
+        let limitingItem = item[i]
+        return <div key = {i}>{limitingItem.name}</div>
       }) : []
    
     const nameDiv = this.props.enabled ? nameSpan :
@@ -29,7 +30,7 @@ class ItemRow extends React.Component {
   						disabled = {!this.props.enabled}
   						checked = {this.props.selected}
   						onChange = {this.props.handleSelection}
-  						id = {item.id}
+  						id = {id}
   					/>
     		   </td>
   				<td>{nameDiv}</td>

@@ -250,232 +250,92 @@ sales = Sale.create([
  }
 ])
 
-exclusions = Exclusion.create([
- {
-   excluder_item: items[0],
-   excluded_item: items[0]
- },
- {
-   excluder_item: items[0],
-   excluded_item: items[1]
- },
- {
-   excluder_item: items[0],
-   excluded_item: items[2]
- },
- {
-   excluder_item: items[0],
-   excluded_item: items[3]
- },
- {
-   excluder_item: items[0],
-   excluded_item: items[4]
- },
- {
-   excluder_item: items[0],
-   excluded_item: items[5]
- },
- {
-   excluder_item: items[0],
-   excluded_item: items[6]
- },
- {
-   excluder_item: items[1],
-   excluded_item: items[0]
- },
- {
-   excluder_item: items[1],
-   excluded_item: items[1]
- },
- {
-   excluder_item: items[1],
-   excluded_item: items[2]
- },
- {
-   excluder_item: items[1],
-   excluded_item: items[3]
- },
- {
-   excluder_item: items[1],
-   excluded_item: items[4]
- },
- {
-   excluder_item: items[1],
-   excluded_item: items[5]
- },
- {
-   excluder_item: items[1],
-   excluded_item: items[6]
- },
- {
-   excluder_item: items[2],
-   excluded_item: items[0]
- },
- {
-   excluder_item: items[2],
-   excluded_item: items[1]
- },
- {
-   excluder_item: items[2],
-   excluded_item: items[2]
- },
- {
-   excluder_item: items[2],
-   excluded_item: items[3]
- },
- {
-   excluder_item: items[2],
-   excluded_item: items[4]
- },
- {
-   excluder_item: items[2],
-   excluded_item: items[5]
- },
- {
-   excluder_item: items[2],
-   excluded_item: items[6]
- },
- {
-   excluder_item: items[3],
-   excluded_item: items[0]
- },
- {
-   excluder_item: items[3],
-   excluded_item: items[1]
- },
- {
-   excluder_item: items[3],
-   excluded_item: items[2]
- },
- {
-   excluder_item: items[3],
-   excluded_item: items[3]
- },
- {
-   excluder_item: items[3],
-   excluded_item: items[4]
- },
- {
-   excluder_item: items[3],
-   excluded_item: items[5]
- },
- {
-   excluder_item: items[3],
-   excluded_item: items[6]
- },
- {
-   excluder_item: items[4],
-   excluded_item: items[0]
- },
- {
-   excluder_item: items[4],
-   excluded_item: items[1]
- },
- {
-   excluder_item: items[4],
-   excluded_item: items[2]
- },
- {
-   excluder_item: items[4],
-   excluded_item: items[3]
- },
- {
-   excluder_item: items[4],
-   excluded_item: items[4]
- },
- {
-   excluder_item: items[4],
-   excluded_item: items[5]
- },
- {
-   excluder_item: items[4],
-   excluded_item: items[6]
- },
- {
-   excluder_item: items[5],
-   excluded_item: items[0]
- },
- {
-   excluder_item: items[5],
-   excluded_item: items[1]
- },
- {
-   excluder_item: items[5],
-   excluded_item: items[2]
- },
- {
-   excluder_item: items[5],
-   excluded_item: items[3]
- },
- {
-   excluder_item: items[5],
-   excluded_item: items[4]
- },
- {
-   excluder_item: items[5],
-   excluded_item: items[5]
- },
- {
-   excluder_item: items[5],
-   excluded_item: items[6]
- },
- {
-   excluder_item: items[6],
-   excluded_item: items[6]
- },
- {
-   excluder_item: items[7],
-   excluded_item: items[7]
- },
- {
-   excluder_item: items[8],
-   excluded_item: items[8]
- },
- {
-   excluder_item: items[9],
-   excluded_item: items[9]
- },
- {
-   excluder_item: items[10],
-   excluded_item: items[10]
- },
- {
-   excluder_item: items[11],
-   excluded_item: items[11]
- },
- {
-   excluder_item: items[12],
-   excluded_item: items[12]
- },
- {
-   excluder_item: items[13],
-   excluded_item: items[13]
- },
- {
-   excluder_item: items[7],
-   excluded_item: items[8]
- },
- {
-   excluder_item: items[8],
-   excluded_item: items[7]
- },
- {
-   excluder_item: items[9],
-   excluded_item: items[10]
- },
- {
-   excluder_item: items[10],
-   excluded_item: items[9]
- },
- {
-   excluder_item: items[11],
-   excluded_item: items[12]
- },
- {
-   excluder_item: items[12],
-   excluded_item: items[11]
- }
-])
+exclusions = Exclusion.create(
+[
+   # every full pass excludes a dance pass
+   {
+      excluder_item: items[0],
+      excluded_item: items[6]
+   },
+   {
+      excluder_item: items[1],
+      excluded_item: items[6]
+   },
+   {
+      excluder_item: items[2],
+      excluded_item: items[6]
+   },
+   {
+      excluder_item: items[3],
+      excluded_item: items[6]
+   },
+   {
+      excluder_item: items[4],
+      excluded_item: items[6]
+   },
+   {
+      excluder_item: items[5],
+      excluded_item: items[6]
+   },
+   # every item excludes itself
+   {
+      excluder_item: items[0],
+      excluded_item: items[0]
+   },
+   {
+      excluder_item: items[1],
+      excluded_item: items[1]
+   },
+   {
+      excluder_item: items[2],
+      excluded_item: items[2]
+   },
+   {
+      excluder_item: items[3],
+      excluded_item: items[3]
+   },
+   {
+      excluder_item: items[4],
+      excluded_item: items[4]
+   },
+   {
+      excluder_item: items[5],
+      excluded_item: items[5]
+   },
+   {
+      excluder_item: items[6],
+      excluded_item: items[6]
+   },
+   {
+      excluder_item: items[7],
+      excluded_item: items[7]
+   },
+   {
+      excluder_item: items[8],
+      excluded_item: items[8]
+   },
+   {
+      excluder_item: items[9],
+      excluded_item: items[9]
+   },
+   {
+      excluder_item: items[10],
+      excluded_item: items[10]
+   },
+   {
+      excluder_item: items[11],
+      excluded_item: items[11]
+   },
+   {
+      excluder_item: items[12],
+      excluded_item: items[12]
+   },
+   {
+      excluder_item: items[13],
+      excluded_item: items[13]
+   }
+]
+)
 
 qualifications = Qualification.create([
    {
@@ -508,32 +368,181 @@ qualifications = Qualification.create([
    }
 ])
 
-upgrades = Upgrade.create([
-   {
-      upgrade_from_item: items[6],
-      upgrade_to_item: items[0]
-   },
-   {
-      upgrade_from_item: items[6],
-      upgrade_to_item: items[1]
-   },
-   {
-      upgrade_from_item: items[6],
-      upgrade_to_item: items[2]
-   },
-   {
-      upgrade_from_item: items[6],
-      upgrade_to_item: items[3]
-   },
-   {
-      upgrade_from_item: items[6],
-      upgrade_to_item: items[4]
-   },
-   {
-      upgrade_from_item: items[6],
-      upgrade_to_item: items[5]
-   }
-])
+upgrades = Upgrade.create(
+[
+   # every full pass can be upgraded to (exchanged for) a different full pass
+  {
+    upgrade_from_item: items[6],
+    upgrade_to_item: items[0]
+  },
+  {
+    upgrade_from_item: items[6],
+    upgrade_to_item: items[1]
+  },
+  {
+    upgrade_from_item: items[6],
+    upgrade_to_item: items[2]
+  },
+  {
+    upgrade_from_item: items[6],
+    upgrade_to_item: items[3]
+  },
+  {
+    upgrade_from_item: items[6],
+    upgrade_to_item: items[4]
+  },
+  {
+    upgrade_from_item: items[6],
+    upgrade_to_item: items[5]
+  },
+  {
+    upgrade_from_item: items[0],
+    upgrade_to_item: items[1]
+  },
+  {
+    upgrade_from_item: items[0],
+    upgrade_to_item: items[2]
+  },
+  {
+    upgrade_from_item: items[0],
+    upgrade_to_item: items[3]
+  },
+  {
+    upgrade_from_item: items[0],
+    upgrade_to_item: items[4]
+  },
+  {
+    upgrade_from_item: items[0],
+    upgrade_to_item: items[5]
+  },
+  {
+    upgrade_from_item: items[1],
+    upgrade_to_item: items[0]
+  },
+  {
+    upgrade_from_item: items[1],
+    upgrade_to_item: items[2]
+  },
+  {
+    upgrade_from_item: items[1],
+    upgrade_to_item: items[3]
+  },
+  {
+    upgrade_from_item: items[1],
+    upgrade_to_item: items[4]
+  },
+  {
+    upgrade_from_item: items[1],
+    upgrade_to_item: items[5]
+  },
+  {
+    upgrade_from_item: items[2],
+    upgrade_to_item: items[0]
+  },
+  {
+    upgrade_from_item: items[2],
+    upgrade_to_item: items[1]
+  },
+  {
+    upgrade_from_item: items[2],
+    upgrade_to_item: items[3]
+  },
+  {
+    upgrade_from_item: items[2],
+    upgrade_to_item: items[4]
+  },
+  {
+    upgrade_from_item: items[2],
+    upgrade_to_item: items[5]
+  },
+  {
+    upgrade_from_item: items[3],
+    upgrade_to_item: items[0]
+  },
+  {
+    upgrade_from_item: items[3],
+    upgrade_to_item: items[1]
+  },
+  {
+    upgrade_from_item: items[3],
+    upgrade_to_item: items[2]
+  },
+  {
+    upgrade_from_item: items[3],
+    upgrade_to_item: items[4]
+  },
+  {
+    upgrade_from_item: items[3],
+    upgrade_to_item: items[5]
+  },
+  {
+    upgrade_from_item: items[4],
+    upgrade_to_item: items[0]
+  },
+  {
+    upgrade_from_item: items[4],
+    upgrade_to_item: items[1]
+  },
+  {
+    upgrade_from_item: items[4],
+    upgrade_to_item: items[2]
+  },
+  {
+    upgrade_from_item: items[4],
+    upgrade_to_item: items[3]
+  },
+  {
+    upgrade_from_item: items[4],
+    upgrade_to_item: items[5]
+  },
+  {
+    upgrade_from_item: items[5],
+    upgrade_to_item: items[0]
+  },
+  {
+    upgrade_from_item: items[5],
+    upgrade_to_item: items[1]
+  },
+  {
+    upgrade_from_item: items[5],
+    upgrade_to_item: items[2]
+  },
+  {
+    upgrade_from_item: items[5],
+    upgrade_to_item: items[3]
+  },
+  {
+    upgrade_from_item: items[5],
+    upgrade_to_item: items[4]
+  },
+  # every weekday workshop of one role can be upgraded to
+  # the same-day workshop as the other role
+  {
+    upgrade_from_item: items[7],
+    upgrade_to_item: items[8]
+  },
+  {
+    upgrade_from_item: items[8],
+    upgrade_to_item: items[7]
+  },
+  {
+    upgrade_from_item: items[9],
+    upgrade_to_item: items[10]
+  },
+  {
+    upgrade_from_item: items[10],
+    upgrade_to_item: items[9]
+  },
+  {
+    upgrade_from_item: items[11],
+    upgrade_to_item: items[12]
+  },
+  {
+    upgrade_from_item: items[12],
+    upgrade_to_item: items[11]
+  }
+]
+)
 
 
 
