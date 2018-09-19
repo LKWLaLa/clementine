@@ -1,4 +1,16 @@
 class Filter {
+	static union(a,b) {
+		return new Set([...a,...b])
+	}
+
+	static intersection(a,b) {
+		return new Set([...a].filter(x => b.has(x)))
+	}
+
+	static difference(a,b) {
+		return new Set([...a].filter(x => !b.has(x)))
+	}
+
 	static excludedItems(priorItemIds,exclusions) {
 	  return new Set(exclusions
 	    .filter(e => priorItemIds.has(e.excluderItemId))
@@ -39,8 +51,7 @@ class Filter {
 	    	.map(q => q.qualifiedItemId))
 
 		return new Set([...restrictedItemIds].filter(rId => qualifications
-				.filter(q => q.qualifiedItemId == rId)
-				.filter(q => priorItems.has(q.qualifierItemId))
+				.filter(q => q.qualifiedItemId == rId && priorItems.has(q.qualifierItemId))
 				.length == 0
 			)
 		)
@@ -71,6 +82,24 @@ class Filter {
 	  let a = new Set([...this.purchaseableItems(priorItemIds,itemIds,exclusions,upgrades)]
 	    .filter(i => this.eligibleItems(priorItemIds,itemIds,qualifications).has(i)))
 	  return new Set([...a,...selectedItemIds])
+	}
+
+	// itemIds that
+	// (a) the user has purchased
+	// (b) or that the user has signaled intent to purchase via selections on the 
+	// 		purchaseableItems or upgrades tables
+	// except itemIds that the user has chosen to upgrade from, thereby
+	// implying that the user will no longer own that item
+
+	// upgrade is an object mapping upgradeIds to upgrade objects
+	static priorItems(purchasedItemIds,
+			selectedPurchaseableItemIds,
+			selectedUpgradeIds,
+			upgrade) {
+		let upgradeToIds = new Set([...selectedUpgradeIds].map(u => upgrade[u].upgradeToItemId))
+		let upgradeFromIds = new Set([...selectedUpgradeIds].map(u => upgrade[u].upgradeFromItemId))
+		return new Set([...purchasedItemIds,...selectedPurchaseableItemIds,...upgradeToIds]
+			.filter(i => !upgradeFromIds.has(i)))
 	}
 }
 
