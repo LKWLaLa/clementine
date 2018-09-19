@@ -20,27 +20,6 @@ class UpgradesTable extends React.Component {
 				(this.toEnabled(upgradeId) && this.fromEnabled(upgradeId))
 	}
 
-	tipData(upgradeId) {
-		let upgradeToItemId = this.props.upgrade[upgradeId].upgradeToItemId
-		let s = this.props.status[upgradeToItemId]
-		if (s.ineligible) {
-			return {
-				message: "requires one of the following:",
-				limitingItems: s.qualifierItemIds
-			}
-		}
-		if (s.excluded) {
-			return {
-				message: "unavailable because you have selected:",
-				limitingItems: s.excluderItemIds
-			}
-		}
-		return {
-			message: null,
-			limitingItems: null
-		}
-	}
-
 	purchasePrice(purchasedItemId) {
 		// TODO:  fix how the purchase price gets pass down the component tree
 		return this.props.purchasedItems.find(pi => pi.id == purchasedItemId).purchasePrice
@@ -59,7 +38,6 @@ class UpgradesTable extends React.Component {
 			let purchasePrice = this.purchasePrice(u.upgradeFromItemId)
 			let upgradeToPrice = item[u.upgradeToItemId].currentPrice
 			let price = upgradeToPrice - purchasePrice
-			let tipData = this.tipData(u.id)
 			let enabled = this.enabled(u.id)
 			return <UpgradeRow
 				key = {u.id}
@@ -70,8 +48,6 @@ class UpgradesTable extends React.Component {
 				item = {item}
 				selected = {selectedUpgradeIds.has(u.id)}
 				enabled = {enabled}
-				message = {tipData.message}
-				limitingItems = {tipData.limitingItems}
 				handleSelection = {handleSelection} />
 		})
 
