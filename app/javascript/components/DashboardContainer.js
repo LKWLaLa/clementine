@@ -77,8 +77,11 @@ class DashboardContainer extends Component {
 
 			let availableUpgrades = upgrades.filter(u => 
 				purchasedItemIds.has(u.upgradeFromItemId)
-				&& item[u.upgradeFromItemId].itemTypeId != item[u.upgradeToItemId].itemTypeId
-			)	
+				&& item[u.upgradeFromItemId].itemTypeId != item[u.upgradeToItemId].itemTypeId)
+				.map(u => {
+					u.upgradePrice = currentUser.purchasedItems.find(i => i.id == u.upgradeFromItemId).purchasePrice
+					return u
+				})
 
 			let availableExchanges = upgrades.filter(u =>
 				purchasedItemIds.has(u.upgradeFromItemId)

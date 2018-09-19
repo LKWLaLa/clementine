@@ -3,6 +3,7 @@ import React from 'react'
 class UpgradeRow extends React.Component {
 
 	render() {
+		// bind all props to local variables
 		const upgradeId = this.props.upgradeId
 		const item = this.props.item
 		const upgradeFromItemId = this.props.upgradeFromItemId
@@ -13,10 +14,17 @@ class UpgradeRow extends React.Component {
 		const handleSelection = this.props.handleSelection
 		const limitingItems = this.props.limitingItems
 
-		const upgradeFromSpan = <span>{item[upgradeFromItemId].name}</span>
-		const upgradeToSpan = <span>{item[upgradeToItemId].name}</span>
-		const priceSpan = <span>{price}</span>
+		// retrieve names
+		const upgradeFromName = item[upgradeFromItemId].name
+		const upgradeToName = item[upgradeToItemId].name
 
+		// construct spans
+		const className = this.props.enabled ? 'enabled-row-entry' : 'disabled-row-entry'
+
+		let upgradeFromSpan = <span className={className}>{upgradeFromName}</span>
+		let upgradeToSpan = <span className={className}>{upgradeToName}</span>
+		let priceSpan = <span className={className}>{price}</span>
+		
 		return (
 			<tr>
 				<td>

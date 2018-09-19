@@ -20,24 +20,16 @@ class UpgradesTable extends React.Component {
 				(this.toEnabled(upgradeId) && this.fromEnabled(upgradeId))
 	}
 
-	purchasePrice(purchasedItemId) {
-		// TODO:  fix how the purchase price gets pass down the component tree
-		return this.props.purchasedItems.find(pi => pi.id == purchasedItemId).purchasePrice
-	}
-
 	render() {
 		const upgrades = this.props.upgrades
 		const exchanges = this.props.exchanges
 		const item = this.props.item
-		const purchasedItems = this.props.purchasedItems
 		const selectedUpgradeIds = this.props.selectedUpgradeIds
 		const status = this.props.status
 		const handleSelection = this.props.handleSelection
+		const price = this.props.upgradePrice
 
 		let upgradeRows = upgrades.map(u => {
-			let purchasePrice = this.purchasePrice(u.upgradeFromItemId)
-			let upgradeToPrice = item[u.upgradeToItemId].currentPrice
-			let price = upgradeToPrice - purchasePrice
 			let enabled = this.enabled(u.id)
 			return <UpgradeRow
 				key = {u.id}

@@ -159,7 +159,6 @@ class PurchaseContainer extends React.Component {
 					upgrades = {this.props.availableUpgrades}
 					exchanges = {this.props.availableExchanges}
 					item = {this.props.item}
-					purchasedItems = {this.props.currentUser.purchasedItems}
 					priorItemIds = {priorItemIds}
 					selectedUpgradeIds = {this.state.selectedUpgradeIds}
 					status = {status}

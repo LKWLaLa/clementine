@@ -5,9 +5,9 @@ class ItemRow extends React.Component {
 		const id = this.props.itemId
     const item = this.props.item
     const limitingItems = this.props.limitingItems
-		const color = this.props.enabled ? 'black' : 'grey'
-		const nameSpan = <span style={{color: color}}>{item[id].name}</span>
-		const priceSpan = <span style={{color: color}}>{item[id].currentPrice}</span>
+		const className = this.props.enabled ? 'enabled-row-entry' : 'disabled-row-entry'
+		const nameSpan = <span className={className}>{item[id].name}</span>
+		const priceSpan = <span className={className}>{item[id].currentPrice}</span>
     const limitingItemDivs = limitingItems ? [...limitingItems].map(i => {
         let limitingItem = item[i]
         return <div key = {i}>{limitingItem.name}</div>
