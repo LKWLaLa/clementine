@@ -2,9 +2,10 @@ import React from 'react'
 import {Elements} from 'react-stripe-elements'
 import PurchaseableItemsTable from './PurchaseableItemsTable.js'
 import PurchasedItemsTable from './PurchasedItemsTable.js'
-import UpgradesTable from './UpgradesTable.js'
+import ConversionsContainer from './ConversionsContainer.js'
 import CheckoutForm from './CheckoutForm.js'
 import Filter from '../helpers/Filter.js'
+
 
 class PurchaseContainer extends React.Component {
 	constructor(props) {
@@ -133,8 +134,12 @@ class PurchaseContainer extends React.Component {
 	}
 
 	subtotal() {
-		return [...this.state.selectedPurchaseableItemIds].reduce((sum,id) => sum + this.props.item[id].currentPrice,0)
-			+ [...this.state.selectedUpgradeIds].reduce((sum,id) => sum + this.props.availableUpgrade[id].upgradePrice,0)
+		let newPurchaseSubtotal = [...this.state.selectedPurchaseableItemIds]
+			.reduce((sum,id) => sum + this.props.item[id].currentPrice,0)
+		let upgradeSubtotal = this.props.availableUpgrades.reduce((sum,u) => 
+			this.state.selectedUpgradeIds.has(u.id) ? sum + u.price : sum, 0
+		)
+		return newPurchaseSubtotal + upgradeSubtotal
 	}
 
 	/******************* Render ********************/
@@ -159,7 +164,7 @@ class PurchaseContainer extends React.Component {
 					item = {this.props.item}
 					handleSelection = {this.handlePurchaseableItemSelection}
 				/>
-				<UpgradesTable 
+				<ConversionsContainer
 					upgrade = {this.props.upgrade}
 					upgrades = {this.props.availableUpgrades}
 					exchanges = {this.props.availableExchanges}

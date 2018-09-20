@@ -11,9 +11,12 @@ class ExchangeRow extends React.Component {
 		const enabled = this.props.enabled
 		const handleSelection = this.props.handleSelection
 
-		let oldItemSpan = <span>{item[oldItemId].name}</span>
-		let newItemSpan = <span>{item[newItemId].name}</span>
-		let priceSpan = <span>free</span>
+		// construct spans
+		const className = this.props.enabled ? 'enabled-row-entry' : 'disabled-row-entry'
+
+		let oldItemSpan = <span className={className}>{item[oldItemId].name}</span>
+		let newItemSpan = <span className={className}>{item[newItemId].name}</span>
+		let priceSpan = <span className={className}>free</span>
 
 		return (
 			<tr>
