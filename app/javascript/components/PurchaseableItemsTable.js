@@ -10,11 +10,17 @@ class PurchaseableItemsTable extends React.Component {
 	enabled(itemId) {
 		let s = this.props.status[itemId]
 		return this.props.selectedItemIds.has(itemId)
-			|| (!(s.ineligible || s.excluded || s.upgradeOnly))
+			|| (!(s.ineligible || s.excluded || s.upgradeOnly || this.props.item[itemId].soldOut))
 	}
 
 	tipData(itemId) {
 		let s = this.props.status[itemId]
+		if (this.props.item[itemId].soldOut) {
+			return {
+				message: "This item is sold out!",
+				limitingItems: null
+			}
+		}
 		if (s.ineligible) {
 			return {
 				message: "requires one of the following:",

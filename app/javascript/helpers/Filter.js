@@ -60,6 +60,8 @@ class Filter {
 	// Items that are not excluded or upgrade_to items (but may not be qualified for yet)
 	// These are the items that should be displayed on the purchaseableItems Table, given
 	// that the user has purchased prior_items.
+	// PurchaseableItems include items that have sold out, since sold out items
+	// should still be displayed to the user with a "sold out" message.
 	static purchaseableItems(purchasedItemIds,itemIds,exclusions,upgrades) {
 	  return new Set([...itemIds]
 	    .filter(i => !this.excludedItems(purchasedItemIds,exclusions).has(i))

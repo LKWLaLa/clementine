@@ -110,3 +110,5 @@ Principles for data storage in react
 Normalization - no redundant data in state
 Work with ids of items for filtering.  For displaying final results, lookup in items dictionary (object).
 Call the dictionary idItem?  similarly idUpgrade?  maybe just item singular and upgrade singular?
+
+It should not be possible for all of an item's prices to sell out before the item itself sells out.  Setting up a system where this could happen is an error on the part of the administrator.

@@ -7,7 +7,7 @@ class UpgradesTable extends React.Component {
 	toEnabled(upgradeId) {
 		let upgradeToItemId = this.props.upgrade[upgradeId].upgradeToItemId
 		let s = this.props.status[upgradeToItemId]
-		return !(s.ineligible || s.excluded)
+		return !(s.ineligible || s.excluded || this.props.item[upgradeToItemId].soldOut)
 	}
 
 	fromEnabled(upgradeId) {
