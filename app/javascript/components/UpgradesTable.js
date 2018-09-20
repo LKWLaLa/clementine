@@ -27,7 +27,6 @@ class UpgradesTable extends React.Component {
 		const selectedUpgradeIds = this.props.selectedUpgradeIds
 		const status = this.props.status
 		const handleSelection = this.props.handleSelection
-		const price = this.props.upgradePrice
 
 		let upgradeRows = upgrades.map(u => {
 			let enabled = this.enabled(u.id)
@@ -36,7 +35,7 @@ class UpgradesTable extends React.Component {
 				upgradeId = {u.id}
 				upgradeFromItemId = {u.upgradeFromItemId}
 				upgradeToItemId = {u.upgradeToItemId}
-				price = {price}
+				price = {u.upgradePrice}
 				item = {item}
 				selected = {selectedUpgradeIds.has(u.id)}
 				enabled = {enabled}

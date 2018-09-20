@@ -39,25 +39,10 @@ class DashboardContainer extends Component {
 			let qualifications = values[4]
 			let items = values[5]
 			
-			let item = {}
-			items.forEach(i => {
-				item[i.id] = i
-			})
-
-			let exclusion = {}
-			exclusions.forEach(e => {
-				exclusion[e.id] = e
-			})
-
-			let upgrade = {}
-			upgrades.forEach(u => {
-				upgrade[u.id] = u
-			})
-
-			let qualification = {}
-			qualifications.forEach(q => {
-				qualification[q.id] = q
-			})
+			let item = this.arrayToObjectById(items)
+			let exclusion = this.arrayToObjectById(exclusions)
+			let upgrade = this.arrayToObjectById(upgrades)
+			let qualification = this.arrayToObjectById(qualifications)
 
 			let itemIds = new Set(items.map(i => i.id))
 			let purchasedItemIds = new Set(currentUser.purchasedItems.map(i => i.id))
@@ -88,6 +73,9 @@ class DashboardContainer extends Component {
 				&& item[u.upgradeFromItemId].itemTypeId == item[u.upgradeToItemId].itemTypeId
 			)
 
+			let availableUpgrade = this.arrayToObjectById(availableUpgrades)
+			let availableExchange = this.arrayToObjectById(availableExchanges)
+
 			this.setState({
 				currentUser: currentUser,
 				itemTypes: itemTypes,
@@ -103,9 +91,21 @@ class DashboardContainer extends Component {
 				purchaseableItemIds: purchaseableItemIds,
 				purchaseableItemsByType: purchaseableItemsByType,
 				availableExchanges: availableExchanges,
-				availableUpgrades: availableUpgrades
+				availableUpgrades: availableUpgrades,
+				availableUpgrade: availableUpgrade,
+				availableExchange: availableExchange
 			})
 		})
+	}
+
+	// build an object mapping each the id of each item in array
+	// to the item itself
+	arrayToObjectById(array) {
+		let obj = {}
+		array.forEach(i => {
+			obj[i.id] = i
+		})
+		return obj
 	}
 
 	render(){
@@ -131,6 +131,8 @@ class DashboardContainer extends Component {
 						purchaseableItemsByType = {this.state.purchaseableItemsByType}
 						availableUpgrades = {this.state.availableUpgrades}
 						availableExchanges = {this.state.availableExchanges}
+						availableUpgrade = {this.state.availableUpgrade}
+						availableExchange = {this.state.availableExchange}
 				    />
 			    </div>
 			)
