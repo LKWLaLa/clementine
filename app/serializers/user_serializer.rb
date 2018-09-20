@@ -5,7 +5,9 @@ class UserSerializer < ActiveModel::Serializer
   has_many :payments
 
   def purchased_items
-    sales = object.sales.map{|sale| {
+    sales = object.sales
+      .select{|sale| !sale.void}
+      .map{|sale| {
       id: sale.item.id,
       item: sale.item.name,
       purchase_price: sale.price.amount.to_f,

@@ -31,9 +31,9 @@ users = User.create([
 		city: 'Winterfell',
 	},
 	{
-		first_name: 'Peter',
+		first_name: 'Petyr',
 		last_name: 'Baelish',
-      email: 'peter.baelish@example.com',
+      email: 'petyr.baelish@example.com',
       password: 'password',
 		city: 'King\'s Landing',
 	},
@@ -239,59 +239,83 @@ prices = Price.create([
 payments = Payment.create([
  {
  	# Jane Doe paid for a Full Pass at Tier 1 and one Weekday Workshop
-   user: users[0],
+   user: jane,
    amount: 220,
    method: 'PayPal'
  },
  {
  	# Jack Black paid for a Dance Pass via Paypal
- 	user: users[1],
+ 	user: jack,
  	amount: 75,
  	method: 'PayPal'
  },
  {
  	# Jack Black paid for a contest entry in Cash
- 	user: users[1],
+ 	user: jack,
  	amount: 15,
  	method: 'Cash'
+ },
+ {
+  user: tim,
+  amount: 180,
+  method: 'Stripe'
  }
 ])
+
+janePaidForFullPassAndWorkshop = payments[0]
+jackPaidForDancePass = payments[1]
+jackPaidForContestEntry = payments[2]
+timPaidForFullPass = payments[3]
 
 sales = Sale.create([
  {
  	# sold Jane Doe a Full Pass Masters Follow at Tier 1
-   user: users[0],
+   user: jane,
    item: full_pass_masters_follow,
    price: prices[0],
-   payment: payments[0]
+   payment: janePaidForFullPassAndWorkshop
  },
  {
  	# sold Jane Doe a Thursday Workshop Follow
-   user: users[0],
+   user: jane,
    item: thursday_workshop_follow,
    price: prices[6],
-   payment: payments[0]
+   payment: janePaidForFullPassAndWorkshop
  },
  {
   # sold Jane Doe a Special Snowflake
-   user: users[0],
+   user: jane,
    item: special_snowflake_item,
    price: prices[6],
-   payment: payments[0]
+   payment: janePaidForFullPassAndWorkshop
  },
  {
  	# sold Jack Black a Dance Pass
- 	user: users[1],
+ 	user: jack,
  	item: dance_pass_item,
  	price: prices[5],
- 	payment: payments[1]
+ 	payment: jackPaidForDancePass
  },
  {
  	# sold Jack Black a Contest Entry
- 	user: users[1],
+ 	user: jack,
  	item: contest_entry_item,
  	price: prices[5],
- 	payment: payments[2]
+ 	payment: jackPaidForContestEntry
+ },
+ {
+  user: tim,
+  item: full_pass_intermediate_follow,
+  price: prices[0],
+  payment: timPaidForFullPass,
+  void: true
+ },
+ {
+  # tim exchanged his full_pass_intermediate_follow for a full_pass_intermediate_lead
+  user: tim,
+  item: full_pass_intermediate_lead,
+  price: prices[0],
+  payment: timPaidForFullPass
  }
 ])
 
@@ -592,7 +616,5 @@ upgrades = Upgrade.create(
   }
 ]
 )
-
-
 
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
