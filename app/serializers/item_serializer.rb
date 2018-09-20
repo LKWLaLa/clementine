@@ -3,7 +3,7 @@ class ItemSerializer < ActiveModel::Serializer
   :current_price, :current_price_type, :item_type_id
 
   def current_price
-    object.current_price || "sold out"
+    object.current_price.to_f || "sold out"
   end
 
   def current_price_type
@@ -11,7 +11,7 @@ class ItemSerializer < ActiveModel::Serializer
   end
 
   def quantity_remaining
-    object.quantity_remaining
+    object.quantity_remaining.to_i
   end
 
 

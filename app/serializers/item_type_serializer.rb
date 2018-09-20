@@ -5,7 +5,7 @@ class ItemTypeSerializer < ActiveModel::Serializer
   has_many :items
 
   def current_price
-    object.current_price.try(:amount) || "sold out"
+    object.current_price.try(:amount).try(:to_f) || "sold out"
   end
 
   def current_price_type
