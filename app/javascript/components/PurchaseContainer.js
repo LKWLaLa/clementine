@@ -16,6 +16,11 @@ class PurchaseContainer extends React.Component {
 		this.updateState = this.updateState.bind(this)
 		this.itemStatus = this.itemStatus.bind(this)
 		this.itemStatuses = this.itemStatuses.bind(this)
+		this.purchaseDescription = this.purchaseDescription.bind(this)
+		this.upgradeToItemId = this.upgradeDescription.bind(this)
+		this.purchaseDescriptions = this.purchaseDescriptions.bind(this)
+		this.upgradeDescriptions = this.upgradeDescriptions.bind(this)
+		this.description = this.description.bind(this)
 
 		this.state = {
 			selectedPurchaseableItemIds: new Set(),
@@ -137,9 +142,37 @@ class PurchaseContainer extends React.Component {
 		let newPurchaseSubtotal = [...this.state.selectedPurchaseableItemIds]
 			.reduce((sum,id) => sum + this.props.item[id].currentPrice,0)
 		let upgradeSubtotal = this.props.availableUpgrades.reduce((sum,u) => 
-			this.state.selectedUpgradeIds.has(u.id) ? sum + u.price : sum, 0
+			this.state.selectedUpgradeIds.has(u.id) ? sum + u.upgradePrice : sum, 0
 		)
 		return newPurchaseSubtotal + upgradeSubtotal
+	}
+
+	upgradeDescription(upgradeId) {
+		let upgrade = this.props.upgrade[upgradeId]
+		let fromItem = this.props.item[upgrade.upgradeFromItemId]
+		let toItem = this.props.item[upgrade.upgradeToItemId]
+		return "Upgrade from " + fromItem.name + " to " + toItem.name
+	}
+
+	purchaseDescription(itemId) {
+		return "Purchase " + this.props.item[itemId].name
+	}
+
+	upgradeDescriptions() {
+		return this.props.availableUpgrades
+			.filter((u) => this.state.selectedUpgradeIds.has(u.id))
+			.reduce((d,u) => d + this.upgradeDescription(u.id) + '\n','')
+	}
+
+	purchaseDescriptions() {
+		return this.props.items
+			.filter((i) => this.state.selectedPurchaseableItemIds.has(i.id))
+			.reduce((d,i) => d + this.purchaseDescription(i.id) + '\n','')
+	}
+
+	// returns a description of all currently selected purchases and upgrades
+	description() {
+		return this.purchaseDescriptions() + '\n' + this.upgradeDescriptions()
 	}
 
 	/******************* Render ********************/
@@ -150,6 +183,7 @@ class PurchaseContainer extends React.Component {
 			this.state.selectedPurchaseableItemIds,
 			this.state.selectedUpgradeIds,
 			this.props.upgrade)
+
 
 		return (
 			<div className="purchaseable-items-container">
@@ -173,11 +207,18 @@ class PurchaseContainer extends React.Component {
 					selectedUpgradeIds = {this.state.selectedUpgradeIds}
 					status = {status}
 					handleSelection = {this.handleUpgradeSelection}
+					currentUser = {this.props.currentUser}
 				/>
-				<h2>Subtotal: {this.subtotal()}</h2>
 				<h3>Checkout: </h3> 
 	            <Elements>
-	            	<CheckoutForm name={this.props.currentUser.name}/>
+	            	<CheckoutForm 
+	            		amount = {this.subtotal()}
+	            		description = {this.description}
+	            		purchases = {this.props.items.filter((i) =>
+	            			this.state.selectedPurchaseableItemIds.has(i.id))}
+	            		upgrades = {this.props.availableUpgrades.filter((u) =>
+	            			this.state.selectedUpgradeIds.has(u.id))}
+	            	/>
 	            </Elements>
 			</div>
 		)

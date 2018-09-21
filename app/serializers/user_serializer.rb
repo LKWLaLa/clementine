@@ -11,7 +11,8 @@ class UserSerializer < ActiveModel::Serializer
       id: sale.item.id,
       item: sale.item.name,
       purchase_price: sale.price.amount.to_f,
-      price_type: sale.price.price_type
+      price_type: sale.price.price_type,
+      sale_id: sale.id
     }}
 
   end

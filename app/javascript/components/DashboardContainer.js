@@ -64,14 +64,22 @@ class DashboardContainer extends Component {
 				purchasedItemIds.has(u.upgradeFromItemId)
 				&& item[u.upgradeFromItemId].itemTypeId != item[u.upgradeToItemId].itemTypeId)
 				.map(u => {
-					u.upgradePrice = currentUser.purchasedItems.find(i => i.id == u.upgradeFromItemId).purchasePrice
+					let priorItem = currentUser.purchasedItems.find(i => i.id == u.upgradeFromItemId)
+					let upgradeToPrice = item[u.upgradeToItemId].currentPriceInfo
+					u.upgradePrice = upgradeToPrice.amount - priorItem.purchasePrice
+					u.priorSaleId = priorItem.saleId
+					u.upgradeToPrice = upgradeToPrice
 					return u
 				})
 
 			let availableExchanges = upgrades.filter(u =>
 				purchasedItemIds.has(u.upgradeFromItemId)
-				&& item[u.upgradeFromItemId].itemTypeId == item[u.upgradeToItemId].itemTypeId
-			)
+				&& item[u.upgradeFromItemId].itemTypeId == item[u.upgradeToItemId].itemTypeId)
+				.map(u => {
+					let priorItem = currentUser.purchasedItems.find(i => i.id == u.upgradeFromItemId)
+					u.priorSaleId = priorItem.saleId
+					return u
+				})
 
 			let availableUpgrade = this.arrayToObjectById(availableUpgrades)
 			let availableExchange = this.arrayToObjectById(availableExchanges)
@@ -86,6 +94,7 @@ class DashboardContainer extends Component {
 				upgrade: upgrade,
 				qualification: qualification,
 				item: item,
+				items: items,
 				itemIds: itemIds,
 				purchasedItemIds: purchasedItemIds,
 				purchaseableItemIds: purchaseableItemIds,
@@ -133,6 +142,7 @@ class DashboardContainer extends Component {
 						availableExchanges = {this.state.availableExchanges}
 						availableUpgrade = {this.state.availableUpgrade}
 						availableExchange = {this.state.availableExchange}
+						items = {this.state.items}
 				    />
 			    </div>
 			)

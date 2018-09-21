@@ -10,6 +10,7 @@ class ConversionsContainer extends React.Component {
 		this.enabled = this.enabled.bind(this)
 		this.showExchangesTable = this.showExchangesTable.bind(this)
 		this.hideExchangesTable = this.hideExchangesTable.bind(this)
+		this.submitExchanges = this.submitExchanges.bind(this)
 
 		this.state = {
 			showExchangesTable: false
@@ -22,6 +23,29 @@ class ConversionsContainer extends React.Component {
 
 	hideExchangesTable() {
 		this.setState({showExchangesTable: false})
+	}
+
+	submitExchanges() {
+		let exchanges = this.props.exchanges
+			.filter((e) => this.props.selectedUpgradeIds.has(e.id))
+
+		let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+		
+		let data = {
+			exchanges : exchanges
+		}
+
+		let init = {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json',
+		        'Accept': 'application/json',
+		        'X-Requested-With': 'XMLHttpRequest',
+		        'X-CSRF-Token': csrfToken
+        	},
+        	body: JSON.stringify(data),
+        	credentials: 'same-origin'
+		}
+		fetch('/api/exchanges',init)
 	}
 
 	toEnabled(upgradeId) {
@@ -75,6 +99,7 @@ class ConversionsContainer extends React.Component {
 			<div>
 				<button onClick={this.hideExchangesTable}>Hide exchanges</button>
 				{exchangesTable}
+				<button onClick={this.submitExchanges}>Confirm Exchange</button>
 			</div> :
 			<button onClick={this.showExchangesTable}>Sign up for the wrong level or role?  Click here!</button>
 
