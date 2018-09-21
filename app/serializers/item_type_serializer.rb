@@ -1,11 +1,11 @@
 class ItemTypeSerializer < ActiveModel::Serializer
   attributes :id, :name, :current_price, :current_price_type, 
-  :quantity_remaining_at_current_price
+  :quantity_remaining_at_current_price, :sold_out
 
   has_many :items
 
   def current_price
-    object.current_price.try(:amount) || "sold out"
+    object.current_price.try(:amount).try(:to_f) || "sold out"
   end
 
   def current_price_type
@@ -13,7 +13,12 @@ class ItemTypeSerializer < ActiveModel::Serializer
   end
 
   def quantity_remaining_at_current_price
-    object.current_price.quantity_remaining 
+    p = object.current_price
+    if (p) 
+      return p.quantity_remaining
+    else
+      return 0
+    end
   end
 
 end

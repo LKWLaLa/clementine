@@ -1,0 +1,114 @@
+Assumptions about the structure of the relationships between
+exclusions, upgrades and qualifications
+(1) if item i excludes item j, then
+    (1a) you cannot upgrade from i to j
+    (1b) i isn't a qualifier for j
+(2) if you can upgrade from i to j, then
+	(2a) i isn't a qualifier for j
+(3) if i is a qualifier for j, then
+	(3a) you cannot upgrade from i to j
+
+No item should be self-qualifying or self-upgrading, i.e.
+i isn't a qualifier for i
+i isn't an upgradeFrom for i
+
+Upgradeability should be transitive.  If you can upgrade from u to v, let's write
+u #> v
+Then
+u #> v and v #> w
+implies that
+u #> w
+because you could first upgrade from u to v, then upgrade from v to w.
+
+If u excludes v, let's write
+u ~> v
+
+If u is restricted (i.e. it requires a qualifier purchase), let's write
+u!
+
+If u is a qualifier for w, let's write
+u *> w
+
+If u #> v, no user may own u and v at the same time, right?
+Also if u #> v, then either v is unrestricted or u *> v.
+
+Could anything the user selects or deselects on the purchaseableItemsTable affect what upgrades are available?
+In our case, Bal Week 2019:
+No.  The only upgrades available will be from dance pass to weekend pass, or from one kind of weekend pass to another.  Once a user has purchased a dance pass or weekend pass, no weekend passes will appear in the purchaseableItemsTable.  Purchasing a weekday workshop or contest entry will not exclude a weekend pass, nor can one upgrade from a weekday workshop or contest entry to a weekend pass, nor does the purchase of a weekday workshop or contest entry qualify one for any new items.
+Furthermore, upgrades are only available from items you have already completely purchased, not just selected for purchase.  So even if the user has only purchased some weekday workshops, and logs back in to purchase a dance pance (selecting the dance pass in the purchaseableItemsTable), the full passes should not become visible in the upgrades table.
+
+More general
+(1) Item i is selected on the purchaseableItemsTable.  Could the selection of i...
+	(a) exclude any item that was previously an upgradeTo?
+	(b) trigger an upgradeto?
+		no, because 
+	(c) qualify the user for a new item to upgrade to?
+
+(2) Item i is deselected on the purchaseableItemsTable.  Could the deselection of i...
+	(a) remove an exclusion that opens up a new upgrade?
+	(b) remove an upgradeTo?
+	(c) disqualify the user for an item she previous qualified for?
+
+Another scenario.  You have purchased an item, say "purebal contest entry".  The purebal occurs on a weekday, not at the weekend dances.  You can upgrade your "purebal contest entry" to a "weekend contest entry", but not until you have purchased a full weekend pass.  Do we need to be concerned about this kind of scenario, were an ineligible item is on the list of possible upgrades?
+
+Another scenario.
+Jane purchases a dance pass.  She then realizes she'd like to compete in the weekend contest, but she is not eligible to purchase a contest entry until she has purchased a full weekend pass.  So she logs in and sees that she can upgrade her dance pass to a full weekend pass, which should enable her to buy a contest entry.  In this case, the purchaseableItemsTable should be responsive to selection made on the upgradesTable, namely "contest entry" should become enabled when Jane selects the upgrade from a dance pass to a full weekend pass.  Furthermore, if Jane deselects the upgrade from dance pass to full weekend pass, then the "contest entry" should be automatically DESELECTED and disabled.
+
+
+The upgrades table behaves weirdly (by design):
+When the page is first loaded and nothing has been selected yet, all of the upgradeTos for the purchasedItems (except those that are excluded by other purchasedItems) are displayed, enabled and deselected, on the UpgradesTable.  After 
+
+With respect to the UpgradesTable, not all priorItems are made equal.  Upgrades available from purchasedItems should be displayed on the UpgradesTable, but an upgrade available from a selectedUpgradeTo should not appear on the UpgradesTable, because the user has only signaled his intent to purchase it.  As a matter of fact, any selected upgrade u should disable all OTHER upgrades whose upgradeToItemId matches u.upgradeToItemId.  More generally, selecting an upgrade u should disable all upgrades whose upgradeToItemIds are excluded by u.upgradeToItemId.
+
+This is analogous to the observation that if an item p has been purchased, no upgrade u whose upgradeToitemId matches p should be enabled (or even displayed in the first place!).  More generally, no upgrade whose upgradeToItemId is excluded by p should be enabled (or even displayed!) on the UpgradesTable.
+
+Here's where it gets weird.  Suppose a user has purchased item a.  An upgrade u, representing a #> b, is displayed on the UpgradesTable.  We also have b #> c, but this upgrade is not available yet because b is not a priorItem.  What happens when we select upgrade u?
+
+One possible behavior is that a new upgrade v representing b #> c appears on the table.  Then to upgrade to c, the user could select v.  Let's call this the Chaining Behavior.
+
+The Chaining Behavior is unnecessarily complicated.  Because upgradeability is transitive, if we have a #> b and b #> c, then we should also have a #> c.  Therefore as soon as user has purchased a, an upgrade w representing a #> c should appear on the UpgradesTable.
+
+Why does this matter for Bal Week 2019?
+
+Lets consider three items:
+DP (Dance Pass)
+FPIF (Full Pass Intermediate Follow)
+FPIL (Full Pass Intermediate Lead)
+
+We have the upgrades
+a : FPIF #> FPIL
+b : FPIL #> FPIF
+c : DP #> FPIF
+
+But since DP #> FPIF and FPIF #> FPIL, we should also have the relation
+d : DP #> FPIL
+by transitivty.
+
+Now Bob has purchased a DP.  Upgrades c and d appear on the UpgradesTable.  If Bob selects c, he has indicated his intent to give up his DP in favor of a FPIF.  Thus a DP is no longer a piorItem; it is not available for him to use to upgrade to something else.  When the view is updated, upgrade d should be disabled.
+
+What about upgrade a? Now that Bob has indicated his intent to upgrade to an FPIF, FPIF is a priorItem.  If we implemented the Chaining Behavior, then a would appear on the UpgradesTable when the view is updated.  But this would be silly; Bob just had the option of upgrading directly from a DP to a FPIL, and he chose to upgrade to a FPIF instead.  Why would he now choose to exchange his FPIF for FPIL, in the same session?  If Bob really wants to upgrade to FPIL, he can simply deselect upgrade c, re-enabling d, which Bob then selects.
+
+So we choose not to implement the Chaining Behavior.
+
+Notice that Bob's selection of upgrade c has two effects on priorItems: it both removes DP from priorItems and adds FPIF to priorItems.  These changes both impact the view.  
+Removal of DP:
+if upgrade u : DP #> x appears on UpgradesTable, it should be disabled.
+if DP ~> y, then y may no longer be excluded after the removal of DP from prioItems, potentially affecting both the PurchaseableItemsTable and the UpgradesTable
+if DP *> z, then Bob may no longer be qualified to purchase z after removal of DP from priorItems, potentially affecting both PurchaseableItemsTable and UpgradesTable
+(this brings up a dizzying question:  what if Bob has already purchased z, and he is no longer qualified to own a z after giving up his DP and gaining a FPIF?  probably, the answer is that we should have never given Bob the opportunity to make this upgrade in the first place.  upgrade c should never have been displayed on the UpgradesTable)
+
+Addition of FPIF:
+if FPIF ~> y, then is added to excludedItems, potentially affecting both PurchaseableItems and UpgradesTable
+if FPIF *> z, then Bob may be newly eligible to purchase z, potentially affecting the PurchaseableItems table and the UpgradesTable
+
+Note that it's not possible for an upgrade u : FPIF #> x to already be present on the UpgradesTable when upgrade c is selected, as this would be an expression of the Chaining Behavior that we are avoiding.
+
+
+One principle to remember:  The items displayed on the various tables (Upgrades, Exchange, PurchaseableItems) should not come and go during a session.  They simply are selected and deselected, enabled and disabled.
+
+Principles for data storage in react
+Normalization - no redundant data in state
+Work with ids of items for filtering.  For displaying final results, lookup in items dictionary (object).
+Call the dictionary idItem?  similarly idUpgrade?  maybe just item singular and upgrade singular?
+
+It should not be possible for all of an item's prices to sell out before the item itself sells out.  Setting up a system where this could happen is an error on the part of the administrator.

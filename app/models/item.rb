@@ -57,4 +57,8 @@ class Item < ApplicationRecord
   def quantity_remaining
     self.supply - self.quantity_sold
   end
+
+  def sold_out
+    self.quantity_remaining == 0
+  end
 end
