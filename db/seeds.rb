@@ -1,51 +1,67 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+# # This file should contain all the record creation needed to seed the database with its default values.
+# # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
+# #
+# # Examples:
+# #
+# #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
+# #   Character.create(name: 'Luke', movie: movies.first)
 
-users = User.create([
-	{
-		first_name: 'Jane',
-		last_name: 'Doe',
-      email: 'jane.doe@example.com',
-      password: 'password',
-		city: 'New York City',
-		country: 'USA',
-	},
-	{
-		first_name: 'Jack',
-		last_name: 'Black',
-      email: 'jack.black@example.com',
-      password: 'password',
-		city: 'London',
-		country: 'UK',
-	},
-	{
-		first_name: 'Ned',
-		last_name: 'Stark',
-      email: 'ned.stark@example.com',
-      password: 'password',
-		city: 'Winterfell',
-	},
-	{
-		first_name: 'Petyr',
-		last_name: 'Baelish',
-      email: 'petyr.baelish@example.com',
-      password: 'password',
-		city: 'King\'s Landing',
-	},
-	{
-		first_name: 'Tim',
-		last_name: 'Allen',
-      email: 'tim.allen@example.com',
-      password: 'password',
-		city: 'Los Angeles',
-		state: 'California',
-	}
-])
+user_hashes = [
+  {
+    first_name: 'Jane',
+    last_name: 'Doe',
+    email: 'jane.doe@example.com',
+    password: 'password',
+    password_confirmation: 'password',
+    city: 'New York City',
+    country: 'USA'
+  },
+  {
+    first_name: 'Jack',
+    last_name: 'Black',
+    email: 'jack.black@example.com',
+    password: 'password',
+    password_confirmation: 'password',
+    city: 'London',
+    country: 'UK'
+  },
+  {
+    first_name: 'Ned',
+    last_name: 'Stark',
+    email: 'ned.stark@example.com',
+    password: 'password',
+    password_confirmation: 'password',
+    city: 'Winterfell'
+  },
+  {
+    first_name: 'Petyr',
+    last_name: 'Baelish',
+    email: 'petyr.baelish@example.com',
+    password: 'password',
+    password_confirmation: 'password',
+    city: 'King\'s Landing'
+  },
+  {
+    first_name: 'Tim',
+    last_name: 'Allen',
+    email: 'tim.allen@example.com',
+    password: 'password',
+    password_confirmation: 'password',
+    city: 'Los Angeles',
+    state: 'California'
+  }
+]
+
+users = []
+i = 0
+
+user_hashes.each do |hash|
+  user = User.new(hash)
+  user.skip_confirmation!
+  user.save!
+  users[i] = user
+  i += 1
+end
 
 jane = users[0]
 jack = users[1]
