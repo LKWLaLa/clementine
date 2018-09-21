@@ -65,7 +65,7 @@ full_pass = item_types[0]
 weekday_workshop = item_types[1]
 dance_pass = item_types[2]
 contest_entry = item_types[3]
-unique_item = item_types[4]
+unique_item_type = item_types[4]
 
 items = Item.create(
 [
@@ -155,7 +155,7 @@ items = Item.create(
  },
  {
    name: "Special Snowflake",
-   item_type: unique_item,
+   item_type: unique_item_type,
    description: "A special item that there is only one of!",
    supply: 1
  }
@@ -233,8 +233,25 @@ prices = Price.create([
    priority: 1,
    amount: 15,
    supply: 60
+ },
+ {
+  item_type: unique_item_type,
+  price_type: "Default",
+  priority: 1,
+  amount: 100,
+  supply: 10
  }
 ])
+
+tier_1 = prices[0]
+tier_2 = prices[1]
+tier_3 = prices[2]
+full_pass_comp = prices[3]
+full_pass_volunteer = prices[4]
+dance_pass_default_price = prices[5]
+weekday_workshop_default_price = prices[6]
+contest_entry_default_price = prices[7]
+unique_item_default_price = prices[8]
 
 payments = Payment.create([
  {
@@ -272,21 +289,21 @@ sales = Sale.create([
  	# sold Jane Doe a Full Pass Masters Follow at Tier 1
    user: jane,
    item: full_pass_masters_follow,
-   price: prices[0],
+   price: tier_1,
    payment: janePaidForFullPassAndWorkshop
  },
  {
  	# sold Jane Doe a Thursday Workshop Follow
    user: jane,
    item: thursday_workshop_follow,
-   price: prices[6],
+   price: weekday_workshop_default_price,
    payment: janePaidForFullPassAndWorkshop
  },
  {
   # sold Jane Doe a Special Snowflake
    user: jane,
    item: special_snowflake_item,
-   price: prices[6],
+   price: unique_item_default_price,
    payment: janePaidForFullPassAndWorkshop
  },
  {
