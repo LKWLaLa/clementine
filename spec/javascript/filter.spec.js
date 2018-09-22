@@ -1,6 +1,5 @@
 import Filter from '../../app/javascript/helpers/Filter.js'
 
-
 describe('Filter', () => {
 	let itemIds = new Set()
 	let exclusions = []
