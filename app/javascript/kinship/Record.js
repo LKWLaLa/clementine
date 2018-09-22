@@ -1,9 +1,8 @@
-let Arbor = require('./RecordCollection.js')
+let RecordCollection = require('./RecordCollection.js')
 
 // https://medium.com/front-end-hacking/creating-an-orm-with-javascript-b28f37ed528
 
-db = {}
-let RecordCollection = Arbor.RecordCollection
+let db = {}
 
 class Record {
 	constructor(obj) {
@@ -39,7 +38,7 @@ class Record {
 					configuration[r.aliasPlural] = {
 						get() {
 							let array = r.relatedModel.all().filter((record) => 
-								record[r.foreignKey].id == obj.id
+								record[r.foreignKey] == obj.id
 							)
 							return new RecordCollection(array)
 						}
@@ -52,7 +51,9 @@ class Record {
 			this.constructor.belongsToRelationships.forEach((r) => {
 				configuration[r.aliasSingular] = {
 					get() {
-						return this[r.foreignKey]
+						let storedValue = db[modelName]['records'][obj.id][r.aliasSingular]
+						if (storedValue) {return storedValue}
+						else return this[r.foreignKey]
 					}
 				}
 			})
@@ -109,11 +110,15 @@ class Record {
 		if (!this.belongsToRelationships) {this.belongsToRelationships = []}
 		this.belongsToRelationships.push(options)
 
-	}	
+	}
+
+	static byId(id) {
+		return db[this.name]['records'][obj.id]
+	}
 }
 
-module.exports.RecordCollection = Arbor.RecordCollection
 module.exports.Record = Record
+module.exports.db = db
 
 // class ItemType extends Record {}
 // class Item extends Record {}

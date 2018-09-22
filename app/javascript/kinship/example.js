@@ -1,6 +1,6 @@
-let Arbor = require('./Record.js')
-let Record = Arbor.Record
-let RecordCollection = Arbor.RecordCollection
+let Kinship = require('./Kinship.js')
+let Record = Kinship.Record
+let RecordCollection = Kinship.RecordCollection
 
 class ItemType extends Record {}
 class Item extends Record {}
@@ -22,6 +22,13 @@ ItemType.hasMany({
 Item.belongsTo({
 	relatedModel: ItemType,
 	foreignKey: 'itemType',
+	aliasSingular: 'itemType',
+	aliasPlural: 'itemTypes'
+})
+// an alias, just for fun
+Item.belongsTo({
+	relatedModel: ItemType,
+	foreignKey: 'itemType',
 	aliasSingular: 'category',
 	aliasPlural: 'categories'
 })
@@ -30,7 +37,7 @@ Item.hasMany({
 	foreignKey: null,
 	aliasSingular: 'price',
 	aliasPlural: 'prices',
-	through: 'category' 
+	through: 'itemType' 
 })
 
 fullPass = new ItemType({
@@ -84,12 +91,12 @@ tueWorkshopFollow = new Item({
 	itemType: weekdayWorkshop
 })
 
-console.log(fpil.name)
 console.log(fpif.name)
 
 console.log(ItemType.all())
 console.log(fullPass.items)
 console.log(weekdayWorkshop.items)
+console.log(fpif.itemType.name)
 console.log(fpif.category.name)
 console.log(fpif.prices.map(p => p.name))
 

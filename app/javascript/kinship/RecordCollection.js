@@ -1,8 +1,12 @@
-RecordCollection = class RecordCollection {
+class RecordCollection {
 	constructor(modelInstances) {
 		// works if modelInstances is passed as a set or an array
 		// assumes all modelInstances have the same class
 		this.modelInstances = new Set(modelInstances)
+	}
+
+	size() {
+		return this.modelInstances.size
 	}
 
 	all(relationshipAlias) {
@@ -29,4 +33,4 @@ RecordCollection = class RecordCollection {
 	}
 }
 
-module.exports.RecordCollection = RecordCollection
+module.exports = RecordCollection
