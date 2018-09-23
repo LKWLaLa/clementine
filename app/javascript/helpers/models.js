@@ -2,6 +2,7 @@ let Kinship = require('../kinship/Kinship.js')
 let Record = Kinship.Record
 let RecordCollection = Kinship.RecordCollection
 
+class User extends Record {}
 class ItemType extends Record {}
 class Item extends Record {}
 class Price extends Record {}
@@ -9,6 +10,42 @@ class Sale extends Record {}
 class Exclusion extends Record {}
 class Upgrade extends Record {}
 class Qualification extends Record {}
+
+User.hasMany({
+	name: 'sales',
+	relatedModel: Sale,
+	foreignKey: 'user'
+})
+User.hasMany({
+	name: 'purchasedItems',
+	relatedModel: Item,
+	through: Sales,
+	source: 'item'
+})
+User.hasMany({
+	name: 'excludedItems',
+	relatedModel: Item,
+	through: 'purchasedItems',
+	source: 'excludedItems'
+})
+User.hasMany({
+	name: 'qualifiedItems',
+	relatedModel: Item,
+	through: 'purchasedItems',
+	source: 'qualifiedItems'
+})
+User.hasMany({
+	name: 'upgradeToItems',
+	relatedModel: Item,
+	through: 'purchasedItems',
+	source: 'upgradeToItems'
+})
+User.hasMany({
+	name: 'upgradeFromTos'
+	relatedModel: Upgrade
+	through: 'purchasedItems'
+	source: 'upgradeFromTos'
+})
 
 ItemType.hasMany({
 	relatedModel: Item,
@@ -172,6 +209,7 @@ Qualification.belongsTo({
 	name: 'qualifiedItem'
 })
 
+module.exports.User = User
 module.exports.Item = Item
 module.exports.ItemType = ItemType
 module.exports.Price = Price
