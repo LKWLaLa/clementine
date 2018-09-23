@@ -47,7 +47,7 @@ class Record {
 		if (this.constructor.hasManyRelationships) {
 			this.constructor.hasManyRelationships.forEach((r) => {
 				if (r.through) {
-					configuration[r.aliasPlural] = {
+					configuration[r.name] = {
 						get() {
 							debugger;
 							let proximalRecords = this[r.through]
@@ -59,7 +59,7 @@ class Record {
 						}
 					}
 				} else {
-					configuration[r.aliasPlural] = {
+					configuration[r.name] = {
 						get() {
 							let out =  r.relatedModel.all().filter((record) => {
 								// console.log(record[r.foreignKey]) 
@@ -75,9 +75,9 @@ class Record {
 
 		if (this.constructor.belongsToRelationships) {
 			this.constructor.belongsToRelationships.forEach((r) => {
-				configuration[r.aliasSingular] = {
+				configuration[r.name] = {
 					get() {
-						let storedValue = db[modelName]['records'][obj.id][r.aliasSingular]
+						let storedValue = db[modelName]['records'][obj.id][r.name]
 						if (storedValue) {return storedValue}
 						else return this[r.foreignKey]
 					}
@@ -96,29 +96,26 @@ class Record {
 	
 	static hasMany(options) {
 		// expected keys in options
-		// relatedModel, foreignKey, aliasSingular, aliasPlural
+		// relatedModel, foreignKey, name, name
 		
 		// for example, an ItemType hasMany({
 		//	relatedModel: Item,
 		//	foreignKey: 'itemType',
-		//  aliasSingular: 'item',
-		//	aliasPlural: 'items',
+		//	name: 'items',
 		//	through: null
 		// })
 
 		// an ItemType hasMany({
 		// 	relatedModel: Price,
 		// 	foreignKey: 'itemType',
-		// 	aliasSingular: 'price',
-		// 	aliasPlural: 'items',
+		// 	name: 'items',
 		// 	through: null
 		// })
 
 		// an item hasMany({
 		//	relatedModel: Price,
 		//	foreignKey: null,
-		//  aliasSingular: 'price',
-		//	aliasPlural: 'prices',
+		//	name: 'prices',
 		//	through: itemType
 		// })
 		if (!this.hasManyRelationships) {this.hasManyRelationships = []}
@@ -129,8 +126,7 @@ class Record {
 		// an item belongsTo({
 		// 	relatedModel: ItemType,
 		// 	foreignKey: 'itemType',
-		// 	aliasSingular: 'itemType',
-		// 	aliasPlural: 'itemTypes',
+		// 	name: 'itemType',
 		// 	through: null
 		// })
 		if (!this.belongsToRelationships) {this.belongsToRelationships = []}

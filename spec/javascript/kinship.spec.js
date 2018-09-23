@@ -34,12 +34,12 @@ describe('RecordCollection', () => {
 			Appointment.belongsTo({
 				relatedModel: Patient,
 				foreignKey: 'patient',
-				aliasSingular: 'patient'
+				name: 'patient'
 			})
 			Patient.hasMany({
 				relatedModel: Appointment,
 				foreignKey: 'patient',
-				aliasPlural: 'appointments'
+				name: 'appointments'
 			})
 
 			rc1 = new RecordCollection([])
@@ -105,31 +105,31 @@ describe('RecordCollection', () => {
 			Appointment.belongsTo({
 				relatedModel: Patient,
 				foreignKey: 'patient',
-				aliasSingular: 'patient'
+				name: 'patient'
 			})
 			Appointment.belongsTo({
 				relatedModel: Doctor,
 				foreignKey: 'doctor',
-				aliasSingular: 'doctor'
+				name: 'doctor'
 			})
 			Patient.hasMany({
 				relatedModel: Appointment,
 				foreignKey: 'patient',
-				aliasPlural: 'appointments'
+				name: 'appointments'
 			})
 			Doctor.hasMany({
 				relatedModel: Appointment,
 				foreignKey: 'doctor',
-				aliasPlural: 'appointments'
+				name: 'appointments'
 			})
 			Patient.hasMany({
 				relatedModel: Doctor,
-				aliasPlural: 'doctors',
+				name: 'doctors',
 				through: 'appointments'
 			})
 			Doctor.hasMany({
 				relatedModel: Patient,
-				aliasPlural: 'patients',
+				name: 'patients',
 				through: 'appointments'
 			})
 		})
@@ -220,32 +220,32 @@ describe('Record',()=>{
 			Appointment.belongsTo({
 				relatedModel: Patient,
 				foreignKey: 'patient',
-				aliasSingular: 'patient'
+				name: 'patient'
 			})
 			Appointment.belongsTo({
 				relatedModel: Doctor,
 				foreignKey: 'doctor',
-				aliasSingular: 'doctor'
+				name: 'doctor'
 			})
 			Patient.hasMany({
 				relatedModel: Appointment,
 				foreignKey: 'patient',
-				aliasPlural: 'appointments'
+				name: 'appointments'
 			})
 			Doctor.hasMany({
 				relatedModel: Appointment,
 				foreignKey: 'doctor',
-				aliasPlural: 'appointments'
+				name: 'appointments'
 			})
 			Patient.hasMany({
 				relatedModel: Doctor,
-				aliasPlural: 'doctors',
+				name: 'doctors',
 				through: 'appointments',
 				source: 'doctor'
 			})
 			Doctor.hasMany({
 				relatedModel: Patient,
-				aliasPlural: 'patients',
+				name: 'patients',
 				through: 'appointments',
 				source: 'patient'
 			})
