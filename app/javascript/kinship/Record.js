@@ -48,7 +48,6 @@ class Record {
 				if (r.through) {
 					configuration[r.name] = {
 						get() {
-							debugger;
 							let proximalRecords = this[r.through]
 							if (proximalRecords instanceof RecordCollection) {
 								return proximalRecords.allRelated(r.source)
@@ -60,7 +59,7 @@ class Record {
 				} else {
 					configuration[r.name] = {
 						get() {
-							let out =  r.relatedModel.all().filter((record) => {
+							let out = r.relatedModel.all().filter((record) => {
 								return record[r.foreignKey].id == obj.id
 							})
 							return out
@@ -72,17 +71,26 @@ class Record {
 
 		if (this.constructor.belongsToRelationships) {
 			this.constructor.belongsToRelationships.forEach((r) => {
-				configuration[r.name] = {
-					get() {
-						return db[modelName]['records'][obj.id][r.foreignKey]
+				if (r.through) {
+					configuration[r.name] = {
+						get() {
+							let proximalRecord = this[r.through]
+							return proximalRecord[r.source]
+						}
+					}
+				} else {
+					configuration[r.name] = {
+						get() {
+							return db[modelName]['records'][obj.id][r.foreignKey]
+						}
 					}
 				}
+				
 			})
 		}
 		
 		// define getters
 		Object.defineProperties(this,configuration)
-
 	}
 
 	static all() {
