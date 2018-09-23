@@ -19,7 +19,7 @@ User.hasMany({
 User.hasMany({
 	name: 'purchasedItems',
 	relatedModel: Item,
-	through: Sales,
+	through: 'sales',
 	source: 'item'
 })
 User.hasMany({
@@ -41,9 +41,9 @@ User.hasMany({
 	source: 'upgradeToItems'
 })
 User.hasMany({
-	name: 'upgradeFromTos'
-	relatedModel: Upgrade
-	through: 'purchasedItems'
+	name: 'upgradeFromTos',
+	relatedModel: Upgrade,
+	through: 'purchasedItems',
 	source: 'upgradeFromTos'
 })
 
