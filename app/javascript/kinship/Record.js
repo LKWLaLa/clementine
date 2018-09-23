@@ -61,10 +61,8 @@ class Record {
 					configuration[r.name] = {
 						get() {
 							let out =  r.relatedModel.all().filter((record) => {
-								// console.log(record[r.foreignKey]) 
 								return record[r.foreignKey].id == obj.id
 							})
-							// console.log(out)
 							return out
 						}
 					}
