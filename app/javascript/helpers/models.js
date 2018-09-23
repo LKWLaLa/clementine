@@ -13,116 +13,163 @@ class Qualification extends Record {}
 ItemType.hasMany({
 	relatedModel: Item,
 	foreignKey: 'itemType',
-	aliasSingular: 'item',
-	aliasPlural: 'items',
-	through: null
+	name: 'items'
 })
 ItemType.hasMany({
 	relatedModel: Price,
 	foreignKey: 'itemType',
-	aliasSingular: 'price',
-	aliasPlural: 'prices',
-	through: null
+	name: 'prices'
 })
 
 Item.belongsTo({
 	relatedModel: ItemType,
 	foreignKey: 'itemType',
-	aliasSingular: 'itemType',
-	aliasPlural: 'itemTypes'
+	name: 'itemType'
 })
 Item.hasMany({
 	relatedModel: Price,
-	foreignKey: null,
-	aliasSingular: 'price',
-	aliasPlural: 'prices',
-	through: 'itemType' 
+	name: 'prices',
+	through: 'itemType',
+	source: 'prices'
 })
+
+// Exclusion Aliasing
 Item.hasMany({
 	relatedModel: Exclusion,
 	foreignKey: 'excluderItem',
-	aliasSingular: 'excluderExcluded',
-	aliasPlural: 'excluderExcludeds'
+	name: 'excluderExcludeds'
 })
 Item.hasMany({
 	relatedModel: Item,
-	foreignKey: null,
-	aliasSingular: 'excludedItem',
-	aliasPlural: 'excludedItems',
-	through: 'excluderExcludeds'
+	name: 'excludedItems',
+	through: 'excluderExcludeds',
+	source: 'excludedItem'
+})
+
+Item.hasMany({
+	relatedModel: Exclusion,
+	foreignKey: 'excludedItem',
+	name: 'excludedExcluders'
+})
+Item.hasMany({
+	relatedModel: Item,
+	name: 'excluderItems',
+	through: 'excludedExcluders',
+	source: 'excluderItem'
+})
+
+// Upgrade Aliasing
+Item.hasMany({
+	relatedModel: Upgrade,
+	name: 'upgradeFromTos',
+	foreignKey: 'upgradeFromItem',
+})
+Item.hasMany({
+	relatedModel: Item,
+	name: 'upgradeToItems',
+	through: 'upgradeFromTos',
+	source: 'upgradeToItem'
+})
+
+Item.hasMany({
+	relatedModel: Upgrade,
+	name: 'upgradeToFroms',
+	foreignKey: 'upgradeToItem',
+	
+})
+Item.hasMany({
+	relatedModel: Item,
+	name: 'upgradeFromItems',
+	through: 'upgradeToFroms',
+	source: 'upgradeFromItem'
+})
+
+// Qualifier Aliasing
+Item.hasMany({
+	relatedModel: Qualification,
+	name: 'qualifierQualifieds',
+	foreignKey: 'qualifierItem',
+	
+})
+Item.hasMany({
+	relatedModel: Item,
+	name: 'qualifiedItems',
+	through: 'qualifierQualifieds',
+	source: 'qualifiedItem'
+})
+
+Item.hasMany({
+	relatedModel: Qualification,
+	name: 'qualifiedQualifiers',
+	foreignKey: 'qualifiedItem',
+	
+})
+Item.hasMany({
+	relatedModel: Item,
+	name: 'qualifierItem',
+	through: 'qualifiedQualifiers',
+	source: 'qualifierItem'
 })
 
 Price.belongsTo({
 	relatedModel: ItemType,
 	foreignKey: 'itemType',
-	aliasSingular: 'itemType',
-	aliasPlural: 'itemTypes'
+	name: 'itemType'
 })
 Price.hasMany({
 	relatedModel: Item,
-	foreignKey: null,
-	aliasSingular: 'item',
-	aliasPlural: 'items',
-	through: 'itemType'
+	name: 'items',
+	through: 'itemType',
+	source: 'items'
 })
 Price.hasMany({
 	relatedModel: Sale,
 	foreignKey: 'price',
-	aliasSingular: 'sale',
-	aliasPlural: 'sales',
-	through: null
+	name: 'sales'
 })
 
 Sale.belongsTo({
 	relatedModel: Price,
 	foreignKey: 'price',
-	aliasSingular: 'price',
-	aliasPlural: 'prices'
+	name: 'price'
 })
 Sale.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'item',
-	aliasSingular: 'item',
-	aliasPlural: 'items'
+	name: 'item'
 })
 
 Exclusion.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'excluderItem',
-	aliasSingular: 'excluderItem',
-	aliasPlural: 'excluderItems'
+	name: 'excluderItem'
 })
 Exclusion.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'excludedItem',
-	aliasSingular: 'excludedItem',
-	aliasPlural: 'excludedItems'
+	name: 'excludedItem'
 })
 
 Upgrade.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'upgradeToItem',
-	aliasSingular: 'upgradeToItem',
-	aliasPlural: 'upgradeToItems'
+	name: 'upgradeToItem'
 })
 Upgrade.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'upgradeFromItem',
-	aliasSingular: 'upgradeFromItem',
-	aliasPlural: 'upgradeFromItems'
+	name: 'upgradeFromItem'
 })
 
 Qualification.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'qualifierItem',
-	aliasSingular: 'qualifierItem',
-	aliasPlural: 'qualifierItems'
+	name: 'qualifierItem'
 })
 Qualification.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'qualifiedItem',
-	aliasSingular: 'qualifiedItem',
-	aliasPlural: 'qualifiedItems'
+	name: 'qualifiedItem'
 })
 
 module.exports.Item = Item
@@ -132,6 +179,8 @@ module.exports.Sale = Sale
 module.exports.Exclusion = Exclusion
 module.exports.Upgrade = Upgrade
 module.exports.Qualification = Qualification
+module.exports.resetDb = Kinship.resetDb
+module.exports.getDb = Kinship.getDb
 
 
 
