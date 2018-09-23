@@ -116,5 +116,10 @@ function resetDb() {
 	db = {}
 }
 
+function getDb() {
+	return db
+}
+
 module.exports.Record = Record
 module.exports.resetDb = resetDb
+module.exports.getDb = getDb
