@@ -76,9 +76,7 @@ class Record {
 			this.constructor.belongsToRelationships.forEach((r) => {
 				configuration[r.name] = {
 					get() {
-						let storedValue = db[modelName]['records'][obj.id][r.name]
-						if (storedValue) {return storedValue}
-						else return this[r.foreignKey]
+						return db[modelName]['records'][obj.id][r.foreignKey]
 					}
 				}
 			})
@@ -94,43 +92,13 @@ class Record {
 	}
 	
 	static hasMany(options) {
-		// expected keys in options
-		// relatedModel, foreignKey, name, name
-		
-		// for example, an ItemType hasMany({
-		//	relatedModel: Item,
-		//	foreignKey: 'itemType',
-		//	name: 'items',
-		//	through: null
-		// })
-
-		// an ItemType hasMany({
-		// 	relatedModel: Price,
-		// 	foreignKey: 'itemType',
-		// 	name: 'items',
-		// 	through: null
-		// })
-
-		// an item hasMany({
-		//	relatedModel: Price,
-		//	foreignKey: null,
-		//	name: 'prices',
-		//	through: itemType
-		// })
 		if (!this.hasManyRelationships) {this.hasManyRelationships = []}
 		this.hasManyRelationships.push(options)
 	}
 
 	static belongsTo(options) {
-		// an item belongsTo({
-		// 	relatedModel: ItemType,
-		// 	foreignKey: 'itemType',
-		// 	name: 'itemType',
-		// 	through: null
-		// })
 		if (!this.belongsToRelationships) {this.belongsToRelationships = []}
 		this.belongsToRelationships.push(options)
-
 	}
 
 	static byId(id) {
