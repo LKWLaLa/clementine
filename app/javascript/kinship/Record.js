@@ -2,7 +2,6 @@ let RecordCollection = require('./RecordCollection.js')
 
 // https://medium.com/front-end-hacking/creating-an-orm-with-javascript-b28f37ed528
 
-module.exports.db = {}
 let db = module.exports.db
 
 class Record {
@@ -136,10 +135,6 @@ class Record {
 
 	static byId(id) {
 		return db[this.name]['instances'][id]
-	}
-
-	static db() {
-		return db
 	}
 }
 
