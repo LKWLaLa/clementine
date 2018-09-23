@@ -179,8 +179,6 @@ module.exports.Sale = Sale
 module.exports.Exclusion = Exclusion
 module.exports.Upgrade = Upgrade
 module.exports.Qualification = Qualification
-module.exports.resetDb = Kinship.resetDb
-module.exports.getDb = Kinship.getDb
 
 
 
