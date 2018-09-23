@@ -2,7 +2,8 @@ let RecordCollection = require('./RecordCollection.js')
 
 // https://medium.com/front-end-hacking/creating-an-orm-with-javascript-b28f37ed528
 
-let db = {}
+module.exports.db = {}
+let db = module.exports.db
 
 class Record {
 	constructor(obj) {
@@ -13,6 +14,23 @@ class Record {
 		// i.e. nested object within db which will contain all
 		// of the instances of a model
 		if (!db[modelName]) db[modelName] = {}
+
+		// The db is read-only; once an instance of a model is created,
+		// it cannot be modified or overwritten.
+		// Since ids are unique
+		// on each model, an attempt to create a new instance with
+		// the same id returns the existing instance
+		// Only one instance of a model with a given id should ever exist.
+		if (db[modelName]['instances']) {				
+			let existingInstance = db[modelName]['instances'][obj.id]
+			if (existingInstance) {return existingInstance}
+		} else {
+			db[modelName]['instances'] = {}
+		}
+		db[modelName]['instances'][obj.id] = this
+
+		// Create the record corresponding to the instance
+		// The record is where the data is actually stored.
 		if (!db[modelName]['records']) db[modelName]['records'] = {}
 		db[modelName]['records'][obj.id] = obj;
 		
@@ -31,16 +49,24 @@ class Record {
 				if (r.through) {
 					configuration[r.aliasPlural] = {
 						get() {
-							return this[r.through][r.aliasPlural]
+							debugger;
+							let proximalRecords = this[r.through]
+							if (proximalRecords instanceof RecordCollection) {
+								return proximalRecords.allRelated(r.source)
+							}
+							// proximalRecords is a single record
+							return proximalRecords[r.source]
 						}
 					}
 				} else {
 					configuration[r.aliasPlural] = {
 						get() {
-							let array = r.relatedModel.all().filter((record) => 
-								record[r.foreignKey] == obj.id
-							)
-							return new RecordCollection(array)
+							let out =  r.relatedModel.all().filter((record) => {
+								// console.log(record[r.foreignKey]) 
+								return record[r.foreignKey].id == obj.id
+							})
+							// console.log(out)
+							return out
 						}
 					}
 				}
@@ -65,7 +91,7 @@ class Record {
 	}
 
 	static all() {
-		return Object.values(db[this.name]['records'])
+		return new RecordCollection(Object.values(db[this.name]['instances']))
 	}
 	
 	static hasMany(options) {
@@ -113,103 +139,17 @@ class Record {
 	}
 
 	static byId(id) {
-		return db[this.name]['records'][obj.id]
+		return db[this.name]['instances'][id]
+	}
+
+	static db() {
+		return db
 	}
 }
 
+function resetDb() {
+	db = {}
+}
+
 module.exports.Record = Record
-module.exports.db = db
-
-// class ItemType extends Record {}
-// class Item extends Record {}
-// class Price extends Record {}
-// ItemType.hasMany({
-// 	relatedModel: Item,
-// 	foreignKey: 'itemType',
-// 	aliasSingular: 'item',
-// 	aliasPlural: 'items',
-// 	through: null
-// })
-// ItemType.hasMany({
-// 	relatedModel: Price,
-// 	foreignKey: 'itemType',
-// 	aliasSingular: 'price',
-// 	aliasPlural: 'prices',
-// 	through: null
-// })
-// Item.belongsTo({
-// 	relatedModel: ItemType,
-// 	foreignKey: 'itemType',
-// 	aliasSingular: 'category',
-// 	aliasPlural: 'categories'
-// })
-// Item.hasMany({
-// 	relatedModel: Price,
-// 	foreignKey: null,
-// 	aliasSingular: 'price',
-// 	aliasPlural: 'prices',
-// 	through: 'category' 
-// })
-
-// fullPass = new ItemType({
-// 	id: 1,
-// 	name: "Full Weekend Pass"
-// })
-
-// weekdayWorkshop = new ItemType({
-// 	id: 2,
-// 	name: "weekday Workshop"
-// })
-
-// dpType = new ItemType({
-// 	id: 3,
-// 	name: "dance pass"
-// })
-
-// fpif = new Item({
-// 	id: 1,
-// 	name: "Full Pass Intermediate Follow",
-// 	itemType: fullPass
-// })
-
-// fpil = new Item({
-// 	id: 2,
-// 	name: "Full Pass Intermediate Lead",
-// 	itemType: fullPass
-// })
-
-// tier1 = new Price({
-// 	id: 1,
-// 	name: "Tier 1",
-// 	itemType: fullPass
-// })
-
-// tier2 = new Price({
-// 	id: 2,
-// 	name: "Tier 2",
-// 	itemType: fullPass
-// })
-
-// workshopPrice = new Price({
-// 	id: 3,
-// 	name: "Default Workshop Price",
-// 	itemType: weekdayWorkshop
-// })
-
-// tueWorkshopFollow = new Item({
-// 	id: 3,
-// 	name: "Tuesday Workshop Follow",
-// 	itemType: weekdayWorkshop
-// })
-
-// console.log(fpil.name)
-// console.log(fpif.name)
-
-// console.log(ItemType.all())
-// console.log(fullPass.items)
-// console.log(weekdayWorkshop.items)
-// console.log(fpif.category.name)
-// console.log(fpif.prices.map(p => p.name))
-
-// items = new RecordCollection([fpif,tueWorkshopFollow])
-// console.log(items.all('prices'))
+module.exports.resetDb = resetDb

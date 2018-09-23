@@ -9,10 +9,16 @@ class RecordCollection {
 		return this.modelInstances.size
 	}
 
-	all(relationshipAlias) {
-		return [...this.modelInstances].reduce((a,mi) => {
-			return new Set([...a,...mi[relationshipAlias].modelInstances])
-		},new Set())
+	allRelated(relationshipAlias) {
+		let array = [...this.modelInstances].reduce((a,mi) => {
+			let records = mi[relationshipAlias]
+			if (records instanceof RecordCollection) {
+				return [...a,records.modelInstances]
+			} else {
+				return [...a,records]
+			}
+		},[])
+		return new RecordCollection(array)
 	}
 
 	map(f) {
@@ -20,7 +26,7 @@ class RecordCollection {
 	}
 
 	filter(f) {
-		return [...this.modelInstances].filter(f)
+		return new RecordCollection([...this.modelInstances].filter(f))
 	}
 
 	reduce(f) {
@@ -30,6 +36,21 @@ class RecordCollection {
 	ids() {
 		return new Set([...this.modelInstances]
 			.map(mi => mi.id))
+	}
+
+	has(instance) {
+		return this.modelInstances.has(instance)
+	}
+
+	isSubsetOf(other) {
+		this.modelInstances.forEach(i => {
+			if (!other.modelInstances.has(i)) {return false}
+		})
+		return true
+	}
+
+	equals(other) {
+		return this.isSubsetOf(other) && other.isSubsetOf(this)
 	}
 }
 

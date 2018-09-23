@@ -91,14 +91,16 @@ tueWorkshopFollow = new Item({
 	itemType: weekdayWorkshop
 })
 
-console.log(fpif.name)
+// console.log(fpif.name)
 
-console.log(ItemType.all())
-console.log(fullPass.items)
-console.log(weekdayWorkshop.items)
-console.log(fpif.itemType.name)
-console.log(fpif.category.name)
+// console.log(ItemType.all())
+// console.log(fullPass.items)
+// console.log(weekdayWorkshop.items)
+// console.log(fpif.itemType.name)
+// console.log(fpif.category.name)
 console.log(fpif.prices.map(p => p.name))
 
-items = new RecordCollection([fpif,tueWorkshopFollow])
-console.log(items.all('prices'))
+// items = new RecordCollection([fpif,tueWorkshopFollow])
+// console.log(items.all('prices'))
+
+console.log(Item.byId(1))
