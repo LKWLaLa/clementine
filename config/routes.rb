@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     resources :upgrades, only: [:index]
     resources :item_types, only: [:index]
     post '/sales', to: 'sales#create'
+    get '/sales', to: 'sales#index'
     post '/exchanges', to: 'sales#exchange'
     get '/current_user', to: 'users#user_info'
   end

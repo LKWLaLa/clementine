@@ -1,8 +1,8 @@
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :first_name, :last_name, :full_name,
-  :email, :purchased_items
+  :email#, :purchased_items
 
-  has_many :payments
+  # has_many :payments
 
   def purchased_items
     sales = object.sales

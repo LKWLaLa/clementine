@@ -5,7 +5,7 @@ let RecordCollection = Kinship.RecordCollection
 class User extends Record {}
 class ItemType extends Record {}
 class Item extends Record {}
-class Price extends Record {}
+// class Price extends Record {}
 class Sale extends Record {}
 class Exclusion extends Record {}
 class Upgrade extends Record {}
@@ -52,23 +52,23 @@ ItemType.hasMany({
 	foreignKey: 'itemType',
 	name: 'items'
 })
-ItemType.hasMany({
-	relatedModel: Price,
-	foreignKey: 'itemType',
-	name: 'prices'
-})
+// ItemType.hasMany({
+// 	relatedModel: Price,
+// 	foreignKey: 'itemType',
+// 	name: 'prices'
+// })
 
 Item.belongsTo({
 	relatedModel: ItemType,
 	foreignKey: 'itemType',
 	name: 'itemType'
 })
-Item.hasMany({
-	relatedModel: Price,
-	name: 'prices',
-	through: 'itemType',
-	source: 'prices'
-})
+// Item.hasMany({
+// 	relatedModel: Price,
+// 	name: 'prices',
+// 	through: 'itemType',
+// 	source: 'prices'
+// })
 
 // Exclusion Aliasing
 Item.hasMany({
@@ -148,32 +148,37 @@ Item.hasMany({
 	source: 'qualifierItem'
 })
 
-Price.belongsTo({
-	relatedModel: ItemType,
-	foreignKey: 'itemType',
-	name: 'itemType'
-})
-Price.hasMany({
-	relatedModel: Item,
-	name: 'items',
-	through: 'itemType',
-	source: 'items'
-})
-Price.hasMany({
-	relatedModel: Sale,
-	foreignKey: 'price',
-	name: 'sales'
-})
+// Price.belongsTo({
+// 	relatedModel: ItemType,
+// 	foreignKey: 'itemType',
+// 	name: 'itemType'
+// })
+// Price.hasMany({
+// 	relatedModel: Item,
+// 	name: 'items',
+// 	through: 'itemType',
+// 	source: 'items'
+// })
+// Price.hasMany({
+// 	relatedModel: Sale,
+// 	foreignKey: 'price',
+// 	name: 'sales'
+// })
 
-Sale.belongsTo({
-	relatedModel: Price,
-	foreignKey: 'price',
-	name: 'price'
-})
+// Sale.belongsTo({
+// 	relatedModel: Price,
+// 	foreignKey: 'price',
+// 	name: 'price'
+// })
 Sale.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'item',
 	name: 'item'
+})
+Sale.belongsTo({
+	name: 'user',
+	relatedModel: User,
+	foreignKey: 'user'
 })
 
 Exclusion.belongsTo({
@@ -209,15 +214,26 @@ Qualification.belongsTo({
 	name: 'qualifiedItem'
 })
 
+let loadSequence = [
+	User,
+	ItemType,
+	Item,
+	//Price,
+	Sale,
+	Exclusion,
+	Upgrade,
+	Qualification
+]
+
 module.exports.User = User
 module.exports.Item = Item
 module.exports.ItemType = ItemType
-module.exports.Price = Price
+// module.exports.Price = Price
 module.exports.Sale = Sale
 module.exports.Exclusion = Exclusion
 module.exports.Upgrade = Upgrade
 module.exports.Qualification = Qualification
-
+module.exports.loadSequence = loadSequence
 
 
 

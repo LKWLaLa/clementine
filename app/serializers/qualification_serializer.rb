@@ -1,6 +1,5 @@
 class QualificationSerializer < ActiveModel::Serializer
-  attributes :qualifier_item_id, :qualifier_item_name,
-  :qualified_item_id, :qualified_item_name
+  attributes :id, :qualifier_item_id, :qualified_item_id
 
   def qualified_item_name
     object.qualified_item.name

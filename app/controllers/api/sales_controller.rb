@@ -61,7 +61,12 @@ class Api::SalesController < ApplicationController
     end
   end
  
- private
+  def index
+    @sales = Sale.where(user_id: current_user.id).select {|sale| !sale.void}
+    render json: @sales, status: 200
+  end
+
+  private
 
     def sale_params
       params.permit(:source, :amount, :description, :purchases, :upgrades)
