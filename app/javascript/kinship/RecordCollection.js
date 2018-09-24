@@ -9,9 +9,9 @@ class RecordCollection {
 		return this.modelInstances.size
 	}
 
-	allRelated(relationshipAlias) {
+	allRelated(relationshipName) {
 		let array = [...this.modelInstances].reduce((a,mi) => {
-			let records = mi[relationshipAlias]
+			let records = mi[relationshipName]
 			if (records instanceof RecordCollection) {
 				return [...a,records.modelInstances]
 			} else {
@@ -51,6 +51,12 @@ class RecordCollection {
 
 	equals(other) {
 		return this.isSubsetOf(other) && other.isSubsetOf(this)
+	}
+
+	// An iterator over a RecordCollection is just an iterator 
+	// over its modelInstances
+	[Symbol.iterator]() {
+		return this.modelInstances[Symbol.iterator]()
 	}
 }
 

@@ -14,6 +14,12 @@ function setEquals(a,b) {
 	return subset(a,b) && subset(b,a)
 }
 
+describe('getDb', ()=>{
+	it('returns an empty object when nothing has been added', ()=>{
+		expect(Kinship.getDb()).toEqual({})
+	})
+})
+
 describe('RecordCollection', () => {
 	let Patient
 	let Doctor
@@ -132,22 +138,82 @@ describe('RecordCollection', () => {
 				name: 'patients',
 				through: 'appointments'
 			})
+
+			p1 = new Patient({id: 1})
+			p2 = new Patient({id: 2})
+			p3 = new Patient({id: 3})
+
+			d1 = new Doctor({id: 1})
+			d2 = new Doctor({id: 2})
+			d3 = new Doctor({id: 3})
+
+			a1 = new Appointment({
+				id: 1,
+				patient: p1,
+				doctor: d1
+			})
+
+			a2 = new Appointment({
+				id: 2,
+				patient: p1,
+				doctor: d2
+			})
+
+			a3 = new Appointment({
+				id: 3,
+				patient: p2,
+				doctor: d3
+			})
 		})
 
 		it('returns all the patients for a collection of appointments', ()=>{
-			// TODO
-			expect(true).toBe(true)
+			let ac1 = new RecordCollection([a1,a2])
+			let ac2 = new RecordCollection([a2,a3])
+			expect(ac1.allRelated('patient')
+				.equals(new RecordCollection([p1]))).toBe(true)
+			expect(ac2.allRelated('patient')
+				.equals(new RecordCollection([p1,p2]))).toBe(true)
 		})
 
 		it('returns all the appointments for a collection of patients', ()=>{
-			// TODO
-			expect(true).toBe(true)
+			let pc1 = new RecordCollection([p1])
+			let pc2 = new RecordCollection([p1,p2])
+			expect(pc1.allRelated('appointments')
+				.equals(new RecordCollection([a1,a2]))).toBe(true)
+			expect(pc2.allRelated('appointments')
+				.equals(new RecordCollection([a1,a2,a3]))).toBe(true)
 		})
 
 		it('returns all the doctors for a set of patients', ()=>{
-			// TODO
-			expect(true).toBe(true)
+			let pc1 = new RecordCollection([p1])
+			let pc2 = new RecordCollection([p1,p2])
+			expect(pc1.allRelated('doctors')
+				.equals(new RecordCollection([d1,d2]))).toBe(true)
+			expect(pc2.allRelated('doctors')
+				.equals(new RecordCollection([d1,d2,d3]))).toBe(true)
 		})
+	})
+
+	describe('iterability',() => {
+		beforeAll(()=>{
+			p1 = new Patient({id: 1})
+			p2 = new Patient({id: 2})
+			p3 = new Patient({id: 3})
+
+			rc1 = new RecordCollection([p1,p2,p3])
+		})
+		it('spread operator works correctly',()=>{
+			expect([...rc1]).toEqual(expect.arrayContaining([p1,p2,p3]))
+			expect([...rc1].length).toEqual(3)
+		})
+		it('for...of works correctly',() => {
+			let arr = []
+			for (let r of rc1) {
+				arr.push(r)
+			}
+			expect(arr).toEqual(expect.arrayContaining([p1,p2,p3]))
+			expect(arr.length).toEqual(3)
+		}) 
 	})
 })
 
@@ -169,7 +235,7 @@ describe('Record',()=>{
 
 	describe('methods',()=>{
 		beforeAll(()=>{
-			Kinship.db={}
+			Kinship.resetDb();
 			Patient = class Patient extends Record {}
 			p1 = new Patient({
 				id: 1,
@@ -203,7 +269,7 @@ describe('Record',()=>{
 		describe('all',() => {
 			it('returns all instances of the model',() => {
 				let allPatients = new RecordCollection([p1,p2])
-				expect(Patient.all().equals(allPatients)).toBe(true)
+				expect(Patient.all.equals(allPatients)).toBe(true)
 			}) 
 		})
 
@@ -445,6 +511,39 @@ describe('Record',()=>{
 					let p1Scripts = new RecordCollection([p1,p2,p3])
 					expect(p1.prescriptions.equals(p1Scripts)).toBe(true)
 				})
+			})
+		})
+
+		describe('Record.foreignKeys',()=>{
+			it('returns an empty set for a model with no foreignKeys',() => {
+				expect(setEquals(Patient.foreignKeys,new Set([]))).toBe(true)
+			})
+			it('stores all the foreign keys on the model',()=>{
+				expect(setEquals(Appointment.foreignKeys,
+					new Set(['patient','doctor']))).toBe(true)
+			})
+			it('returns the foreign keys even if the class has not been instantiated', ()=>{
+				class Office extends Record {}
+				Office.belongsTo({
+					name: 'doctor',
+					relatedModel: Doctor,
+					foreignKey: 'doctor'
+				})
+				expect(setEquals(Office.foreignKeys,new Set(['doctor']))).toBe(true)
+			})
+		})
+
+		describe('Record.foreignKeyIds',()=>{
+			it('returns the concatenation of each foreign key with the string \'Id\'',()=>{
+				expect(setEquals(Appointment.foreignKeyIds,
+					new Set(['patientId','doctorId']))).toBe(true)
+			}) 
+		})
+
+		describe('Record.relatedModel',()=>{
+			it('returns the relatedModel that this belongsTo via foreignKey',()=>{
+				expect(Appointment.relatedModel('patient')).toBe(Patient)
+				expect(Nurse.relatedModel('employer')).toBe(Doctor)
 			})
 		})
 	})

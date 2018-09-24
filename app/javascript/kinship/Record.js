@@ -2,7 +2,8 @@ let RecordCollection = require('./RecordCollection.js')
 
 // https://medium.com/front-end-hacking/creating-an-orm-with-javascript-b28f37ed528
 
-let db = module.exports.db
+
+let db = {}
 
 class Record {
 	constructor(obj) {
@@ -59,7 +60,7 @@ class Record {
 				} else {
 					configuration[r.name] = {
 						get() {
-							let out = r.relatedModel.all().filter((record) => {
+							let out = r.relatedModel.all.filter((record) => {
 								return record[r.foreignKey].id == obj.id
 							})
 							return out
@@ -84,8 +85,9 @@ class Record {
 							return db[modelName]['records'][obj.id][r.foreignKey]
 						}
 					}
+					// track foreignKeys
+					this.constructor.foreignKeys.add(r.foreignKey)
 				}
-				
 			})
 		}
 		
@@ -93,7 +95,7 @@ class Record {
 		Object.defineProperties(this,configuration)
 	}
 
-	static all() {
+	static get all() {
 		return new RecordCollection(Object.values(db[this.name]['instances']))
 	}
 	
@@ -103,12 +105,37 @@ class Record {
 	}
 
 	static belongsTo(options) {
+		if (!options.through) {this.foreignKeys.add(options.foreignKey)}
 		if (!this.belongsToRelationships) {this.belongsToRelationships = []}
 		this.belongsToRelationships.push(options)
 	}
 
 	static byId(id) {
 		return db[this.name]['instances'][id]
+	}
+
+	static get foreignKeys() {
+		if (!this._foreignKeys) {this._foreignKeys = new Set([])}
+		return this._foreignKeys
+	}
+
+	static set foreignKeys(val) {
+		this._foreignKeys = val
+	}
+
+	static get foreignKeyIds() {
+		return new Set([...this.foreignKeys]
+			.map(fk => fk + 'Id'))
+	}
+
+	static relatedModel(foreignKey) {
+		// relatedModel is the class of instanceOfThis.foreignKey
+		// returns relatedModel's constructor, assuming belongsTo has been called
+		if (this.belongsToRelationships) {
+			return this.belongsToRelationships
+				.find(r => r.foreignKey == foreignKey)
+				.relatedModel
+		}
 	}
 }
 
