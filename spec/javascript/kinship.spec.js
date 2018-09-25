@@ -1,18 +1,7 @@
+import expect from './customMatchers.js'
 let Kinship = require('../../app/javascript/kinship/Kinship.js')
 let RecordCollection = Kinship.RecordCollection
 let Record = Kinship.Record
-
-// helpers for equality of sets
-// returns true if a is contained in b
-function subset(a,b) {
-	a.forEach(i => {
-		if (!b.has(i)) return false
-	})
-	return true
-}
-function setEquals(a,b) {
-	return subset(a,b) && subset(b,a)
-}
 
 describe('getDb', ()=>{
 	it('returns an empty object when nothing has been added', ()=>{
@@ -53,14 +42,14 @@ describe('RecordCollection', () => {
 		})
 		describe('size',()=>{
 			it('returns 0',() =>{
-				expect(rc1.size()).toEqual(0)	
+				expect(rc1.size).toEqual(0)	
 			})	
 		})
 		describe('allRelated',()=>{
 			it('returns an empty collection',()=>{
 				let all = rc1.allRelated('appointments')
 				expect(all instanceof RecordCollection).toBe(true)
-				expect(all.size()).toEqual(0)
+				expect(all.size).toEqual(0)
 			})
 		})
 		describe('ids',() =>{
@@ -91,18 +80,24 @@ describe('RecordCollection', () => {
 		})
 		describe('size',()=>{
 			it('returns the number of records in the collection',()=>{
-				expect(rc1.size()).toBe(1)
-				expect(rc2.size()).toBe(2)
+				expect(rc1.size).toBe(1)
+				expect(rc2.size).toBe(2)
 			})
 		})
 		describe('ids',()=>{
 			it('returns the set of ids',()=>{
-				let expectedIds = new Set([1,2])
-				expect(setEquals(rc2.ids(),expectedIds)).toBe(true)
+				expect([...rc2.ids()]).includesExactly([1,2])
+			})
+		})
+		describe('equals',()=>{
+			it('returns true if other has the same elements as this',()=>{
+				expect(rc1.equals(rc1)).toBe(true)
+				expect(rc2.equals(rc1)).toBe(false)
+				expect(rc1.equals(rc2)).toBe(false)
 			})
 		})
 	})
-	describe('all',()=>{
+	describe('allRelated',()=>{
 		beforeAll(()=>{
 			Kinship.resetDb()
 			Patient = class Patient extends Record {}
@@ -131,12 +126,14 @@ describe('RecordCollection', () => {
 			Patient.hasMany({
 				relatedModel: Doctor,
 				name: 'doctors',
-				through: 'appointments'
+				through: 'appointments',
+				source: 'doctor'
 			})
 			Doctor.hasMany({
 				relatedModel: Patient,
 				name: 'patients',
-				through: 'appointments'
+				through: 'appointments',
+				source: 'patient'
 			})
 
 			p1 = new Patient({id: 1})
@@ -178,19 +175,21 @@ describe('RecordCollection', () => {
 		it('returns all the appointments for a collection of patients', ()=>{
 			let pc1 = new RecordCollection([p1])
 			let pc2 = new RecordCollection([p1,p2])
-			expect(pc1.allRelated('appointments')
-				.equals(new RecordCollection([a1,a2]))).toBe(true)
-			expect(pc2.allRelated('appointments')
-				.equals(new RecordCollection([a1,a2,a3]))).toBe(true)
+
+			expect(pc1.allRelated('appointments'))
+				.includesExactly([a1,a2])
+			expect(pc2.allRelated('appointments'))
+				.includesExactly([a1,a2,a3])
 		})
 
 		it('returns all the doctors for a set of patients', ()=>{
 			let pc1 = new RecordCollection([p1])
 			let pc2 = new RecordCollection([p1,p2])
-			expect(pc1.allRelated('doctors')
-				.equals(new RecordCollection([d1,d2]))).toBe(true)
-			expect(pc2.allRelated('doctors')
-				.equals(new RecordCollection([d1,d2,d3]))).toBe(true)
+
+			expect(pc1.allRelated('doctors'))
+				.includesExactly([d1,d2])
+			expect(pc2.allRelated('doctors'))
+				.includesExactly([d1,d2,d3])
 		})
 	})
 
@@ -214,6 +213,19 @@ describe('RecordCollection', () => {
 			expect(arr).toEqual(expect.arrayContaining([p1,p2,p3]))
 			expect(arr.length).toEqual(3)
 		}) 
+	})
+
+	describe('constructor',()=>{
+		beforeAll(()=>{
+			Kinship.resetDb()
+			r1 = new Record({id: 1})
+			r2 = new Record({id: 2})
+			rc1 = new RecordCollection([r1,r2])
+		})
+		it('constructs a RecordCollection from another RecordCollection',()=>{
+			rc2 = new RecordCollection(rc1)
+			expect(rc2.equals(rc1)).toBe(true)
+		})
 	})
 })
 
@@ -465,14 +477,11 @@ describe('Record',()=>{
 		describe('hasMany',()=>{
 			describe('getters',()=>{
 				it('patient.appointments returns the collection of the patient\'s appointments',() =>{
-					let p1Appointments = new RecordCollection([a1,a2])
-					let p2Appointments = new RecordCollection([a3,a4,a5])
-					expect(p1.appointments.equals(p1Appointments)).toBe(true)
-					expect(p2.appointments.equals(p2Appointments)).toBe(true)
+					expect(p1.appointments).includesExactly([a1,a2])
+					expect(p2.appointments).includesExactly([a3,a4,a5])
 				})
 				it('doctor.nurses returns the nurses employed by the doctor',()=>{
-					let d1Nurses = new RecordCollection([n1,n2])
-					expect(d1.nurses.equals(d1Nurses)).toBe(true)
+					expect(d1.nurses).includesExactly([n1,n2])
 				})
 			})
 		})
@@ -480,47 +489,38 @@ describe('Record',()=>{
 			describe('getters',()=>{
 				// patient hasMany appointments belongsTo doctors
 				it('patient.doctors returns the collection of the patient\'s doctors',()=>{
-					let p1Doctors = new RecordCollection([d1,d2])
-					let p2Doctors = new RecordCollection([d2,d3])
-					expect(p1.doctors.equals(p1Doctors)).toBe(true)
-					expect(p2.doctors.equals(p2Doctors)).toBe(true)
+					expect(p1.doctors).includesExactly([d1,d2])
+					expect(p2.doctors).includesExactly([d2,d3])
 				})
 				// doctor hasMany appointments belongsTo patient
 				it('doctor.patients returns the collection of the doctor\'s patients',()=>{
-					let d1Patients = new RecordCollection([p1])
-					let d4Patients = new RecordCollection([])
-					expect(d1.patients.equals(d1Patients)).toBe(true)
-					expect(d4.patients.equals(d4Patients)).toBe(true)
+					expect(d1.patients).includesExactly([p1])
+					expect(d4.patients).includesExactly([])
 				})
 				// appointment belongsTo doctor hasMany nurses
 				it('appointment.nurses returns the collection of nurses who might assist at the appointment', ()=>{
-					let a1Nurses = new RecordCollection([n1,n2])
-					let a2Nurses = new RecordCollection([n3])
-					expect(a1.nurses.equals(a1Nurses)).toBe(true)
-					expect(a2.nurses.equals(a2Nurses)).toBe(true)
+					expect(a1.nurses).includesExactly([n1,n2])
+					expect(a2.nurses).includesExactly([n3])
 				})
 				// nurse belongsTo employer hasMany appointments (doctor is an alias)
 				it('nurse.appointments returns the collection of appointments a nurse might assist at', ()=>{
-					let n1Appointments = new RecordCollection([a1])
-					let n2Appointments = new RecordCollection([a2,a3,a4])
-					expect(n1.appointments.equals(n1Appointments)).toBe(true)
-					expect(n2.appointments.equals(n2Appointments)).toBe(true)
+					expect(n1.appointments).includesExactly([a1])
+					expect(n3.appointments).includesExactly([a2,a3,a4])
 				})
 				// patient hasMany appointments hasMany scripts (prescriptions is an alias)
 				it('patient.prescriptions returns all of the scripts a doctor has written for the patient',()=>{
-					let p1Scripts = new RecordCollection([p1,p2,p3])
-					expect(p1.prescriptions.equals(p1Scripts)).toBe(true)
+					expect(p1.prescriptions).includesExactly([s1,s2,s3])
 				})
 			})
 		})
 
 		describe('Record.foreignKeys',()=>{
 			it('returns an empty set for a model with no foreignKeys',() => {
-				expect(setEquals(Patient.foreignKeys,new Set([]))).toBe(true)
+				expect([...Patient.foreignKeys]).includesExactly([])
 			})
 			it('stores all the foreign keys on the model',()=>{
-				expect(setEquals(Appointment.foreignKeys,
-					new Set(['patient','doctor']))).toBe(true)
+				expect([...Appointment.foreignKeys])
+					.includesExactly(['patient','doctor'])
 			})
 			it('returns the foreign keys even if the class has not been instantiated', ()=>{
 				class Office extends Record {}
@@ -529,15 +529,15 @@ describe('Record',()=>{
 					relatedModel: Doctor,
 					foreignKey: 'doctor'
 				})
-				expect(setEquals(Office.foreignKeys,new Set(['doctor']))).toBe(true)
+				expect([...Office.foreignKeys]).includesExactly(['doctor'])
 			})
 		})
 
 		describe('Record.foreignKeyIds',()=>{
 			it('returns the concatenation of each foreign key with the string \'Id\'',()=>{
-				expect(setEquals(Appointment.foreignKeyIds,
-					new Set(['patientId','doctorId']))).toBe(true)
-			}) 
+				expect([...Appointment.foreignKeyIds])
+					.includesExactly(['patientId','doctorId'])
+			})
 		})
 
 		describe('Record.relatedModel',()=>{
