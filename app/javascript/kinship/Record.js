@@ -111,6 +111,7 @@ class Record {
 	}
 
 	static byId(id) {
+		this._initializeDbEntries()
 		return db[this.name]['instances'][id]
 	}
 
@@ -135,6 +136,15 @@ class Record {
 			return this.belongsToRelationships
 				.find(r => r.foreignKey == foreignKey)
 				.relatedModel
+		}
+	}
+
+	static _initializeDbEntries() {
+		if (!db[this.name]) {
+			db[this.name] = {
+				instances: {},
+				records: {}
+			}
 		}
 	}
 }
