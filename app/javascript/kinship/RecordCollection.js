@@ -8,7 +8,7 @@ class RecordCollection {
 		this.modelInstances = new Set(params)
 	}
 
-	size() {
+	get size() {
 		return this.modelInstances.size
 	}
 
