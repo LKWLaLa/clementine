@@ -16,9 +16,9 @@ class RecordCollection {
 		let array = [...this.modelInstances].reduce((a,mi) => {
 			let records = mi[relationshipName]
 			if (records instanceof RecordCollection) {
-				return [...a,records.modelInstances]
+				return [...a,...records.modelInstances]
 			} else {
-				return [...a,records]
+				return [...a,records] // for a belongsTo, records is actually a single instance, not a collection
 			}
 		},[])
 		return new RecordCollection(array)
@@ -45,10 +45,14 @@ class RecordCollection {
 		return this.modelInstances.has(instance)
 	}
 
+	includes(instance) {
+		return this.modelInstances.has(instance)
+	}
+
 	isSubsetOf(other) {
-		this.modelInstances.forEach(i => {
+		for (let i of this.modelInstances) {
 			if (!other.modelInstances.has(i)) {return false}
-		})
+		}
 		return true
 	}
 
