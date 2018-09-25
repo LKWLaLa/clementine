@@ -1,8 +1,11 @@
 class RecordCollection {
-	constructor(modelInstances) {
-		// works if modelInstances is passed as a set or an array
-		// assumes all modelInstances have the same class
-		this.modelInstances = new Set(modelInstances)
+	constructor(params) {
+		// works if params is passed as a set or an array of records
+		// assumes all params have the same class
+		if (params instanceof RecordCollection) {
+			return new RecordCollection(params.modelInstances)
+		}
+		this.modelInstances = new Set(params)
 	}
 
 	size() {
