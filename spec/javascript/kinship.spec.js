@@ -192,6 +192,34 @@ describe('RecordCollection', () => {
 				.includesExactly([d1,d2,d3])
 		})
 	})
+	
+	describe('toJSON',()=>{
+		beforeAll(()=>{
+			Kinship.resetDb()
+			r1 = new Record({id: 1})
+			r2 = new Record({id: 2, name: 'second record'})
+			rc1 = new RecordCollection([r1])
+			rc2 = new RecordCollection([r1,r2])
+		})
+		describe('collection is empty',()=>{
+			it('returns an empty array',()=>{
+				expect(new RecordCollection().toJSON()).toEqual([])
+			})
+		})
+		describe('collection is nonempty',()=>{
+			it('returns an array of all the instances in the collection',()=>{
+				// careful to uses toEqual here, not includesExactly
+				// toEqual compares values recursively, which is what we want.
+				// includesExactly uses whatever comparison algorithm the `includes` method
+				// of each type uses.  In the case of arrays, this is identity of reference (Object.is)
+				expect(rc1.toJSON()).toEqual(expect.arrayContaining([{id: 1}]))
+				expect(rc1.toJSON().length).toEqual(1)
+				expect(rc2.toJSON()).toEqual(expect.arrayContaining([{id: 1},{id: 2, name: 'second record'}]))
+				expect(rc2.toJSON().length).toEqual(2)
+			})	
+		})
+		
+	})
 
 	describe('iterability',() => {
 		beforeAll(()=>{
@@ -545,6 +573,30 @@ describe('Record',()=>{
 				expect(Appointment.relatedModel('patient')).toBe(Patient)
 				expect(Nurse.relatedModel('employer')).toBe(Doctor)
 			})
+		})
+
+		describe('toJSON',()=>{
+			it('returns only own properties and belongsTo relationships, not hasMany relationships',()=>{
+				expect(a1.toJSON()).toEqual({
+					id: 1, 
+					patient: {id: 1},
+					doctor: {id: 1}
+				})
+				expect(a1.toJSON()).not.toEqual({id: 1})
+				expect(a1.toJSON()).not.toEqual({id: 1, patient: {}, doctor: {}})
+			})
+		})
+	})
+
+	describe('toJSON',()=>{
+		beforeAll(()=>{
+			Kinship.resetDb()
+			r1 = new Record({id: 1})
+			r2 = new Record({id: 2, name: 'second record', color: 'blue'})
+		})
+		it('returns an object with all the record\'s properties, including those accessed by getters',()=>{
+			expect(r1.toJSON()).toEqual({id: 1})
+			expect(r2.toJSON()).toEqual({id: 2, name: 'second record', color: 'blue'})
 		})
 	})
 })

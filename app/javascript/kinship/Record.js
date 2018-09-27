@@ -147,6 +147,24 @@ class Record {
 			}
 		}
 	}
+
+	// Ensure that properties defined via getters are included when the record
+	// is serialized to JSON
+	// Except hasMany relationships; do not serialize these.
+	// Only serialize own properties and belongsTo relationships
+	toJSON() {
+		let entries = Object.entries(Object.getOwnPropertyDescriptors(this))
+		let out = {}
+		for (let [key,val] of entries) {
+			if (this.constructor.hasManyRelationships && this.constructor.hasManyRelationships.find(e=>e.name==key)) {continue}
+			if (this.constructor.foreignKeys.has(key)) {
+				out[key] = this[key].toJSON()
+			} else {
+				out[key] = this[key]
+			}
+		}
+		return out;
+	}
 }
 
 function resetDb() {

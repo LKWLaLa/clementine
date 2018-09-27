@@ -65,6 +65,14 @@ class RecordCollection {
 	[Symbol.iterator]() {
 		return this.modelInstances[Symbol.iterator]()
 	}
+
+	toJSON() {
+		let out = []
+		for (let mi of this.modelInstances) {
+			out.push(mi.toJSON())
+		}
+		return out
+	}
 }
 
 module.exports = RecordCollection
