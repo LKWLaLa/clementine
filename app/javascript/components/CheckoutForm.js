@@ -17,6 +17,8 @@ class CheckoutForm extends Component {
     // tokenize, since there's only one in this group (the CardElement).
     this.props.stripe.createToken({type: 'card', name: this.props.name})
     .then(({token}) => {
+      console.log(this.props.purchases)
+      console.log(this.props.upgrades)
       let data = {
         source: token.id,
         amount: Math.round(this.props.amount * 100), // stripe requires cents
@@ -31,7 +33,7 @@ class CheckoutForm extends Component {
         'X-Requested-With': 'XMLHttpRequest',
         'X-CSRF-Token': csrfToken
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data), // will this work with getters?
         credentials: 'same-origin'
       }).then(resp => resp.json())
       .then(resp => {

@@ -1,6 +1,15 @@
 class Api::SalesController < ApplicationController
 
   def create
+    # TODO:  Implement transactions here.
+    # Since we can't roll back a credit card transaction made by Stripe,
+    # (without going through the refund process), we should check to make sure
+    # we have all the data that the database requires to successfully record
+    # the transaction before sending the charge to Stripe.
+    # This may entail writing the transaction to the database first, then
+    # rolling back the database transaction if the Stripe 
+    # transaction is unsuccessful.
+
     # Amount must be in cents
     # Description will be the items purchased
 
@@ -31,12 +40,12 @@ class Api::SalesController < ApplicationController
     params[:upgrades].each do |u|
       sale = Sale.new(
         user_id: current_user.id,
-        item_id: u[:upgrade_to_item_id],
-        price_id: u[:upgrade_to_price][:id],
+        item_id: u[:upgrade_to_item][:id],
+        price_id: u[:upgrade_to_item][:current_price_info][:id],
         payment_id: payment.id
       )
       sale.save if sale.valid?
-      Sale.find_by(id: u[:prior_sale_id]).update(void: true)
+      Sale.find_by(id: u[:prior_sale][:id]).update(void: true)
     end
 
     render json: {ok: true}, status: 201 

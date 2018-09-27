@@ -1,17 +1,47 @@
 import React, {Component} from 'react'
 import PurchaseContainer from './PurchaseContainer.js'
 import Filter from '../helpers/Filter.js'
-import models from '../helpers/models.js'
-import Kinship from '../kinship/Kinship.js'
+import models, {Item, ItemType, User, Sale, Exclusion, Upgrade, Qualification} from '../helpers/models.js'
+import Kinship, {Record, RecordCollection} from '../kinship/Kinship.js'
 
 class DashboardContainer extends Component {
 	constructor(props) {
 		super(props)
 
 		this.loadData().then(apiArrays => {
-			let currentUser = this.buildDb(apiArrays)
+			let user = this.buildDb(apiArrays)
+
+			let availableUpgrades = new RecordCollection(Upgrade.all.filter(u => {
+				return user.purchasedItems.has(u.upgradeFromItem)
+				&& u.upgradeFromItem.itemType != u.upgradeToItem.itemType})
+				.map(u => {
+					u.priorSale = user.sales.findBy({item: u.upgradeFromItem})
+					let upgradeToPrice = u.upgradeToItem.itemType.currentPrice
+					u.upgradePrice = upgradeToPrice - u.priorSale.price.amount
+					u.upgradeToPrice = upgradeToPrice
+					return u
+				})
+			)
+
+			let availableExchanges = Upgrade.all.filter(u =>
+				user.purchasedItems.has(u.upgradeFromItem)
+				&& u.upgradeFromItem.itemType == u.upgradeToItem.itemType)
+				.map(u => {
+					u.priorSale = user.sales.findBy({item: u.upgradeFromItem})
+					return u
+				})
+
+			let purchaseableItems = Filter.purchaseableItems(
+				user.purchasedItems,
+				Item.all,
+				Exclusion.all,
+				Upgrade.all)
+
 			this.setState({
-				currentUser: currentUser
+				user: user,
+				availableUpgrades: availableUpgrades,
+				availableExchanges: availableExchanges,
+				purchaseableItems: purchaseableItems
 			})
 		}) // TODO: add error handling for the data loading
 	}
@@ -27,16 +57,16 @@ class DashboardContainer extends Component {
 			// objects in the ith api array
 			let m = models.loadSequence[i]
 			let arr = apiValues[i]
-			arr.forEach(obj => {
+			arr.forEach(obj => {				
 				let x = {}
-				Object.getOwnPropertyNames(obj).forEach(propName => {
+				Object.getOwnPropertyNames(obj).forEach(propName => {					
 					if (m.foreignKeyIds.has(propName)) {
 						// All instances that x depends on
 						// must be created prior to creation
 						// of instance x.
 						// The order in which data is loaded
 						// is therefore critically important.
-						let foreignKey = propName.slice(0,-2) // chop off the "Id"
+						let foreignKey = propName.slice(0,-2) // chop off the ""
 						x[foreignKey] = m.relatedModel(foreignKey).byId(obj[propName])
 					} else {
 						x[propName] = obj[propName]
@@ -87,13 +117,17 @@ class DashboardContainer extends Component {
 
 	render(){
 		if (this.state) {
-			let firstName = this.state.currentUser.firstName			
+			let firstName = this.state.user.firstName			
 			return (
 			  	<div className="dashboard-container">
 				    <h2>Welcome to your registration dashboard, {firstName}!</h2>
 				  	<PurchaseContainer
-				  		currentUser = {this.state.currentUser}
-				  	 /> 
+				  		user = {this.state.user}
+				  		purchaseableItems = {this.state.purchaseableItems}
+				  		purchaseableItemsByType = {this.state.purchaseableItems.groupBy('itemType')}
+				  		availableUpgrades = {this.state.availableUpgrades}
+				  		availableExchanges = {this.state.availableExchanges}
+				  	 />
 			    </div>
 			)
 		} else {

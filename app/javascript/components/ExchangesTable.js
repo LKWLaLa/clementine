@@ -4,20 +4,17 @@ import ExchangeRow from './ExchangeRow.js'
 class ExchangesTable extends React.Component {
 	render() {
 		const exchanges = this.props.exchanges
-		const item = this.props.item
-		const selectedUpgradeIds = this.props.selectedUpgradeIds
-		const status = this.props.status
+		const selectedUpgrades = this.props.selectedUpgrades
 		const handleSelection = this.props.handleSelection
 
 		let exchangeRows = exchanges.map(u => 
 			<ExchangeRow
 				key = {u.id}
-				upgradeId = {u.id}
-				oldItemId = {u.upgradeFromItemId}
-				newItemId = {u.upgradeToItemId}
-				item = {item}
-				selected = {selectedUpgradeIds.has(u.id)}
-				enabled = {this.props.enabled(u.id)}
+				upgrade = {u}
+				oldItem = {u.upgradeFromItem}
+				newItem = {u.upgradeToItem}
+				selected = {selectedUpgrades.has(u)}
+				enabled = {this.props.enabled(u)}
 				handleSelection = {handleSelection}/>
 		)
 

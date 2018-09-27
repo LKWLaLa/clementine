@@ -3,10 +3,9 @@ import React from 'react'
 class ExchangeRow extends React.Component {
 
 	render() {
-		const upgradeId = this.props.upgradeId
-		const item = this.props.item
-		const oldItemId = this.props.oldItemId
-		const newItemId = this.props.newItemId
+		const upgrade = this.props.upgrade
+		const oldItem = this.props.oldItem
+		const newItem = this.props.newItem
 		const selected = this.props.selected
 		const enabled = this.props.enabled
 		const handleSelection = this.props.handleSelection
@@ -14,8 +13,8 @@ class ExchangeRow extends React.Component {
 		// construct spans
 		const className = this.props.enabled ? 'enabled-row-entry' : 'disabled-row-entry'
 
-		let oldItemSpan = <span className={className}>{item[oldItemId].name}</span>
-		let newItemSpan = <span className={className}>{item[newItemId].name}</span>
+		let oldItemSpan = <span className={className}>{oldItem.name}</span>
+		let newItemSpan = <span className={className}>{newItem.name}</span>
 		let priceSpan = <span className={className}>free</span>
 
 		return (
@@ -26,7 +25,7 @@ class ExchangeRow extends React.Component {
   						disabled = {!enabled}
   						checked = {selected}
   						onChange = {handleSelection}
-  						id = {upgradeId}
+  						id = {upgrade.id}
   					/>
 				</td>
 				<td>{oldItemSpan}</td>
