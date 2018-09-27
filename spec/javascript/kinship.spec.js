@@ -266,6 +266,7 @@ describe('RecordCollection', () => {
 
 	describe('iterability',() => {
 		beforeAll(()=>{
+			Kinship.resetDb()
 			p1 = new Patient({id: 1})
 			p2 = new Patient({id: 2})
 			p3 = new Patient({id: 3})
@@ -331,7 +332,7 @@ describe('Record',()=>{
 		})
 
 		afterAll(()=>{
-			Kinship.db={}
+			Kinship.resetDb();
 			Patient = undefined
 		})
 
