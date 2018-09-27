@@ -16,7 +16,14 @@ class Record {
 		if (!db[modelName]) db[modelName] = {}
 
 		// The db is read-only; once an instance of a model is created,
-		// it cannot be modified or overwritten.
+		// it cannot be ovewritten, nor can any database properties
+		// be modified.
+		// A `database property` on an instance is one that is created
+		// at construction time and stored in the db object for later retrieval via
+		// a gettter
+		// Kinship allows a user to create and edit non-database
+		// properties (i.e. properties added to an instance after construction time)
+
 		// Since ids are unique
 		// on each model, an attempt to create a new instance with
 		// the same id returns the existing instance
