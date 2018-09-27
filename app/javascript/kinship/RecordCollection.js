@@ -64,16 +64,16 @@ class RecordCollection {
 		return new RecordCollection(array)
 	}
 
-	map(f) {
-		return [...this.modelInstances].map(f)
+	map(f,thisArg) {
+		return [...this.modelInstances].map(f,thisArg)
 	}
 
-	filter(f) {
-		return new RecordCollection([...this.modelInstances].filter(f))
+	filter(f,thisArg) {
+		return new RecordCollection([...this.modelInstances].filter(f,thisArg))
 	}
 
-	reduce(f) {
-		return [...this.modelInstances].reduce(f)
+	reduce(f,init) {
+		return [...this.modelInstances].reduce(f,init)
 	}
 
 	ids() {
