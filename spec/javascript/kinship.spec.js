@@ -69,6 +69,19 @@ describe('RecordCollection', () => {
 				expect(rc1.equals(rc2)).toBe(true)
 			})
 		})
+		describe('findBy',()=>{
+			describe('passed an empty params object',()=>{
+				it('returns null',()=>{
+					expect(rc1.findBy()).toBeNull()
+				})	
+			})
+			describe('passed a nonempty params object',()=>{
+				it('returns null',()=>{
+					expect(rc1.findBy({id: 1})).toBeNull()
+				})
+			})
+			
+		})
 	})
 	describe('the collection is nonempty',()=>{
 		beforeEach(()=>{
@@ -94,6 +107,23 @@ describe('RecordCollection', () => {
 				expect(rc1.equals(rc1)).toBe(true)
 				expect(rc2.equals(rc1)).toBe(false)
 				expect(rc1.equals(rc2)).toBe(false)
+			})
+		})
+		describe('findBy',()=>{
+			describe('passed an empty params object',()=>{
+				it('returns a record from the collection',()=>{
+					expect(rc2.findBy()).toBe(p1)
+				})	
+			})
+			describe('passed a matchable params object',()=>{
+				it('returns a matching record',()=>{
+					expect(rc2.findBy({id: 2})).toBe(p2)
+				})
+			})
+			describe('passed an unmatchable params object',()=>{
+				it('returns null',()=>{
+					expect(rc1.findBy({id: 2})).toBeNull()
+				})
 			})
 		})
 	})
@@ -190,6 +220,16 @@ describe('RecordCollection', () => {
 				.includesExactly([d1,d2])
 			expect(pc2.allRelated('doctors'))
 				.includesExactly([d1,d2,d3])
+
+		describe('groupBy',()=>{
+			it('returns an empty Map for an empty RecordCollection',()=>{
+				expect(new RecordCollection().groupBy('')).toEqual(new Map())
+			})
+			it('returns a Map, where each patient with appointments in this collection maps to her appointments in this collection',()=>{
+				let appointmentsByPatient = new RecordCollection([a1,a2,a3]).groupBy('patient')
+				expect(appointmentsByPatient.get(p1)).includesExactly([a1,a2])
+				expect(appointmentsByPatient.get(p2)).includesExactly([a3])
+			})
 		})
 	})
 	

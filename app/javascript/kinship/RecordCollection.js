@@ -12,6 +12,46 @@ class RecordCollection {
 		return this.modelInstances.size
 	}
 
+	add(record) {
+		this.modelInstances.add(record)
+		return this
+	}
+
+	delete(record) {
+		return this.modelInstances.delete(record)
+	}
+
+	findBy(params) {
+		if (!params) {
+			params = {}
+		}
+		for (let mi of this.modelInstances) {
+			let found = true
+			for (let p of Object.getOwnPropertyNames(params)) {
+				if (params[p] != mi[p]) {
+					found = false
+					break
+				}
+			}
+			if (found) {return mi}
+		}
+		return null
+	}
+
+	groupBy(relationshipName) {
+		let out = new Map()
+		for (let mi of this.modelInstances) {
+			if (!mi.constructor.belongsToRelationships.find(r => r.name == relationshipName)) {
+				err = `relationship ${relationshipName} not found in belongsToRelationships`
+				throw err
+			}
+			let relatedRecord = mi[relationshipName]
+			if (!out.get(relatedRecord)) {out.set(relatedRecord,new RecordCollection())}
+			out.get(relatedRecord).add(mi)
+		}
+		return out
+	}
+
 	allRelated(relationshipName) {
 		let array = [...this.modelInstances].reduce((a,mi) => {
 			let records = mi[relationshipName]
