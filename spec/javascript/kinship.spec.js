@@ -127,7 +127,7 @@ describe('RecordCollection', () => {
 			})
 		})
 	})
-	describe('allRelated',()=>{
+	describe('relationships',()=>{
 		beforeAll(()=>{
 			Kinship.resetDb()
 			Patient = class Patient extends Record {}
@@ -193,33 +193,36 @@ describe('RecordCollection', () => {
 			})
 		})
 
-		it('returns all the patients for a collection of appointments', ()=>{
-			let ac1 = new RecordCollection([a1,a2])
-			let ac2 = new RecordCollection([a2,a3])
-			expect(ac1.allRelated('patient')
-				.equals(new RecordCollection([p1]))).toBe(true)
-			expect(ac2.allRelated('patient')
-				.equals(new RecordCollection([p1,p2]))).toBe(true)
+		describe('allRelated',()=>{
+			it('returns all the patients for a collection of appointments', ()=>{
+				let ac1 = new RecordCollection([a1,a2])
+				let ac2 = new RecordCollection([a2,a3])
+				expect(ac1.allRelated('patient')
+					.equals(new RecordCollection([p1]))).toBe(true)
+				expect(ac2.allRelated('patient')
+					.equals(new RecordCollection([p1,p2]))).toBe(true)
+			})
+
+			it('returns all the appointments for a collection of patients', ()=>{
+				let pc1 = new RecordCollection([p1])
+				let pc2 = new RecordCollection([p1,p2])
+
+				expect(pc1.allRelated('appointments'))
+					.includesExactly([a1,a2])
+				expect(pc2.allRelated('appointments'))
+					.includesExactly([a1,a2,a3])
+			})
+
+			it('returns all the doctors for a set of patients', ()=>{
+				let pc1 = new RecordCollection([p1])
+				let pc2 = new RecordCollection([p1,p2])
+
+				expect(pc1.allRelated('doctors'))
+					.includesExactly([d1,d2])
+				expect(pc2.allRelated('doctors'))
+					.includesExactly([d1,d2,d3])
+			})
 		})
-
-		it('returns all the appointments for a collection of patients', ()=>{
-			let pc1 = new RecordCollection([p1])
-			let pc2 = new RecordCollection([p1,p2])
-
-			expect(pc1.allRelated('appointments'))
-				.includesExactly([a1,a2])
-			expect(pc2.allRelated('appointments'))
-				.includesExactly([a1,a2,a3])
-		})
-
-		it('returns all the doctors for a set of patients', ()=>{
-			let pc1 = new RecordCollection([p1])
-			let pc2 = new RecordCollection([p1,p2])
-
-			expect(pc1.allRelated('doctors'))
-				.includesExactly([d1,d2])
-			expect(pc2.allRelated('doctors'))
-				.includesExactly([d1,d2,d3])
 
 		describe('groupBy',()=>{
 			it('returns an empty Map for an empty RecordCollection',()=>{
