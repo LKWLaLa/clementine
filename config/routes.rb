@@ -2,9 +2,19 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
-  devise_for :users, :controllers => { registrations: 'registrations' }
+  devise_for :users, :controllers => { 
+    registrations: 'registrations', 
+    sessions: 'sessions'
+  } 
+  
+  devise_scope :user do
+    get 'active' => 'sessions#active'
+    get 'timeout' => 'sessions#timeout'  
+  end    
+
 
   root 'home#index'
+  
 
   namespace :api, defaults: { format: :json } do
     resources :items, only: [:index]

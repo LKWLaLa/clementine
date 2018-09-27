@@ -41,6 +41,7 @@ gem 'webpacker', '~> 3.3'
 gem 'react-rails'
 gem 'active_model_serializers', '~> 0.10.2'
 gem 'country_select', '~> 3.1'
+gem 'auto-session-timeout'
 
 
 group :development, :test do

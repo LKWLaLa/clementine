@@ -6,20 +6,26 @@ actions :index, :show, :edit, :update
 permit_params :first_name, :last_name, :email
 
 preserve_default_filters!
-  remove_filter :encrypted_password
-  remove_filter :reset_password_token
-  remove_filter :reset_password_sent_at
-  remove_filter :remember_created_at
+  filter :purchased_items, as: :select, label: "Registration item"
+  filter :country, as: :select
+  filter :city, as: :select
+  filter :state, as: :select
   remove_filter :address_line_1
   remove_filter :address_line_2
   remove_filter :postal_code
   remove_filter :updated_at
   remove_filter :payments
   remove_filter :sales
-  filter :purchased_items, as: :select, label: "Registration item"
-  filter :country, as: :select
-  filter :city, as: :select
-  filter :state, as: :select
+  remove_filter :locked_at
+  remove_filter :unlock_token
+  remove_filter :failed_attempts
+  remove_filter :confirmation_sent_at
+  remove_filter :confirmed_at
+  remove_filter :confirmation_token
+  remove_filter :encrypted_password
+  remove_filter :reset_password_token
+  remove_filter :reset_password_sent_at
+  remove_filter :remember_created_at
   
 
   index do |user|
@@ -71,6 +77,7 @@ preserve_default_filters!
         end
       end
     end
+    active_admin_comments
   end
 
 
