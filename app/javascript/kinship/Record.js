@@ -61,6 +61,10 @@ class Record {
 					configuration[r.name] = {
 						get() {
 							let out = r.relatedModel.all.filter((record) => {
+								if (!record[r.foreignKey]) {
+									err = `property ${r.foreignKey} not found on record ${record.constructor.name} : ${record.id}`
+									console.error(err)
+								}
 								return record[r.foreignKey].id == obj.id
 							})
 							return out
