@@ -34,7 +34,7 @@ remove_filter :payment
       link_to sale.payment.method, admin_payment_path(sale.payment)
     end
     column :date do |sale|
-      sale.payment.created_at.strftime('%B %-d, %Y')
+      link_to sale.payment.created_at.strftime('%B %-d, %Y'), admin_payment_path(sale.payment)
     end
     column :void
     actions
