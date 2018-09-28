@@ -3,7 +3,7 @@ ActiveAdmin.register User do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 actions :index, :show, :edit, :update
-permit_params :first_name, :last_name, :email
+permit_params :first_name, :last_name, :email, :city, :state, :country
 
 preserve_default_filters!
   filter :purchased_items, as: :select, label: "Registration item"
@@ -34,6 +34,7 @@ preserve_default_filters!
     column :last_name
     column :email
     column :city
+    column :state
     column :country
     actions
   end
@@ -46,6 +47,7 @@ preserve_default_filters!
      row :last_name
      row :email
      row :city
+     row :state
      row :country
       panel "Payments" do
         table_for user.payments do
@@ -78,6 +80,18 @@ preserve_default_filters!
       end
     end
     active_admin_comments
+  end
+
+  form do |f|
+    f.inputs 'Edit User Data' do
+      f.input :first_name
+      f.input :last_name
+      f.input :email
+      f.input :city
+      f.input :state, as: :select, collection: us_states, value: user.state
+      f.input :country, priority: ['US', 'CA']
+    end
+    f.actions
   end
 
 
