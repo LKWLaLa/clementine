@@ -5,8 +5,10 @@ class CheckoutForm extends Component {
   constructor(props){
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this)
-    
-    this.state = {complete: false}
+
+    this.state = {
+      error: null
+    }
   }
 
 
@@ -37,7 +39,8 @@ class CheckoutForm extends Component {
         credentials: 'same-origin'
       }).then(resp => resp.json())
       .then(resp => {
-        if (resp.ok) this.setState({complete: true});
+        console.log(this.props)
+        if (resp.ok) this.props.showTransactionComplete();
         if (resp.error) this.setState({error: resp.error});
       })
     })
@@ -46,8 +49,6 @@ class CheckoutForm extends Component {
   
 
   render() {
-    if (this.state.complete) return <h2>Purchase complete. Thanks for your registration!</h2>;
-    
     return (
       <div>
         <h2>Amount : ${this.props.amount}</h2>

@@ -56,14 +56,14 @@ class Api::SalesController < ApplicationController
 
   def exchange
     params[:exchanges].each do |e|
-      binding.remote_pry
+      #binding.remote_pry
       
-      prior_sale = Sale.find_by(id: e[:prior_sale_id])
+      prior_sale = Sale.find_by(id: e[:prior_sale][:id])
       sale = Sale.new(
         user_id: current_user.id,
-        item_id: e[:upgrade_to_item_id],
+        item_id: e[:upgrade_to_item][:id],
         price_id: prior_sale.price_id,
-        payment_id: prior_sale.payment.id
+        payment_id: prior_sale.payment_id
       )
       sale.save if sale.valid?
       prior_sale.update(void: true)

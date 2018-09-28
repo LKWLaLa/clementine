@@ -8,6 +8,13 @@ class DashboardContainer extends Component {
 	constructor(props) {
 		super(props)
 
+		this.showTransactionComplete = this.showTransactionComplete.bind(this)
+		this.load = this.load.bind(this)
+
+		this.load()
+	}
+
+	load() {
 		this.loadData().then(apiArrays => {
 			let user = this.buildDb(apiArrays)
 
@@ -41,7 +48,8 @@ class DashboardContainer extends Component {
 				user: user,
 				availableUpgrades: availableUpgrades,
 				availableExchanges: availableExchanges,
-				purchaseableItems: purchaseableItems
+				purchaseableItems: purchaseableItems,
+				transactionComplete: false
 			})
 		}) // TODO: add error handling for the data loading
 	}
@@ -115,21 +123,44 @@ class DashboardContainer extends Component {
 		})
 	}
 
+	showTransactionComplete() {
+		this.setState({transactionComplete: true})
+	}
+
+	reload() {
+		Kinship.resetDb()
+		this.load()
+	}
+
 	render(){
 		if (this.state) {
-			let firstName = this.state.user.firstName			
-			return (
-			  	<div className="dashboard-container">
-				    <h2>Welcome to your registration dashboard, {firstName}!</h2>
-				  	<PurchaseContainer
-				  		user = {this.state.user}
-				  		purchaseableItems = {this.state.purchaseableItems}
-				  		purchaseableItemsByType = {this.state.purchaseableItems.groupBy('itemType')}
-				  		availableUpgrades = {this.state.availableUpgrades}
-				  		availableExchanges = {this.state.availableExchanges}
-				  	 />
-			    </div>
-			)
+			let firstName = this.state.user.firstName
+			if (this.state.transactionComplete) {
+				return(
+					<div>
+						<h2>Purchase complete. Thanks for your registration!</h2>
+						<button onClick = {this.load}>
+						Click here to return to your dashboard.
+						</button>
+					</div>
+				)
+			} else {
+				return (
+				  	<div className="dashboard-container">
+					    <h2>Welcome to your registration dashboard, {firstName}!</h2>
+					  	<PurchaseContainer
+					  		user = {this.state.user}
+					  		purchaseableItems = {this.state.purchaseableItems}
+					  		purchaseableItemsByType = {this.state.purchaseableItems.groupBy('itemType')}
+					  		availableUpgrades = {this.state.availableUpgrades}
+					  		availableExchanges = {this.state.availableExchanges}
+					  		showTransactionComplete = {this.showTransactionComplete}
+					  	 />
+				    </div>
+				)
+			}
+					
+			
 		} else {
 			return (null)
 		}

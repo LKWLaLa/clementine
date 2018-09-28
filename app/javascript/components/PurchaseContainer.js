@@ -190,6 +190,7 @@ class PurchaseContainer extends React.Component {
 	            		description = {this.description}
 	            		purchases = {this.state.selectedPurchaseableItems}
 	            		upgrades = {this.state.selectedUpgrades}
+	            		showTransactionComplete = {this.props.showTransactionComplete}
 	            	/>
 	            </Elements>
 			</div>
