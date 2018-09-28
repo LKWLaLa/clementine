@@ -2,7 +2,8 @@ let RecordCollection = require('./RecordCollection.js')
 
 // https://medium.com/front-end-hacking/creating-an-orm-with-javascript-b28f37ed528
 
-let db = module.exports.db
+
+let db = {}
 
 class Record {
 	constructor(obj) {
@@ -15,7 +16,14 @@ class Record {
 		if (!db[modelName]) db[modelName] = {}
 
 		// The db is read-only; once an instance of a model is created,
-		// it cannot be modified or overwritten.
+		// it cannot be ovewritten, nor can any database properties
+		// be modified.
+		// A `database property` on an instance is one that is created
+		// at construction time and stored in the db object for later retrieval via
+		// a gettter
+		// Kinship allows a user to create and edit non-database
+		// properties (i.e. properties added to an instance after construction time)
+
 		// Since ids are unique
 		// on each model, an attempt to create a new instance with
 		// the same id returns the existing instance
@@ -59,7 +67,11 @@ class Record {
 				} else {
 					configuration[r.name] = {
 						get() {
-							let out = r.relatedModel.all().filter((record) => {
+							let out = r.relatedModel.all.filter((record) => {
+								if (!record[r.foreignKey]) {
+									err = `property ${r.foreignKey} not found on record ${record.constructor.name} : ${record.id}`
+									console.error(err)
+								}
 								return record[r.foreignKey].id == obj.id
 							})
 							return out
@@ -84,8 +96,9 @@ class Record {
 							return db[modelName]['records'][obj.id][r.foreignKey]
 						}
 					}
+					// track foreignKeys
+					this.constructor.foreignKeys.add(r.foreignKey)
 				}
-				
 			})
 		}
 		
@@ -93,7 +106,7 @@ class Record {
 		Object.defineProperties(this,configuration)
 	}
 
-	static all() {
+	static get all() {
 		return new RecordCollection(Object.values(db[this.name]['instances']))
 	}
 	
@@ -103,12 +116,65 @@ class Record {
 	}
 
 	static belongsTo(options) {
+		if (!options.through) {this.foreignKeys.add(options.foreignKey)}
 		if (!this.belongsToRelationships) {this.belongsToRelationships = []}
 		this.belongsToRelationships.push(options)
 	}
 
 	static byId(id) {
+		this._initializeDbEntries()
 		return db[this.name]['instances'][id]
+	}
+
+	static get foreignKeys() {
+		if (!this._foreignKeys) {this._foreignKeys = new Set([])}
+		return this._foreignKeys
+	}
+
+	static set foreignKeys(val) {
+		this._foreignKeys = val
+	}
+
+	static get foreignKeyIds() {
+		return new Set([...this.foreignKeys]
+			.map(fk => fk + 'Id'))
+	}
+
+	static relatedModel(foreignKey) {
+		// relatedModel is the class of instanceOfThis.foreignKey
+		// returns relatedModel's constructor, assuming belongsTo has been called
+		if (this.belongsToRelationships) {
+			return this.belongsToRelationships
+				.find(r => r.foreignKey == foreignKey)
+				.relatedModel
+		}
+	}
+
+	static _initializeDbEntries() {
+		if (!db[this.name]) {
+			db[this.name] = {
+				instances: {},
+				records: {}
+			}
+		}
+	}
+
+	// Ensure that properties defined via getters are included when the record
+	// is serialized to JSON
+	// Except hasMany relationships; do not serialize these.
+	// Only serialize own properties and belongsTo relationships
+	toJSON() {
+		let entries = Object.entries(Object.getOwnPropertyDescriptors(this))
+		let out = {}
+		for (let [key,val] of entries) {
+			if (this.constructor.hasManyRelationships && this.constructor.hasManyRelationships.find(e=>e.name==key)) {continue}
+			if (this.constructor.foreignKeys.has(key)) {
+				out[key] = this[key].toJSON()
+			} else {
+				out[key] = this[key]
+			}
+		}
+		return out;
 	}
 }
 
@@ -116,5 +182,10 @@ function resetDb() {
 	db = {}
 }
 
+function getDb() {
+	return db
+}
+
 module.exports.Record = Record
 module.exports.resetDb = resetDb
+module.exports.getDb = getDb

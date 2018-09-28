@@ -1,308 +1,308 @@
 import Filter from '../../app/javascript/helpers/Filter.js'
+import expect from './customMatchers.js'
+import Kinship, {Record, RecordCollection} from '../../app/javascript/kinship/Kinship.js'
+import models, {Item,ItemType,Exclusion,Upgrade,Qualification} from '../../app/javascript/helpers/models.js'
+let RC = RecordCollection
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+function factory(model) {
+	return function(obj) {
+		if (!obj.id) {
+			while (model.byId(obj.id = getRandomInt(1000000))) {}
+		}
+		return new model(obj)
+	}
+}
+
+let EX = factory(Exclusion)
+let UP = factory(Upgrade)
+let QU = factory(Qualification)
 
 describe('Filter', () => {
-	let itemIds = new Set()
+	let items = new RC()
 	let exclusions = []
 	let upgrades = []
 	let qualifications = []
-	let purchasedItemIds = new Set()
-	let priorItemIds = new Set()
+	let purchasedItems = new RC()
+	let priorItems = new RC()
 
+	// separate vars (no brackets) will make for more pleasant reading
+	let i1,i2,i3,i4,i5,i6,i7,i8,i9,i10
 
+	let type = new ItemType({
+		id: 1,
+		name: "Any Type"
+	})
+
+	function reset() {
+		Kinship.resetDb()
+		let i = []
+		for (let j = 1; j <= 10; ++j) {
+			i[j] = new Item({
+				id: j,
+				itemType: type
+			})
+		}
+		
+		i1 = i[1]
+		i2 = i[2]
+		i3 = i[3]
+		i4 = i[4]
+		i5 = i[5]
+		i6 = i[6]
+		i7 = i[7]
+		i8 = i[8]
+		i9 = i[9]
+		i10 = i[10]
+	}
+
+	beforeAll(()=>{
+		reset();
+	})
+	
 	describe('excludedItems', () => {
-		it('should return the excludedItems for the priorItemIds', () => {
-			let exclusions = [
-				{excluderItemId: 1,excludedItemId: 3},
-				{excluderItemId: 2,excludedItemId: 5},
-				{excluderItemId: 2,excludedItemId: 6}
-			]
-			expect([...Filter.excludedItems(new Set([2,4]),exclusions)].sort()).toEqual([5,6])
+		it('should return the excludedItems for the priorItems', () => {
+			let exclusions = new RC([
+				EX({excluderItem: i1,excludedItem: i3}),
+				EX({excluderItem: i2,excludedItem: i5}),
+				EX({excluderItem: i2,excludedItem: i6})
+			])
+			expect(Filter.excludedItems(new RC([i2,i4]),exclusions))
+				.includesExactly([i5,i6])
 		})
 
 		it('should work with different exclusions', () => {
-			let exclusions = [
-				{excluderItemId: 1, excludedItemId: 1},
-				{excluderItemId: 2, excludedItemId: 2},
-				{excluderItemId: 1, excludedItemId: 2}
-			]
-			expect([...Filter.excludedItems(new Set([2]),exclusions)].sort()).toEqual([2])
-			expect([...Filter.excludedItems(new Set([1]),exclusions)].sort()).toEqual([1,2])
+			let exclusions = new RC([
+				EX({excluderItem: i1, excludedItem: i1}),
+				EX({excluderItem: i2, excludedItem: i2}),
+				EX({excluderItem: i1, excludedItem: i2})
+			])
+			expect(Filter.excludedItems(new RC([i2]),exclusions))
+				.includesExactly([i2])
+			expect(Filter.excludedItems(new RC([i1]),exclusions))
+				.includesExactly([i1,i2])
 		})
 	})
 
 	describe('upgradeToItems', () => {
 		beforeEach(() => {
-			priorItemIds = new Set([2,4])
-			upgrades = [
-				{upgradeFromItemId: 1,upgradeToItemId: 3},
-				{upgradeFromItemId: 2,upgradeToItemId: 5},
-				{upgradeFromItemId: 2,upgradeToItemId: 6}
-			]
+			priorItems = new RC([i2,i4])
+			upgrades = new RC([
+				UP({upgradeFromItem: i1,upgradeToItem: i3}),
+				UP({upgradeFromItem: i2,upgradeToItem: i5}),
+				UP({upgradeFromItem: i2,upgradeToItem: i6})
+			])
 		})
 
-		it('should return the upgradeToItems for the priorItemIds', () => {
-			expect([...Filter.upgradeToItems(priorItemIds,upgrades)].sort()).toEqual([5,6])
+		it('should return the upgradeToItems for the priorItems', () => {
+			expect(Filter.upgradeToItems(priorItems,upgrades))
+				.includesExactly([i5,i6])
 		})
 	})
 
 	describe('eligibleItems', () => {
 		beforeEach(() => {
-			itemIds = new Set([1,2,3,4,5])
-			qualifications = [
-				{qualifierItemId: 1, qualifiedItemId: 5},
-				{qualifierItemId: 2, qualifiedItemId: 4},
-				{qualifierItemId: 3, qualifiedItemId: 4}
-			]		
+			items = new RC([i1,i2,i3,i4,i5])
+			qualifications = new RC([
+				QU({qualifierItem: i1, qualifiedItem: i5}),
+				QU({qualifierItem: i2, qualifiedItem: i4}),
+				QU({qualifierItem: i3, qualifiedItem: i4})
+			])
 		})
 		
-		it('should return the eligibleItems for the priorItemIds and the itemIds', () => {
-			expect([...Filter.eligibleItems(new Set(),itemIds,qualifications)].sort()).toEqual([1,2,3])
-			expect([...Filter.eligibleItems(new Set([2]),itemIds,qualifications)].sort()).toEqual([1,2,3,4])
+		it('should return the eligibleItems for the priorItems and the items', () => {
+			expect(Filter.eligibleItems(new RC(),items,qualifications))
+				.includesExactly([i1,i2,i3])
+			expect(Filter.eligibleItems(new RC([i2]),items,qualifications))
+				.includesExactly([i1,i2,i3,i4])
 		})
 	})
 
 	describe('purchaseableItems', () => {
 		beforeEach(() => {
-			itemIds = new Set([1,2,3,4])
-			exclusions = [
-				{excluderItemId: 1, excludedItemId: 1},
-				{excluderItemId: 2, excludedItemId: 2},
-				{excluderItemId: 1, excludedItemId: 2}
-			]
-			upgrades = [
-				{upgradeFromItemId: 2, upgradeToItemId: 1},
-				{upgradeFromItemId: 2, upgradeToItemId: 3}
-			]
+			items = new RC([i1,i2,i3,i4])
+			exclusions = new RC([
+				EX({excluderItem: i1, excludedItem: i1}),
+				EX({excluderItem: i2, excludedItem: i2}),
+				EX({excluderItem: i1, excludedItem: i2})
+			])
+			upgrades = new RC([
+				UP({upgradeFromItem: i2, upgradeToItem: i1}),
+				UP({upgradeFromItem: i2, upgradeToItem: i3})
+			])
 		})
 		
-		it('should return all itemIds if purchasedItemIds is empty', () => {
-			expect([...Filter.purchaseableItems(new Set(),itemIds,exclusions,upgrades)].sort())
-				.toEqual([1,2,3,4])
+		it('should return all items if purchasedItems is empty', () => {
+			expect(Filter.purchaseableItems(new RC(),items,exclusions,upgrades))
+				.includesExactly([i1,i2,i3,i4])
 		})
-		it('should return all itemIds except the excluded ones when there are no upgrades', () => {
-			expect([...Filter.purchaseableItems(new Set([1]),itemIds,exclusions,upgrades)].sort())
-				.toEqual([3,4])
+		it('should return all items except the excluded ones when there are no upgrades', () => {
+			expect(Filter.purchaseableItems(new RC([i1]),items,exclusions,upgrades))
+				.includesExactly([i3,i4])
 		})
 		it('should function properly in a vareity of non-edge cases', () => {
-			expect([...Filter.purchaseableItems(new Set([2]),itemIds,exclusions,upgrades)].sort())
-				.toEqual([4])
-			expect([...Filter.purchaseableItems(new Set([1,2]),itemIds,exclusions,upgrades)].sort())
-				.toEqual([4])
+			expect(Filter.purchaseableItems(new RC([i2]),items,exclusions,upgrades))
+				.includesExactly([i4])
+			expect(Filter.purchaseableItems(new RC([i1,i2]),items,exclusions,upgrades))
+				.includesExactly([i4])
 		})
 	})
 
 	describe('enabledPurchaseableItems', () => {
 		beforeEach(() => {
-			itemIds = new Set([1,2,3,4])
-			exclusions = [
-				{excluderItemId: 1, excludedItemId: 1},
-				{excluderItemId: 2, excludedItemId: 2},
-				{excluderItemId: 3, excludedItemId: 3},
-				{excluderItemId: 4, excludedItemId: 4},
-				{excluderItemId: 1, excludedItemId: 2},
-			]
-			upgrades = [
-				{upgradeFromItemId: 2, upgradeToItemId: 1},
-			]
-			qualifications = [
-				{qualifierItemId: 1, qualifiedItemId: 4},
-				{qualifierItemId: 2, qualifiedItemId: 4},
-			]
+			items = new RC([i1,i2,i3,i4])
+			exclusions = new RC([
+				EX({excluderItem: i1, excludedItem: i1}),
+				EX({excluderItem: i2, excludedItem: i2}),
+				EX({excluderItem: i3, excludedItem: i3}),
+				EX({excluderItem: i4, excludedItem: i4}),
+				EX({excluderItem: i1, excludedItem: i2})
+			])
+			upgrades = new RC([
+				UP({upgradeFromItem: i2, upgradeToItem: i1})
+			])
+			qualifications = new RC([
+				QU({qualifierItem: i1, qualifiedItem: i4}),
+				QU({qualifierItem: i2, qualifiedItem: i4})
+			])
 		})
 
 		it(`should return purchaseableItems that are not excludedItems
 			 or upgradeToItems of the currently selected items, for which the
 			 user is eligible based on purchased items and selected items`, () => {
 
-			let wrapEnabledPurchaseableItems = (purchasedItemIds,selectedItemIds) => {
-				return [...Filter.enabledPurchaseableItems(
-				 	purchasedItemIds,
-				 	selectedItemIds,
-				 	itemIds,
+			let enabledPurchaseableItems = (purchasedItems,selectedItems) => {
+				return Filter.enabledPurchaseableItems(
+				 	purchasedItems,
+				 	selectedItems,
+				 	items,
 				 	exclusions,
 				 	upgrades,
-				 	qualifications)]
-				.sort()
+				 	qualifications)
 			}
-			expect(wrapEnabledPurchaseableItems(new Set(), new Set())).toEqual([1,2,3])
-			expect(wrapEnabledPurchaseableItems(new Set([1]), new Set())).toEqual([3,4])
-			expect(wrapEnabledPurchaseableItems(new Set(), new Set([1]))).toEqual([1,3,4])
-			expect(wrapEnabledPurchaseableItems(new Set([1]), new Set([3]))).toEqual([3,4])
-			expect(wrapEnabledPurchaseableItems(new Set([1,3]), new Set())).toEqual([4])
-			expect(wrapEnabledPurchaseableItems(new Set([1,3,4]), new Set())).toEqual([])
-			expect(wrapEnabledPurchaseableItems(new Set(), new Set([1,3,4]))).toEqual([1,3,4])
-			expect(wrapEnabledPurchaseableItems(new Set(), new Set([1,4]))).toEqual([1,3,4])
+			expect(enabledPurchaseableItems(new RC(), new RC()))
+				.includesExactly([i1,i2,i3])
+			expect(enabledPurchaseableItems(new RC([i1]), new RC()))
+				.includesExactly([i3,i4])
+			expect(enabledPurchaseableItems(new RC(), new RC([i1])))
+				.includesExactly([i1,i3,i4])
+			expect(enabledPurchaseableItems(new RC([i1]), new RC([i3])))
+				.includesExactly([i3,i4])
+			expect(enabledPurchaseableItems(new RC([i1,i3]), new RC()))
+				.includesExactly([i4])
+			expect(enabledPurchaseableItems(new RC([i1,i3,i4]), new RC()))
+				.includesExactly([])
+			expect(enabledPurchaseableItems(new RC(), new RC([i1,i3,i4])))
+				.includesExactly([i1,i3,i4])
+			expect(enabledPurchaseableItems(new RC(), new RC([i1,i4])))
+				.includesExactly([i1,i3,i4])
 		})
 	})
 
 	describe('ineligibleItems', () => {
 		beforeEach(() => {
-			qualifications = [
-				{qualifierItemId: 1, qualifiedItemId: 4},
-				{qualifierItemId: 2, qualifiedItemId: 4},
-				{qualifierItemId: 5, qualifiedItemId: 6},
-				{qualifierItemId: 8, qualifiedItemId: 10},
-				{qualifierItemId: 9, qualifiedItemId: 10}
-			]
+			qualifications = new RC([
+				QU({qualifierItem: i1, qualifiedItem: i4}),
+				QU({qualifierItem: i2, qualifiedItem: i4}),
+				QU({qualifierItem: i5, qualifiedItem: i6}),
+				QU({qualifierItem: i8, qualifiedItem: i10}),
+				QU({qualifierItem: i9, qualifiedItem: i10})
+			])
 		})
 
 		it('should return all restricted items if the user has not made a purchase', () => {
-			expect([...Filter.ineligibleItems(new Set(),qualifications)]
-				.sort((a,b) => a-b))
-				.toEqual([4,6,10])
+			expect(Filter.ineligibleItems(new RC(),qualifications))
+				.includesExactly([i4,i6,i10])
 		})
 
 		it('should return all restricted items if the user has not made a qualifier purchase', () => {
-			expect([...Filter.ineligibleItems(new Set([3,7]),qualifications)]
-				.sort((a,b) => a-b))
-				.toEqual([4,6,10])
+			expect(Filter.ineligibleItems(new RC([i3,i7]),qualifications))
+				.includesExactly([i4,i6,i10])
 		})
 		
 		it('should return those restricted items for which the user has not purchased a qualifier item', () => {
-			expect([...Filter.ineligibleItems(new Set([8]),qualifications)]
-				.sort((a,b) => a-b))
-				.toEqual([4,6])
-			expect([...Filter.ineligibleItems(new Set([2,8]),qualifications)]
-				.sort((a,b) => a-b))
-				.toEqual([6])
+			expect(Filter.ineligibleItems(new RC([i8]),qualifications))
+				.includesExactly([i4,i6])
+			expect(Filter.ineligibleItems(new RC([i2,i8]),qualifications))
+				.includesExactly([i6])
 		})
 	})
 
 	describe('priorItems', () => {
-		let upgrade;
-		let selectedPurchaseableItemIds;
-		let selectedUpgradeIds;
+		let u1;
+		let selectedPurchaseableItems;
+		let selectedUpgrades;
 
-		beforeEach(() => {
-			// items
-			// 1 : full pass intermediate follow
-			// 2 : full pass intermediate lead
-			// 3 : dance pass
-			// 4 : tuesday workshop follow
-			// 5 : tuesday workshop lead
-			// 6 : contest entry
-			upgrade = {
-				1 : {upgradeFromItemId: 1, upgradeToItemId: 2},
-				2 : {upgradeFromItemId: 2, upgradeToItemId: 1},
-				3 : {upgradeFromItemId: 3, upgradeToItemId: 1},
-				4 : {upgradeFromItemId: 3, upgradeToItemId: 2},
-				5 : {upgradeFromItemId: 4, upgradeToItemId: 5},
-				6 : {upgradeFromItemId: 5, upgradeToItemId: 4}
-			}
+		beforeAll(() => {
+			reset()
+			u1 = UP({upgradeFromItem: i1, upgradeToItem: i2})
 		})
 
-		describe('no purchasedItemIds', () => {
-			beforeEach(() => {
-				purchasedItemIds = new Set()
-				selectedUpgradeIds = new Set()
-			})
-
-			describe('no selectedPurchaseableItemIds', () => {
-				beforeEach(() => {
-					selectedPurchaseableItemIds = new Set()
-				})
+		describe('no purchasedItems', () => {
+			describe('no selectedPurchaseableItems', () => {
 				it('returns no items', () => {
 					expect(Filter.priorItems(
-						purchasedItemIds,
-						selectedPurchaseableItemIds,
-						selectedUpgradeIds,
-						upgrade).size).toEqual(0)
+						new RC(),
+						new RC(),
+						new RC()).size).toEqual(0)
 				})
 			})
 
-			describe('some selectedPurchaseableItemIds', () => {
-				beforeEach(() => {
-					selectedPurchaseableItemIds = new Set([1,2])
-				})
-				it('returns the selectedPurchaseableItemIds', () => {
-					expect([...Filter.priorItems(
-							purchasedItemIds,
-							selectedPurchaseableItemIds,
-							selectedUpgradeIds,
-							upgrade)]
-							.sort())
-						.toEqual([1,2])
+			describe('some selectedPurchaseableItems', () => {
+				it('returns the selectedPurchaseableItems', () => {
+					expect(Filter.priorItems(
+						new RC(),
+						new RC([i1,i2]),
+						new RC()))
+						.includesExactly([i1,i2])
 				})
 			})
 		})
 
-		describe('some purchasedItemIds', () => {
-			beforeEach(() => {
-				purchasedItemIds = new Set([1,6])
-			})
-
-			describe('no selectedPurchaseableItemIds', () => {
-				beforeEach(() => {
-					selectedPurchaseableItemIds = new Set()
-				})
-
-				describe('no selectedUpgradeIds', () => {
-					beforeEach(() => {
-						selectedUpgradeIds = new Set()
-					})
-
-					it('returns the purchasedItemIds', () => {
-						expect([...Filter.priorItems(
-							purchasedItemIds,
-							selectedPurchaseableItemIds,
-							selectedUpgradeIds,
-							upgrade)]
-							.sort())
-							.toEqual([1,6])
+		describe('some purchasedItems', () => {
+			describe('no selectedPurchaseableItems', () => {
+				describe('no selectedUpgrades', () => {
+					it('returns the purchasedItems', () => {
+						expect(Filter.priorItems(
+							new RC([i1,i6]),
+							new RC(),
+							new RC()))
+							.includesExactly([i1,i6])
 					})
 				})
 
-				describe('some selectedUpgradeIds', () => {
-					beforeEach(() => {
-						selectedUpgradeIds = new Set([1])
-					})
-
-					it('returns (purchasedItemIds U upgradeToItemIds) - upgradeFromItemIds', () =>{
-						expect([...Filter.priorItems(
-							purchasedItemIds,
-							selectedPurchaseableItemIds,
-							selectedUpgradeIds,
-							upgrade)]
-							.sort())
-							.toEqual([2,6])
+				describe('some selectedUpgrades', () => {
+					it('returns (purchasedItems U upgradeToItems) - upgradeFromItems', () =>{
+						expect(Filter.priorItems(
+							new RC([i1,i6]),
+							new RC(),
+							new RC([u1])))
+							.includesExactly([i2,i6])
 					})
 				})
 			})
 
-			describe('some selectedPurchaseableItemIds', () => {
-				beforeEach(() => {
-					selectedPurchaseableItemIds = new Set([4])
-				})
-
-				describe('no selectedUpgradeIds', () => {
-					beforeEach(() => {
-						selectedUpgradeIds = new Set()
-					})
-
-					it('returns purchasedItemIds U selectedPurchaseableItemIds', () => {
-						expect([...Filter.priorItems(
-							purchasedItemIds,
-							selectedPurchaseableItemIds,
-							selectedUpgradeIds,
-							upgrade)]
-							.sort())
-							.toEqual([1,4,6])
+			describe('some selectedPurchaseableItems', () => {
+				describe('no selectedUpgrades', () => {
+					it('returns purchasedItems U selectedPurchaseableItems', () => {
+						expect(Filter.priorItems(
+							new RC([i1,i6]),
+							new RC([i4]),
+							new RC()))
+							.includesExactly([i1,i4,i6])
 					})
 				})
 
-				describe('some selectedUpgradeIds', () => {
-					beforeEach(() => {
-						selectedUpgradeIds = new Set([1])
-					})
-
-					it('returns purchasedItemIds U selectedPurchaseableItemIds U upgradeToIds - upgradeFromIds', () => {
-						expect([...Filter.priorItems(
-							purchasedItemIds,
-							selectedPurchaseableItemIds,
-							selectedUpgradeIds,
-							upgrade)]
-							.sort())
-							.toEqual([2,4,6])
+				describe('some selectedUpgrades', () => {
+					it('returns purchasedItems U selectedPurchaseableItems U upgradeTos - upgradeFroms', () => {
+						expect(Filter.priorItems(
+							new RC([i1,i6]),
+							new RC([i4]),
+							new RC([u1])))
+							.includesExactly([i2,i4,i6])
 					})
 				})
 			})

@@ -1,21 +1,22 @@
 import React from 'react'
 import ItemRow from './ItemRow.js'
 import ItemTypeRow from './ItemTypeRow.js'
+import {RecordCollection} from '../kinship/Kinship.js'
 
 class PurchaseableItemsTable extends React.Component {
 	constructor(props) {
 		super(props)
 	}
 
-	enabled(itemId) {
-		let s = this.props.status[itemId]
-		return this.props.selectedItemIds.has(itemId)
-			|| (!(s.ineligible || s.excluded || s.upgradeOnly || this.props.item[itemId].soldOut))
+	enabled(item) {
+		let s = this.props.status(item)
+		return this.props.selectedItems.has(item)
+			|| (!(s.ineligible || s.excluded || s.upgradeOnly || item.soldOut))
 	}
 
-	tipData(itemId) {
-		let s = this.props.status[itemId]
-		if (this.props.item[itemId].soldOut) {
+	tipData(item) {
+		let s = this.props.status(item)
+		if (item.soldOut) {
 			return {
 				message: "This item is sold out!",
 				limitingItems: null
@@ -24,13 +25,13 @@ class PurchaseableItemsTable extends React.Component {
 		if (s.ineligible) {
 			return {
 				message: "requires one of the following:",
-				limitingItems: s.qualifierItemIds
+				limitingItems: s.qualifierItems
 			}
 		}
 		if (s.excluded || s.upgradeOnly) {
 			return {
 				message: "unavailable because you have selected:",
-				limitingItems: new Set([...(s.excluderItemIds || []),...(s.upgradeFromItemIds || [])])
+				limitingItems: new RecordCollection([...(s.excluderItems || []),...(s.upgradeFromItems || [])])
 			}
 		}
 		return {
@@ -41,23 +42,21 @@ class PurchaseableItemsTable extends React.Component {
   
 	render() {
 		let rows = []
-
-		this.props.purchaseableItemsByType.forEach((itemType) => {
-			rows.push(<ItemTypeRow itemType = {itemType} key = {itemType.name}/>)
-			itemType.items.forEach(item => {
-				let tipData = this.tipData(item.id)
+		for (let [itemType,items] of this.props.purchaseableItemsByType) {
+			rows.push(<ItemTypeRow itemTypeName = {itemType.name} key = {itemType.id}/>)
+			for (let item of items) {
+				let tipData = this.tipData(item)
 				rows.push(
 					<ItemRow
-						itemId = {item.id}
-						item={this.props.item}
-						enabled={this.enabled(item.id)}
-						selected = {this.props.selectedItemIds.has(item.id)}
+						item = {item}
+						enabled={this.enabled(item)}
+						selected = {this.props.selectedItems.has(item)}
 						handleSelection = {this.props.handleSelection}
 						message = {tipData.message}
 						limitingItems = {tipData.limitingItems}
 						key={item.id} />)
-			})
-		})
+			}
+		}
 
 		return (
 			<table>

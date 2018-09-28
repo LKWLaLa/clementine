@@ -27,7 +27,7 @@ class ConversionsContainer extends React.Component {
 
 	submitExchanges() {
 		let exchanges = this.props.exchanges
-			.filter((e) => this.props.selectedUpgradeIds.has(e.id))
+			.filter((e) => this.props.selectedUpgrades.has(e))
 
 		let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 		
@@ -42,55 +42,49 @@ class ConversionsContainer extends React.Component {
 		        'X-Requested-With': 'XMLHttpRequest',
 		        'X-CSRF-Token': csrfToken
         	},
-        	body: JSON.stringify(data),
+        	body: JSON.stringify(data), // will this work with getters?
         	credentials: 'same-origin'
 		}
 		fetch('/api/exchanges',init)
 	}
 
-	toEnabled(upgradeId) {
-		let upgradeToItemId = this.props.upgrade[upgradeId].upgradeToItemId
-		let s = this.props.status[upgradeToItemId]
-		return !(s.ineligible || s.excluded || this.props.item[upgradeToItemId].soldOut)
+	toEnabled(upgrade) {
+		let upgradeToItem = upgrade.upgradeToItem
+		let s = this.props.status(upgradeToItem)
+		return !(s.ineligible || s.excluded || upgradeToItem.soldOut)
 	}
 
-	fromEnabled(upgradeId) {
-		let upgradeFromItemId = this.props.upgrade[upgradeId].upgradeFromItemId
-		return this.props.priorItemIds.has(upgradeFromItemId)
+	fromEnabled(upgrade) {
+		let upgradeFromItem = upgrade.upgradeFromItem
+		return this.props.priorItems.has(upgradeFromItem)
 	}
 
-	enabled(upgradeId) {
-		return this.props.selectedUpgradeIds.has(upgradeId) ||
-				(this.toEnabled(upgradeId) && this.fromEnabled(upgradeId))
+	enabled(upgrade) {
+		return this.props.selectedUpgrades.has(upgrade) ||
+				(this.toEnabled(upgrade) && this.fromEnabled(upgrade))
 	}
 
 	render() {
 		const upgrades = this.props.upgrades
 		const exchanges = this.props.exchanges
-		const item = this.props.item
-		const selectedUpgradeIds = this.props.selectedUpgradeIds
-		const status = this.props.status
+		const selectedUpgrades = this.props.selectedUpgrades
 		const handleSelection = this.props.handleSelection
 
 		const upgradesTable = <UpgradesTable 
 				upgrades = {upgrades}
-				item = {item}
-				selectedUpgradeIds = {selectedUpgradeIds}
-				status = {status}
+				selectedUpgrades = {selectedUpgrades}
 				handleSelection = {handleSelection}
 				enabled = {this.enabled}
 			/>
 
 		const noAvailableUpgradesMessage = <div>You have no upgrades available at this time </div>
 
-		const upgradesElement = this.props.upgrades.length > 0 ?
+		const upgradesElement = this.props.upgrades.size > 0 ?
 			upgradesTable : noAvailableUpgradesMessage
 			
 		const exchangesTable = <ExchangesTable
 					exchanges = {exchanges}
-					item = {item}
-					selectedUpgradeIds = {selectedUpgradeIds}
-					status = {status}
+					selectedUpgrades = {selectedUpgrades}
 					handleSelection = {handleSelection}
 					enabled = {this.enabled}
 				/>

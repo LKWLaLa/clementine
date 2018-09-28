@@ -1,6 +1,6 @@
 class ItemSerializer < ActiveModel::Serializer
   attributes :id, :name, :description, :supply, :quantity_remaining, 
-  :current_price, :current_price_info, :item_type_id, :sold_out
+  :item_type_id, :sold_out,:current_price,:current_price_info, 
 
   def current_price
     object.current_price.to_f || "sold out"

@@ -5,8 +5,10 @@ class CheckoutForm extends Component {
   constructor(props){
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this)
-    
-    this.state = {complete: false}
+
+    this.state = {
+      error: null
+    }
   }
 
 
@@ -17,6 +19,8 @@ class CheckoutForm extends Component {
     // tokenize, since there's only one in this group (the CardElement).
     this.props.stripe.createToken({type: 'card', name: this.props.name})
     .then(({token}) => {
+      console.log(this.props.purchases)
+      console.log(this.props.upgrades)
       let data = {
         source: token.id,
         amount: Math.round(this.props.amount * 100), // stripe requires cents
@@ -31,11 +35,12 @@ class CheckoutForm extends Component {
         'X-Requested-With': 'XMLHttpRequest',
         'X-CSRF-Token': csrfToken
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data), // will this work with getters?
         credentials: 'same-origin'
       }).then(resp => resp.json())
       .then(resp => {
-        if (resp.ok) this.setState({complete: true});
+        console.log(this.props)
+        if (resp.ok) this.props.showTransactionComplete();
         if (resp.error) this.setState({error: resp.error});
       })
     })
@@ -44,8 +49,6 @@ class CheckoutForm extends Component {
   
 
   render() {
-    if (this.state.complete) return <h2>Purchase complete. Thanks for your registration!</h2>;
-    
     return (
       <div>
         <h2>Amount : ${this.props.amount}</h2>

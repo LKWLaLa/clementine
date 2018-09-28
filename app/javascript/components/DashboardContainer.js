@@ -1,12 +1,95 @@
 import React, {Component} from 'react'
 import PurchaseContainer from './PurchaseContainer.js'
 import Filter from '../helpers/Filter.js'
+import models, {Item, ItemType, User, Sale, Exclusion, Upgrade, Qualification} from '../helpers/models.js'
+import Kinship, {Record, RecordCollection} from '../kinship/Kinship.js'
 
 class DashboardContainer extends Component {
 	constructor(props) {
 		super(props)
 
-		// get the data
+		this.showTransactionComplete = this.showTransactionComplete.bind(this)
+		this.load = this.load.bind(this)
+
+		this.load()
+	}
+
+	load() {
+		this.loadData().then(apiArrays => {
+			let user = this.buildDb(apiArrays)
+
+			let availableUpgrades = new RecordCollection(Upgrade.all.filter(u => {
+				return user.purchasedItems.has(u.upgradeFromItem)
+				&& u.upgradeFromItem.itemType != u.upgradeToItem.itemType})
+				.map(u => {
+					u.priorSale = user.sales.findBy({item: u.upgradeFromItem})
+					let upgradeToPrice = u.upgradeToItem.itemType.currentPrice
+					u.upgradePrice = upgradeToPrice - u.priorSale.price.amount
+					u.upgradeToPrice = upgradeToPrice
+					return u
+				})
+			)
+
+			let availableExchanges = Upgrade.all.filter(u =>
+				user.purchasedItems.has(u.upgradeFromItem)
+				&& u.upgradeFromItem.itemType == u.upgradeToItem.itemType)
+				.map(u => {
+					u.priorSale = user.sales.findBy({item: u.upgradeFromItem})
+					return u
+				})
+
+			let purchaseableItems = Filter.purchaseableItems(
+				user.purchasedItems,
+				Item.all,
+				Exclusion.all,
+				Upgrade.all)
+
+			this.setState({
+				user: user,
+				availableUpgrades: availableUpgrades,
+				availableExchanges: availableExchanges,
+				purchaseableItems: purchaseableItems,
+				transactionComplete: false
+			})
+		}) // TODO: add error handling for the data loading
+	}
+
+	buildDb(apiValues) {
+		// apiValues[0] should be the currentUser
+		// which is not wrapped in an array
+		if (apiValues.length != models.loadSequence.length) {throw 'apiValues and models.loadSequence must have the same length'}
+
+		let currentUser = new models.User(apiValues[0])
+		for (let i = 1; i < apiValues.length; ++i) {
+			// construct instances of the ith model from
+			// objects in the ith api array
+			let m = models.loadSequence[i]
+			let arr = apiValues[i]
+			arr.forEach(obj => {				
+				let x = {}
+				Object.getOwnPropertyNames(obj).forEach(propName => {					
+					if (m.foreignKeyIds.has(propName)) {
+						// All instances that x depends on
+						// must be created prior to creation
+						// of instance x.
+						// The order in which data is loaded
+						// is therefore critically important.
+						let foreignKey = propName.slice(0,-2) // chop off the ""
+						x[foreignKey] = m.relatedModel(foreignKey).byId(obj[propName])
+					} else {
+						x[propName] = obj[propName]
+					}
+				})
+				// Calling the constructor of the model loads
+				// the newly created instance into Kinship
+				// even though no reference is retained here.
+				new m(x)
+			})
+		}
+		return currentUser
+	}
+
+	loadData() {
 		let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 		let init = {
 	        method: 'GET',
@@ -20,132 +103,64 @@ class DashboardContainer extends Component {
 
 		let promises = [fetch('/api/current_user', init),
 			fetch('/api/item_types', init),
+			fetch('/api/items',init),
+			// fetch('/api/price',init), 
+			fetch('/api/sales',init), // for current user only
 			fetch('/api/exclusions',init),
 			fetch('/api/upgrades', init),
 			fetch('/api/qualifications', init),
-			fetch('/api/items',init)]
+			]
 		
-		Promise.all(promises).then(values => {
+		// return a single promise that is fulfilled when all
+		// api calls have returned been
+		// converted into arrays of Javascript objects
+		return Promise.all(promises).then(values => {
 			let jsonPromises = []
 			values.forEach(value => {
 				jsonPromises.push(value.json())
 			})
 			return Promise.all(jsonPromises)
-		}).then(values => {
-			let currentUser = values[0]
-			let itemTypes = values[1]
-			let exclusions = values[2]
-			let upgrades = values[3]
-			let qualifications = values[4]
-			let items = values[5]
-			
-			let item = this.arrayToObjectById(items)
-			let exclusion = this.arrayToObjectById(exclusions)
-			let upgrade = this.arrayToObjectById(upgrades)
-			let qualification = this.arrayToObjectById(qualifications)
-
-			let itemIds = new Set(items.map(i => i.id))
-			let purchasedItemIds = new Set(currentUser.purchasedItems.map(i => i.id))
-			let purchaseableItemIds = Filter.purchaseableItems(
-					purchasedItemIds,
-					itemIds,
-					exclusions,
-					upgrades)
-
-			let purchaseableItemsByType = itemTypes
-				.map(oldType => {
-					let type = {...oldType} // shallow copy
-					type.items = oldType.items.filter(item => purchaseableItemIds.has(item.id))
-					return type
-				})
-				.filter(type => type.items.length > 0)
-
-			let availableUpgrades = upgrades.filter(u => 
-				purchasedItemIds.has(u.upgradeFromItemId)
-				&& item[u.upgradeFromItemId].itemTypeId != item[u.upgradeToItemId].itemTypeId)
-				.map(u => {
-					let priorItem = currentUser.purchasedItems.find(i => i.id == u.upgradeFromItemId)
-					let upgradeToPrice = item[u.upgradeToItemId].currentPriceInfo
-					u.upgradePrice = upgradeToPrice.amount - priorItem.purchasePrice
-					u.priorSaleId = priorItem.saleId
-					u.upgradeToPrice = upgradeToPrice
-					return u
-				})
-
-			let availableExchanges = upgrades.filter(u =>
-				purchasedItemIds.has(u.upgradeFromItemId)
-				&& item[u.upgradeFromItemId].itemTypeId == item[u.upgradeToItemId].itemTypeId)
-				.map(u => {
-					let priorItem = currentUser.purchasedItems.find(i => i.id == u.upgradeFromItemId)
-					u.priorSaleId = priorItem.saleId
-					return u
-				})
-
-			let availableUpgrade = this.arrayToObjectById(availableUpgrades)
-			let availableExchange = this.arrayToObjectById(availableExchanges)
-
-			this.setState({
-				currentUser: currentUser,
-				itemTypes: itemTypes,
-				exclusions: exclusions,
-				upgrades: upgrades,
-				qualifications: qualifications,
-				exclusion: exclusion,
-				upgrade: upgrade,
-				qualification: qualification,
-				item: item,
-				items: items,
-				itemIds: itemIds,
-				purchasedItemIds: purchasedItemIds,
-				purchaseableItemIds: purchaseableItemIds,
-				purchaseableItemsByType: purchaseableItemsByType,
-				availableExchanges: availableExchanges,
-				availableUpgrades: availableUpgrades,
-				availableUpgrade: availableUpgrade,
-				availableExchange: availableExchange
-			})
 		})
 	}
 
-	// build an object mapping each the id of each item in array
-	// to the item itself
-	arrayToObjectById(array) {
-		let obj = {}
-		array.forEach(i => {
-			obj[i.id] = i
-		})
-		return obj
+	showTransactionComplete() {
+		this.setState({transactionComplete: true})
+	}
+
+	reload() {
+		Kinship.resetDb()
+		this.load()
 	}
 
 	render(){
 		if (this.state) {
-									
-			return (
-			  	<div className="dashboard-container">
-				    <h2>Welcome to your registration dashboard</h2>
-				    <PurchaseContainer
-				    	currentUser = {this.state.currentUser}
-						itemTypes = {this.state.itemTypes}
-						exclusions = {this.state.exclusions}
-						upgrades = {this.state.upgrades}
-						qualifications = {this.state.qualifications}
-						item = {this.state.item}
-						exclusion = {this.state.exclusion}
-						upgrade = {this.state.upgrade}
-						qualification = {this.state.qualification}
-						itemIds = {this.state.itemIds}
-						purchasedItems = {this.state.purchasedItems}
-						purchasedItemIds = {this.state.purchasedItemIds}
-						purchaseableItemIds = {this.state.purchaseableItemIds}
-						purchaseableItemsByType = {this.state.purchaseableItemsByType}
-						availableUpgrades = {this.state.availableUpgrades}
-						availableExchanges = {this.state.availableExchanges}
-						availableUpgrade = {this.state.availableUpgrade}
-						availableExchange = {this.state.availableExchange}
-						items = {this.state.items}
-				    />
-			    </div>
-			)
+			let firstName = this.state.user.firstName
+			if (this.state.transactionComplete) {
+				return(
+					<div>
+						<h2>Purchase complete. Thanks for your registration!</h2>
+						<button onClick = {this.load}>
+						Click here to return to your dashboard.
+						</button>
+					</div>
+				)
+			} else {
+				return (
+				  	<div className="dashboard-container">
+					    <h2>Welcome to your registration dashboard, {firstName}!</h2>
+					  	<PurchaseContainer
+					  		user = {this.state.user}
+					  		purchaseableItems = {this.state.purchaseableItems}
+					  		purchaseableItemsByType = {this.state.purchaseableItems.groupBy('itemType')}
+					  		availableUpgrades = {this.state.availableUpgrades}
+					  		availableExchanges = {this.state.availableExchanges}
+					  		showTransactionComplete = {this.showTransactionComplete}
+					  	 />
+				    </div>
+				)
+			}
+					
+			
 		} else {
 			return (null)
 		}

@@ -4,22 +4,18 @@ import UpgradeRow from './UpgradeRow.js'
 class UpgradesTable extends React.Component {
 	render() {
 		const upgrades = this.props.upgrades
-		const exchanges = this.props.exchanges
-		const item = this.props.item
-		const selectedUpgradeIds = this.props.selectedUpgradeIds
-		const status = this.props.status
+		const selectedUpgrades = this.props.selectedUpgrades
 		const handleSelection = this.props.handleSelection
 
 		let upgradeRows = upgrades.map(u => {
-			let enabled = this.props.enabled(u.id)
+			let enabled = this.props.enabled(u)
 			return <UpgradeRow
 				key = {u.id}
-				upgradeId = {u.id}
-				upgradeFromItemId = {u.upgradeFromItemId}
-				upgradeToItemId = {u.upgradeToItemId}
+				upgrade = {u}
+				upgradeFromItem = {u.upgradeFromItem}
+				upgradeToItem = {u.upgradeToItem}
 				price = {u.upgradePrice}
-				item = {item}
-				selected = {selectedUpgradeIds.has(u.id)}
+				selected = {selectedUpgrades.has(u)}
 				enabled = {enabled}
 				handleSelection = {handleSelection} />
 		})

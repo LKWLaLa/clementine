@@ -2,137 +2,238 @@ let Kinship = require('../kinship/Kinship.js')
 let Record = Kinship.Record
 let RecordCollection = Kinship.RecordCollection
 
+class User extends Record {}
 class ItemType extends Record {}
 class Item extends Record {}
-class Price extends Record {}
+// class Price extends Record {}
 class Sale extends Record {}
 class Exclusion extends Record {}
 class Upgrade extends Record {}
 class Qualification extends Record {}
 
+User.hasMany({
+	name: 'sales',
+	relatedModel: Sale,
+	foreignKey: 'user'
+})
+User.hasMany({
+	name: 'purchasedItems',
+	relatedModel: Item,
+	through: 'sales',
+	source: 'item'
+})
+User.hasMany({
+	name: 'excludedItems',
+	relatedModel: Item,
+	through: 'purchasedItems',
+	source: 'excludedItems'
+})
+User.hasMany({
+	name: 'qualifiedItems',
+	relatedModel: Item,
+	through: 'purchasedItems',
+	source: 'qualifiedItems'
+})
+User.hasMany({
+	name: 'upgradeToItems',
+	relatedModel: Item,
+	through: 'purchasedItems',
+	source: 'upgradeToItems'
+})
+User.hasMany({
+	name: 'upgradeFromTos',
+	relatedModel: Upgrade,
+	through: 'purchasedItems',
+	source: 'upgradeFromTos'
+})
+
 ItemType.hasMany({
 	relatedModel: Item,
 	foreignKey: 'itemType',
-	aliasSingular: 'item',
-	aliasPlural: 'items',
-	through: null
+	name: 'items'
 })
-ItemType.hasMany({
-	relatedModel: Price,
-	foreignKey: 'itemType',
-	aliasSingular: 'price',
-	aliasPlural: 'prices',
-	through: null
-})
+// ItemType.hasMany({
+// 	relatedModel: Price,
+// 	foreignKey: 'itemType',
+// 	name: 'prices'
+// })
 
 Item.belongsTo({
 	relatedModel: ItemType,
 	foreignKey: 'itemType',
-	aliasSingular: 'itemType',
-	aliasPlural: 'itemTypes'
+	name: 'itemType'
 })
-Item.hasMany({
-	relatedModel: Price,
-	foreignKey: null,
-	aliasSingular: 'price',
-	aliasPlural: 'prices',
-	through: 'itemType' 
-})
+// Item.hasMany({
+// 	relatedModel: Price,
+// 	name: 'prices',
+// 	through: 'itemType',
+// 	source: 'prices'
+// })
+
+// Exclusion Aliasing
 Item.hasMany({
 	relatedModel: Exclusion,
 	foreignKey: 'excluderItem',
-	aliasSingular: 'excluderExcluded',
-	aliasPlural: 'excluderExcludeds'
+	name: 'excluderExcludeds'
 })
 Item.hasMany({
 	relatedModel: Item,
-	foreignKey: null,
-	aliasSingular: 'excludedItem',
-	aliasPlural: 'excludedItems',
-	through: 'excluderExcludeds'
+	name: 'excludedItems',
+	through: 'excluderExcludeds',
+	source: 'excludedItem'
 })
 
-Price.belongsTo({
-	relatedModel: ItemType,
-	foreignKey: 'itemType',
-	aliasSingular: 'itemType',
-	aliasPlural: 'itemTypes'
+Item.hasMany({
+	relatedModel: Exclusion,
+	foreignKey: 'excludedItem',
+	name: 'excludedExcluders'
 })
-Price.hasMany({
+Item.hasMany({
 	relatedModel: Item,
-	foreignKey: null,
-	aliasSingular: 'item',
-	aliasPlural: 'items',
-	through: 'itemType'
-})
-Price.hasMany({
-	relatedModel: Sale,
-	foreignKey: 'price',
-	aliasSingular: 'sale',
-	aliasPlural: 'sales',
-	through: null
+	name: 'excluderItems',
+	through: 'excludedExcluders',
+	source: 'excluderItem'
 })
 
-Sale.belongsTo({
-	relatedModel: Price,
-	foreignKey: 'price',
-	aliasSingular: 'price',
-	aliasPlural: 'prices'
+// Upgrade Aliasing
+Item.hasMany({
+	relatedModel: Upgrade,
+	name: 'upgradeFromTos',
+	foreignKey: 'upgradeFromItem',
 })
+Item.hasMany({
+	relatedModel: Item,
+	name: 'upgradeToItems',
+	through: 'upgradeFromTos',
+	source: 'upgradeToItem'
+})
+
+Item.hasMany({
+	relatedModel: Upgrade,
+	name: 'upgradeToFroms',
+	foreignKey: 'upgradeToItem',
+	
+})
+Item.hasMany({
+	relatedModel: Item,
+	name: 'upgradeFromItems',
+	through: 'upgradeToFroms',
+	source: 'upgradeFromItem'
+})
+
+// Qualifier Aliasing
+Item.hasMany({
+	relatedModel: Qualification,
+	name: 'qualifierQualifieds',
+	foreignKey: 'qualifierItem',
+	
+})
+Item.hasMany({
+	relatedModel: Item,
+	name: 'qualifiedItems',
+	through: 'qualifierQualifieds',
+	source: 'qualifiedItem'
+})
+
+Item.hasMany({
+	relatedModel: Qualification,
+	name: 'qualifiedQualifiers',
+	foreignKey: 'qualifiedItem',
+	
+})
+Item.hasMany({
+	relatedModel: Item,
+	name: 'qualifierItem',
+	through: 'qualifiedQualifiers',
+	source: 'qualifierItem'
+})
+
+// Price.belongsTo({
+// 	relatedModel: ItemType,
+// 	foreignKey: 'itemType',
+// 	name: 'itemType'
+// })
+// Price.hasMany({
+// 	relatedModel: Item,
+// 	name: 'items',
+// 	through: 'itemType',
+// 	source: 'items'
+// })
+// Price.hasMany({
+// 	relatedModel: Sale,
+// 	foreignKey: 'price',
+// 	name: 'sales'
+// })
+
+// Sale.belongsTo({
+// 	relatedModel: Price,
+// 	foreignKey: 'price',
+// 	name: 'price'
+// })
 Sale.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'item',
-	aliasSingular: 'item',
-	aliasPlural: 'items'
+	name: 'item'
+})
+Sale.belongsTo({
+	name: 'user',
+	relatedModel: User,
+	foreignKey: 'user'
 })
 
 Exclusion.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'excluderItem',
-	aliasSingular: 'excluderItem',
-	aliasPlural: 'excluderItems'
+	name: 'excluderItem'
 })
 Exclusion.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'excludedItem',
-	aliasSingular: 'excludedItem',
-	aliasPlural: 'excludedItems'
+	name: 'excludedItem'
 })
 
 Upgrade.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'upgradeToItem',
-	aliasSingular: 'upgradeToItem',
-	aliasPlural: 'upgradeToItems'
+	name: 'upgradeToItem'
 })
 Upgrade.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'upgradeFromItem',
-	aliasSingular: 'upgradeFromItem',
-	aliasPlural: 'upgradeFromItems'
+	name: 'upgradeFromItem'
 })
 
 Qualification.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'qualifierItem',
-	aliasSingular: 'qualifierItem',
-	aliasPlural: 'qualifierItems'
+	name: 'qualifierItem'
 })
 Qualification.belongsTo({
 	relatedModel: Item,
 	foreignKey: 'qualifiedItem',
-	aliasSingular: 'qualifiedItem',
-	aliasPlural: 'qualifiedItems'
+	name: 'qualifiedItem'
 })
 
+let loadSequence = [
+	User,
+	ItemType,
+	Item,
+	//Price,
+	Sale,
+	Exclusion,
+	Upgrade,
+	Qualification
+]
+
+module.exports.User = User
 module.exports.Item = Item
 module.exports.ItemType = ItemType
-module.exports.Price = Price
+// module.exports.Price = Price
 module.exports.Sale = Sale
 module.exports.Exclusion = Exclusion
 module.exports.Upgrade = Upgrade
 module.exports.Qualification = Qualification
-
+module.exports.loadSequence = loadSequence
 
 
 
