@@ -2,8 +2,7 @@ ActiveAdmin.register User do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-actions :index, :show, :edit, :update
-permit_params :first_name, :last_name, :email, :city, :state, :country
+actions :index, :show
 
 preserve_default_filters!
   filter :purchased_items, as: :select, label: "Registration item"
@@ -75,6 +74,9 @@ preserve_default_filters!
           end
           column "amount" do |sale|
             number_to_currency(sale.price.amount)
+          end
+          column "void" do |sale|
+            sale.void
           end
         end
       end

@@ -1,5 +1,6 @@
 ActiveAdmin.register Price do
-actions :index
+actions :index, :new, :create, :edit, :update, :show
+permit_params :price_type, :item_type_id, :supply, :priority, :amount
 
 filter :price_type, as: :select
 filter :item_type, as: :select
@@ -7,6 +8,7 @@ filter :items
 filter :supply
 filter :priority
 filter :amount
+filter :quantity_remaining
 
 
 index do
@@ -17,6 +19,8 @@ index do
   column :priority
   column :item_type
   column :supply
+  column :quantity_remaining
+  column :sold_out
   actions
 end
 
