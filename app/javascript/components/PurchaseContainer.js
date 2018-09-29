@@ -127,6 +127,7 @@ class PurchaseContainer extends React.Component {
 		let newPurchaseSubtotal = this.state.selectedPurchaseableItems
 			.reduce((sum,item) => sum + item.itemType.currentPrice,0)
 		let upgradeSubtotal = this.state.selectedUpgrades
+			.filter(u => this.props.availableUpgrades.has(u))
 			.reduce((sum,u) => sum + u.upgradePrice,0)
 		return newPurchaseSubtotal + upgradeSubtotal
 	}
@@ -182,6 +183,7 @@ class PurchaseContainer extends React.Component {
 					handleSelection = {this.handleUpgradeSelection}
 					user = {this.props.user}
 					status = {this.itemStatus}
+					showTransactionComplete = {this.props.showTransactionComplete}
 				/>
 				<h3>Checkout: </h3> 
 	            <Elements>

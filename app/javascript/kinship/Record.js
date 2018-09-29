@@ -96,8 +96,8 @@ class Record {
 							return db[modelName]['records'][obj.id][r.foreignKey]
 						}
 					}
-					// track foreignKeys
-					this.constructor.foreignKeys.add(r.foreignKey)
+					// // track foreignKeys
+					// this.constructor.foreignKeys.add(r.foreignKey)
 				}
 			})
 		}
@@ -127,7 +127,7 @@ class Record {
 	}
 
 	static get foreignKeys() {
-		if (!this._foreignKeys) {this._foreignKeys = new Set([])}
+		if (!this.hasOwnProperty('_foreignKeys')) {this._foreignKeys = new Set([])}
 		return this._foreignKeys
 	}
 

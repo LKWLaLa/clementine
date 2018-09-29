@@ -13,7 +13,8 @@ class ConversionsContainer extends React.Component {
 		this.submitExchanges = this.submitExchanges.bind(this)
 
 		this.state = {
-			showExchangesTable: false
+			showExchangesTable: false,
+			exchangesButtonEnabled: true
 		}
 	}
 
@@ -26,6 +27,7 @@ class ConversionsContainer extends React.Component {
 	}
 
 	submitExchanges() {
+		this.setState({exchangesButtonEnabled: false})
 		let exchanges = this.props.exchanges
 			.filter((e) => this.props.selectedUpgrades.has(e))
 
@@ -45,7 +47,14 @@ class ConversionsContainer extends React.Component {
         	body: JSON.stringify(data), // will this work with getters?
         	credentials: 'same-origin'
 		}
-		fetch('/api/exchanges',init)
+		fetch('/api/exchanges',init).then((res,err) =>{
+			if (err) {
+				msg = `error in call to /api/exchanges: ${err}`
+				throw msg
+			}
+			if (res.ok) {this.props.showTransactionComplete()}
+			if (res.error) {this.setState({error: res.error})}
+		})
 	}
 
 	toEnabled(upgrade) {
@@ -89,11 +98,15 @@ class ConversionsContainer extends React.Component {
 					enabled = {this.enabled}
 				/>
 
+		const exchangesButton = this.state.exchangesButtonEnabled ?
+			<button onClick={this.submitExchanges}>Confirm Exchange</button> :
+			<span>Submitting Exchange...</span>
+
 		const exchangesElement = this.state.showExchangesTable ?
 			<div>
 				<button onClick={this.hideExchangesTable}>Hide exchanges</button>
 				{exchangesTable}
-				<button onClick={this.submitExchanges}>Confirm Exchange</button>
+				{exchangesButton}
 			</div> :
 			<button onClick={this.showExchangesTable}>Sign up for the wrong level or role?  Click here!</button>
 
