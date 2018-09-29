@@ -7,12 +7,14 @@ class CheckoutForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
 
     this.state = {
-      error: null
+      error: null,
+      processingPayment: false
     }
   }
 
 
   handleSubmit(e) {
+    this.setState({processingPayment: true})
     e.preventDefault()
     let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     // Within the context of `Elements`, this call to createToken knows which Element to
@@ -49,13 +51,22 @@ class CheckoutForm extends Component {
   
 
   render() {
+    let submitButton;
+    if (this.state.processingPayment) {
+      submitButton = <span>processing payment</span>
+    } else if (this.props.amount > 0) {
+      submitButton = <button>Submit Payment</button>
+    } else {
+      submitButton = <button disabled={true}>Submit Payment</button>
+    }
+
     return (
       <div>
         <h2>Amount : ${this.props.amount}</h2>
         <form onSubmit={this.handleSubmit} style={{margin: '0 40% 3% 0' }}>
           <CardElement style={{base: {fontSize: '18px'}}} /><br />
           <div id="card-errors" role="alert">{this.state.error}</div><br />
-          <button>Submit Payment</button>
+          {submitButton}
         </form>
       </div>
     );
