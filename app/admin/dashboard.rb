@@ -14,7 +14,7 @@ ActiveAdmin.register_page "Dashboard" do
         
       column do
         panel "Stats to date" do
-            div "#{Sale.all.count} total sales"
+            div "#{Sale.where(void: false).count} total sales"
             div "#{number_to_currency(Sale.all.reduce(0) {|a, s| a + s.price.amount})} in revenue"              
         end
       end
