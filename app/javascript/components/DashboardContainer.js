@@ -10,12 +10,14 @@ class DashboardContainer extends Component {
 
 		this.showTransactionComplete = this.showTransactionComplete.bind(this)
 		this.load = this.load.bind(this)
+		this.reload = this.reload.bind(this)
 
 		this.load()
 	}
 
 	load() {
 		this.loadData().then(apiArrays => {
+			console.log(apiArrays)
 			let user = this.buildDb(apiArrays)
 
 			let availableUpgrades = new RecordCollection(Upgrade.all.filter(u => {
@@ -38,6 +40,7 @@ class DashboardContainer extends Component {
 					return u
 				})
 
+			console.log(user.purchasedItems)
 			let purchaseableItems = Filter.purchaseableItems(
 				user.purchasedItems,
 				Item.all,
@@ -129,6 +132,7 @@ class DashboardContainer extends Component {
 
 	reload() {
 		Kinship.resetDb()
+		console.log(Kinship.getDb())
 		this.load()
 	}
 
@@ -139,7 +143,7 @@ class DashboardContainer extends Component {
 				return(
 					<div>
 						<h2>Purchase complete. Thanks for your registration!</h2>
-						<button onClick = {this.load}>
+						<button onClick = {this.reload}>
 						Click here to return to your dashboard.
 						</button>
 					</div>

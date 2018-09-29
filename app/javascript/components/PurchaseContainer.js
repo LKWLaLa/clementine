@@ -183,6 +183,7 @@ class PurchaseContainer extends React.Component {
 					handleSelection = {this.handleUpgradeSelection}
 					user = {this.props.user}
 					status = {this.itemStatus}
+					showTransactionComplete = {this.props.showTransactionComplete}
 				/>
 				<h3>Checkout: </h3> 
 	            <Elements>

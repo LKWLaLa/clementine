@@ -68,6 +68,8 @@ class Api::SalesController < ApplicationController
       sale.save if sale.valid?
       prior_sale.update(void: true)
     end
+
+    render json: {ok: true}, status: 201
   end
  
   def index
