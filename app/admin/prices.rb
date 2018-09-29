@@ -1,15 +1,23 @@
 ActiveAdmin.register Price do
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
+actions :index
+
+filter :price_type, as: :select
+filter :item_type, as: :select
+filter :items
+filter :supply
+filter :priority
+filter :amount
+
+
+index do
+  column :price_type
+  column :amount do |price|
+    number_to_currency(price.amount)
+  end
+  column :priority
+  column :item_type
+  column :supply
+  actions
+end
 
 end
