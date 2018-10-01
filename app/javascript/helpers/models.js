@@ -143,7 +143,7 @@ Item.hasMany({
 })
 Item.hasMany({
 	relatedModel: Item,
-	name: 'qualifierItem',
+	name: 'qualifierItems',
 	through: 'qualifiedQualifiers',
 	source: 'qualifierItem'
 })
