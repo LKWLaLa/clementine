@@ -6,8 +6,17 @@ class ItemRow extends React.Component {
     const limitingItems = this.props.limitingItems
 		const className = this.props.enabled ? 'enabled-row-entry' : 'disabled-row-entry'
 		const nameSpan = <span className={className}>{item.name}</span>
-    const price = item.soldOut ? "Sold Out" : "$" + item.currentPrice
-		const priceSpan = <span className={className}>{price}</span>
+    let remaining
+    const warningThreshold = 5
+    if (item.soldOut) {
+      remaining = "Sold Out"
+    } else if (item.quantityRemaining < warningThreshold) {
+      remaining = `only ${item.quantityRemaining} left!`
+    } else {
+      remaining = ''
+    }
+
+		const remainingSpan = <span className={className}>{remaining}</span>
     const limitingItemDivs = limitingItems ? limitingItems.map(limitingItem => {
         return <div key = {limitingItem.id}>{limitingItem.name}</div>
       }) : []
@@ -33,7 +42,7 @@ class ItemRow extends React.Component {
   					/>
     		   </td>
   				<td>{nameDiv}</td>
-  				<td>{priceSpan}</td>
+  				<td>{remainingSpan}</td>
       </tr> 
 		)
 	}

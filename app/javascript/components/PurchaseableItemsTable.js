@@ -46,6 +46,8 @@ class PurchaseableItemsTable extends React.Component {
 			rows.push(<ItemTypeRow
 				itemTypeName = {itemType.name}
 				currentPrice = {itemType.currentPrice}
+				currentPriceType = {itemType.currentPriceType}
+				nextPriceType = {itemType.nextPriceType}
 				quantityRemainingAtCurrentPrice = {itemType.quantityRemainingAtCurrentPrice}
 				key = {'itemType ' + itemType.id}
 
