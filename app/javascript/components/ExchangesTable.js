@@ -21,12 +21,12 @@ class ExchangesTable extends React.Component {
 		return (
 			<table>
 				<thead>
-					<tr><th colSpan="4">Exchanges</th></tr>
+					<tr><th colSpan="4" className="category-header">Exchanges</th></tr>
 					<tr>
-						<th> </th>
-						<th>Exchange Item</th>
-						<th>For Item</th>
-						<th>Price of Exchange</th>
+						<th className="column-header"> </th>
+						<th className="column-header">Exchange Item</th>
+						<th className="column-header">For Item</th>
+						<th className="column-header">Price of Exchange</th>
 					</tr>
 				</thead>
 				<tbody>

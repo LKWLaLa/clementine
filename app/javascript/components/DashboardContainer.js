@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import PurchaseContainer from './PurchaseContainer.js'
 import Filter from '../helpers/Filter.js'
+import Footer from './Footer'
 import models, {Item, ItemType, User, Sale, Exclusion, Upgrade, Qualification} from '../helpers/models.js'
 import Kinship, {Record, RecordCollection} from '../kinship/Kinship.js'
 
@@ -149,7 +150,6 @@ class DashboardContainer extends Component {
 			} else {
 				return (
 				  	<div className="dashboard-container">
-					    <h2>Welcome to your registration dashboard, {firstName}!</h2>
 					  	<PurchaseContainer
 					  		user = {this.state.user}
 					  		purchaseableItems = {this.state.purchaseableItems}
@@ -158,6 +158,7 @@ class DashboardContainer extends Component {
 					  		availableExchanges = {this.state.availableExchanges}
 					  		showTransactionComplete = {this.showTransactionComplete}
 					  	 />
+					  	<Footer /> 
 				    </div>
 				)
 			}

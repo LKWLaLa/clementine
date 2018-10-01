@@ -5,16 +5,13 @@ class PurchasedItemsTable extends React.Component {
 		const purchasedItems = this.props.purchasedItems
 		const rows = purchasedItems.size > 0 ?
 			[...purchasedItems].map(item => (
-				<tr key={item.id}><td>{item.name}</td></tr>)) :
+				<tr className="item-row" key={item.id}><td>{item.name}</td></tr>)) :
 			<tr><td>You have not purchased any items yet</td></tr>
 		return (
-			<table>
+			<table className="items-table">
 				<thead>
 					<tr>
-					<th colSpan="1">Purchased Items</th>
-					</tr>
-					<tr>
-						<th>Item</th>
+					<th colSpan="1" className="category-header">Your Purchased Items</th>
 					</tr>
 				</thead>
 				<tbody>{rows}</tbody>

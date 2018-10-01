@@ -61,7 +61,7 @@ class CheckoutForm extends Component {
     }
 
     return (
-      <div>
+      <div className="checkout-form">
         <h2>Amount : ${this.props.amount}</h2>
         <form onSubmit={this.handleSubmit} style={{margin: '0 40% 3% 0' }}>
           <CardElement style={{base: {fontSize: '18px'}}} /><br />

@@ -24,3 +24,7 @@
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+
+.item-row {
+    font-size: 1.1em;
+}

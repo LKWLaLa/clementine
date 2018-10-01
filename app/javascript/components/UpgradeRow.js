@@ -19,7 +19,7 @@ class UpgradeRow extends React.Component {
 		let priceSpan = <span className={className}>{price}</span>
 		
 		return (
-			<tr>
+			<tr className="item-row">
 				<td>
 					<input 
   						type = "checkbox"

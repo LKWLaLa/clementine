@@ -6,7 +6,7 @@ class ItemRow extends React.Component {
     const limitingItems = this.props.limitingItems
 		const className = this.props.enabled ? 'enabled-row-entry' : 'disabled-row-entry'
 		const nameSpan = <span className={className}>{item.name}</span>
-    const price = item.soldOut ? "Sold Out" : item.currentPrice
+    const price = item.soldOut ? "Sold Out" : "$" + item.currentPrice
 		const priceSpan = <span className={className}>{price}</span>
     const limitingItemDivs = limitingItems ? limitingItems.map(limitingItem => {
         return <div key = {limitingItem.id}>{limitingItem.name}</div>
@@ -22,7 +22,7 @@ class ItemRow extends React.Component {
               </div>)
 
 		return (
-  			<tr>
+  			<tr className="item-row">
         	<td>
   					<input 
   						type = "checkbox"

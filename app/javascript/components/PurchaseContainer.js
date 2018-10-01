@@ -166,15 +166,21 @@ class PurchaseContainer extends React.Component {
 		
 		return (
 			<div className="purchaseable-items-container">
-				<PurchasedItemsTable
-					purchasedItems = {this.props.user.purchasedItems}
-				/>
-				<PurchaseableItemsTable
-					purchaseableItemsByType = {this.props.purchaseableItemsByType}
-					selectedItems = {this.state.selectedPurchaseableItems}
-					handleSelection = {this.handlePurchaseableItemSelection}
-					status = {this.itemStatus}
-				/>
+				<div className="flex-container">
+					<div className="flex-item">
+						<PurchasedItemsTable
+							purchasedItems = {this.props.user.purchasedItems}
+						/>
+					</div>
+					<div className="flex-item">
+						<PurchaseableItemsTable
+							purchaseableItemsByType = {this.props.purchaseableItemsByType}
+							selectedItems = {this.state.selectedPurchaseableItems}
+							handleSelection = {this.handlePurchaseableItemSelection}
+							status = {this.itemStatus}
+						/>
+					</div>
+				</div>
 				<ConversionsContainer
 					upgrades = {this.props.availableUpgrades}
 					exchanges = {this.props.availableExchanges}
