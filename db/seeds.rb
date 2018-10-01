@@ -326,20 +326,20 @@ sales = Sale.create([
  	# sold Jack Black a Dance Pass
  	user: jack,
  	item: dance_pass_item,
- 	price: prices[5],
+ 	price: dance_pass_default_price,
  	payment: jackPaidForDancePass
  },
  {
  	# sold Jack Black a Contest Entry
  	user: jack,
  	item: contest_entry_item,
- 	price: prices[5],
+ 	price: contest_entry_default_price,
  	payment: jackPaidForContestEntry
  },
  {
   user: tim,
   item: full_pass_intermediate_follow,
-  price: prices[0],
+  price: tier_1,
   payment: timPaidForFullPass,
   void: true
  },
@@ -347,7 +347,7 @@ sales = Sale.create([
   # tim exchanged his full_pass_intermediate_follow for a full_pass_intermediate_lead
   user: tim,
   item: full_pass_intermediate_lead,
-  price: prices[0],
+  price: tier_1,
   payment: timPaidForFullPass
  }
 ])
