@@ -15,7 +15,7 @@ filter :item, collection: -> {
   Item.all.sort_by{|i| i.name}
 }
 filter :price, collection: -> {
-  Price.all.map{|p| p.price_type }
+  Price.all.map{|p| [p.price_type,p.id]}
 }, label: "Price type"
 remove_filter :payment 
 

@@ -51,7 +51,7 @@ class Item < ApplicationRecord
   end
 
   def quantity_sold
-    self.sales.count
+    self.sales.where(void: false).count
   end
 
   def quantity_remaining
