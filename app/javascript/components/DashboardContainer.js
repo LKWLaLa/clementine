@@ -140,9 +140,9 @@ class DashboardContainer extends Component {
 			let firstName = this.state.user.firstName
 			if (this.state.transactionComplete) {
 				return(
-					<div>
-						<h2>Purchase complete. Thanks for your registration!</h2>
-						<button onClick = {this.reload}>
+					<div className="transaction-complete">
+						<p className="transaction-complete-text">Thanks for your registration! Transaction complete.</p>
+						<button className="return-home-button" onClick = {this.reload}>
 						Click here to return to your dashboard.
 						</button>
 					</div>

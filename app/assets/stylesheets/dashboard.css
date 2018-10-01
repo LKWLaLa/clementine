@@ -48,3 +48,30 @@
   text-shadow: .5px .5px .5px rgba(0,0,0,.9);
   border: 1px solid rgb(133,208,164);
 }
+
+.conversions-container {
+  margin-bottom: 100px;
+}
+
+.show-hide-exchanges {
+ margin-bottom: 15px;
+}
+
+.transaction-complete {
+  text-align: center;
+  margin-top: 100px;
+}
+
+.transaction-complete-text {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.5em;
+}
+
+.return-home-button {
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgb(133,208,164);
+  background-image: none;
+  text-shadow: .5px .5px .5px rgba(0,0,0,.9);
+  border: 1px solid rgb(133,208,164);
+}
