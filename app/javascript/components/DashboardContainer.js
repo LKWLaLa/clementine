@@ -17,7 +17,6 @@ class DashboardContainer extends Component {
 
 	load() {
 		this.loadData().then(apiArrays => {
-			console.log(apiArrays)
 			let user = this.buildDb(apiArrays)
 
 			let availableUpgrades = new RecordCollection(Upgrade.all.filter(u => {
@@ -40,7 +39,6 @@ class DashboardContainer extends Component {
 					return u
 				})
 
-			console.log(user.purchasedItems)
 			let purchaseableItems = Filter.purchaseableItems(
 				user.purchasedItems,
 				Item.all,
@@ -132,7 +130,6 @@ class DashboardContainer extends Component {
 
 	reload() {
 		Kinship.resetDb()
-		console.log(Kinship.getDb())
 		this.load()
 	}
 
