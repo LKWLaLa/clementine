@@ -61,6 +61,7 @@ class DashboardContainer extends Component {
 		// which is not wrapped in an array
 		if (apiValues.length != models.loadSequence.length) {throw 'apiValues and models.loadSequence must have the same length'}
 
+		Kinship.initializeDb(models.loadSequence)
 		let currentUser = new models.User(apiValues[0])
 		for (let i = 1; i < apiValues.length; ++i) {
 			// construct instances of the ith model from
