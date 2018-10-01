@@ -89,27 +89,23 @@ class PurchaseContainer extends React.Component {
 			this.state.selectedUpgrades)
 
 		let status = {ineligible: false, excluded: false, upgradeOnly: false}
+
+		// is the item ineligible?
 		if (!Filter.eligibleItems(priorItems,Item.all,Qualification.all).has(item)) {
 			status.ineligible = true
 			status.qualifierItems = item.qualifierItems
 		}
 
 		// is the item excluded?
-		let excluderItems = Exclusion.all
-			.filter(e => ((e.excludedItem == item) && (priorItems.has(e.excluderItem))))
-			.map(e => e.excluderItem)
-		if (excluderItems.length > 0) {
+		if (priorItems.allRelated('excludedItems').has(item)) {
 			status.excluded = true
-			status.excluderItems = excluderItems
+			status.excluderItems = priorItems.filter(i => item.excluderItems.has(i))
 		}
 
 		// is the item upgradeOnly?
-		let upgradeFromItems = Upgrade.all
-			.filter(u => u.upgradeToItem == item && priorItems.has(u.upgradeFromItem))
-			.map(u => u.upgradeFromItem)
-		if (upgradeFromItems.length > 0) {
+		if (priorItems.allRelated('upgradeToItems').has(item)) {
 			status.upgradeOnly = true
-			status.upgradeFromItems = upgradeFromItems
+			status.upgradeFromItems = priorItems.filter(i => item.upgradeFromItems.has(i))
 		}
 
 		return status
