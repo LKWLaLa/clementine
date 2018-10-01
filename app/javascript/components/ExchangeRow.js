@@ -18,7 +18,7 @@ class ExchangeRow extends React.Component {
 		let priceSpan = <span className={className}>free</span>
 
 		return (
-			<tr>
+			<tr className="item-row">
 				<td>
 					<input 
   						type = "checkbox"

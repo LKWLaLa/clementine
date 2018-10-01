@@ -59,17 +59,12 @@ class PurchaseableItemsTable extends React.Component {
 		}
 
 		return (
-			<table>
+			<table className="items-table">
 				<thead>
 					<tr>
-						<th colSpan="3">
-              				Items available for purchase
+						<th colSpan="3" className="category-header">
+              				Available For Purchase
 						</th>
-					</tr>
-					<tr>
-						<th> </th>
-						<th>Item</th>
-						<th>Price</th>
 					</tr>
 				</thead>
 				<tbody>{rows}</tbody>

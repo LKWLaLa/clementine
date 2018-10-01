@@ -151,7 +151,6 @@ class DashboardContainer extends Component {
 			} else {
 				return (
 				  	<div className="dashboard-container">
-					    <h2>Welcome to your registration dashboard, {firstName}!</h2>
 					  	<PurchaseContainer
 					  		user = {this.state.user}
 					  		purchaseableItems = {this.state.purchaseableItems}
