@@ -179,7 +179,7 @@ class PurchaseContainer extends React.Component {
 					status = {this.itemStatus}
 					showTransactionComplete = {this.props.showTransactionComplete}
 				/>
-				<h3>Checkout: </h3> 
+				<h3 className="checkout-title"> Checkout</h3> 
 	            <Elements>
 	            	<CheckoutForm 
 	            		amount = {this.subtotal()}

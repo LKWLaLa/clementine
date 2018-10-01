@@ -55,14 +55,14 @@ class CheckoutForm extends Component {
     if (this.state.processingPayment) {
       submitButton = <span>processing payment</span>
     } else if (this.props.amount > 0) {
-      submitButton = <button>Submit Payment</button>
+      submitButton = <button className="submit-button">Submit Payment</button>
     } else {
       submitButton = <button disabled={true}>Submit Payment</button>
     }
 
     return (
       <div className="checkout-form">
-        <h2>Amount : ${this.props.amount}</h2>
+        <h3 className="amount">Total amount: ${this.props.amount}</h3>
         <form onSubmit={this.handleSubmit} style={{margin: '0 40% 3% 0' }}>
           <CardElement style={{base: {fontSize: '18px'}}} /><br />
           <div id="card-errors" role="alert">{this.state.error}</div><br />

@@ -3,6 +3,7 @@
   font-size: 1.2em;
   text-align: center;
   font-family: 'Josefin Sans', sans-serif;
+  border-radius: 6px;
 }
 
 .column-header {
@@ -27,4 +28,23 @@
 
 .checkout-form {
   margin-bottom: 70px;
+}
+
+.checkout-title {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.amount {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.submit-button {
+  background-color: rgb(133,208,164);
+  background-image: none;
+  text-shadow: .5px .5px .5px rgba(0,0,0,.9);
+  border: 1px solid rgb(133,208,164);
 }

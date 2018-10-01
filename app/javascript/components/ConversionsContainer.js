@@ -89,7 +89,7 @@ class ConversionsContainer extends React.Component {
 		const noAvailableUpgradesMessage = <div>You have no upgrades available at this time </div>
 
 		const upgradesElement = this.props.upgrades.size > 0 ?
-			upgradesTable : noAvailableUpgradesMessage
+			upgradesTable : null
 			
 		const exchangesTable = <ExchangesTable
 					exchanges = {exchanges}
