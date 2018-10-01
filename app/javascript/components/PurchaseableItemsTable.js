@@ -43,7 +43,13 @@ class PurchaseableItemsTable extends React.Component {
 	render() {
 		let rows = []
 		for (let [itemType,items] of this.props.purchaseableItemsByType) {
-			rows.push(<ItemTypeRow itemTypeName = {itemType.name} key = {itemType.id}/>)
+			rows.push(<ItemTypeRow
+				itemTypeName = {itemType.name}
+				currentPrice = {itemType.currentPrice}
+				quantityRemainingAtCurrentPrice = {itemType.quantityRemainingAtCurrentPrice}
+				key = {'itemType ' + itemType.id}
+
+			/>)
 			for (let item of items) {
 				let tipData = this.tipData(item)
 				rows.push(
