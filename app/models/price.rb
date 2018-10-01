@@ -5,7 +5,7 @@ class Price < ApplicationRecord
   validates_presence_of :price_type, :amount
 
   def quantity_sold
-  	self.sales.count
+  	self.sales.where(void: false).count
   end
 
   def quantity_remaining

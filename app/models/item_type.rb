@@ -3,7 +3,7 @@ class ItemType < ApplicationRecord
   has_many :prices
 
   def remaining_prices
-  	self.prices.select{|price| price.supply > Sale.where(:price_id => price.id).count}
+  	self.prices.select{|price| price.supply > price.quantity_sold}
   end
 
   def current_price
