@@ -23,12 +23,12 @@ class UpgradesTable extends React.Component {
 		return (
 			<table>
 				<thead>
-					<tr><th colSpan="4">Upgrades</th></tr>
+					<tr><th colSpan="4" className="category-header">Upgrades</th></tr>
 					<tr>
-						<th> </th>
-						<th>Upgrade From Item</th>
-						<th>To Item</th>
-						<th>Price of Upgrade</th>
+						<th className="column-header"> </th>
+						<th className="column-header">Upgrade From Item</th>
+						<th className="column-header">To Item</th>
+						<th className="column-header">Price of Upgrade</th>
 					</tr>
 				</thead>
 				<tbody>

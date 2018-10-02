@@ -9,7 +9,7 @@ class Api::SalesController < ApplicationController
 
     # Amount must be in cents
     # Description will be the items purchased
-    
+
     payment = Payment.new(
       user_id: current_user.id,
       amount: params[:amount] / 100,
