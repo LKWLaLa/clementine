@@ -182,6 +182,7 @@ class PurchaseContainer extends React.Component {
 				<h3 className="checkout-title"> Checkout</h3> 
 	            <Elements>
 	            	<CheckoutForm 
+	            		user = {this.props.user}
 	            		amount = {this.subtotal()}
 	            		description = {this.description}
 	            		purchases = {this.state.selectedPurchaseableItems}

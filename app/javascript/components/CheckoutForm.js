@@ -19,7 +19,7 @@ class CheckoutForm extends Component {
     let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     // Within the context of `Elements`, this call to createToken knows which Element to
     // tokenize, since there's only one in this group (the CardElement).
-    this.props.stripe.createToken({type: 'card', name: this.props.name})
+    this.props.stripe.createToken({type: 'card', name: this.props.user.fullName})
     .then(({token}) => {
       let data = {
         source: token.id,

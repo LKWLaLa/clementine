@@ -65,6 +65,7 @@
 .transaction-complete-text {
   font-family: 'Josefin Sans', sans-serif;
   font-size: 1.5em;
+  margin-bottom: 10px;
 }
 
 .return-home-button {

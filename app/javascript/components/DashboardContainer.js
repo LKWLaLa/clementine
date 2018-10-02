@@ -141,7 +141,7 @@ class DashboardContainer extends Component {
 			if (this.state.transactionComplete) {
 				return(
 					<div className="transaction-complete">
-						<p className="transaction-complete-text">Thanks for your registration! Transaction complete.</p>
+						<div className="transaction-complete-text">Thanks for your registration! Transaction complete.</div>
 						<button className="return-home-button" onClick = {this.reload}>
 						Click here to return to your dashboard.
 						</button>
