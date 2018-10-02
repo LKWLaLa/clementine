@@ -12,7 +12,6 @@ class CheckoutForm extends Component {
     }
   }
 
-
   handleSubmit(e) {
     this.setState({processingPayment: true})
     e.preventDefault()
@@ -47,8 +46,6 @@ class CheckoutForm extends Component {
       })
     })
   }
-
-  
 
   render() {
     let submitButton;
