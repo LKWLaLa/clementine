@@ -52,7 +52,7 @@ remove_filter :payment
       sale.price.price_type
     end
     row :payment do |sale|
-      link_to sale.payment.method, admin_payments_path(sale.payment)
+      link_to sale.payment.method, admin_payment_path(sale.payment)
     end
     row :date do |sale|
       sale.payment.created_at.strftime('%B %-d, %Y')

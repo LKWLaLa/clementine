@@ -6,36 +6,33 @@ class Api::SalesController < ApplicationController
     # (without going through the refund process), we should check to make sure
     # we have all the data that the database requires to successfully record
     # the transaction before sending the charge to Stripe.
-    # This may entail writing the transaction to the database first, then
-    # rolling back the database transaction if the Stripe 
-    # transaction is unsuccessful.
 
     # Amount must be in cents
     # Description will be the items purchased
 
-    charge = Stripe::Charge.create(
-      :source      => params[:source],
-      :amount      => params[:amount],
-      :description => params[:description],
-      :currency    => 'usd',
-      :receipt_email => current_user.email
-    )
-
     payment = Payment.new(
       user_id: current_user.id,
       amount: params[:amount] / 100,
-      method: 'credit card'
+      method: 'Stripe'
     )
-    payment.save if payment.valid?
+    if (!payment.valid?)
+      return render json: {error: payment.errors}, status: 500 
+    end
+
+    sales = []
+    void_sales = []
 
     params[:purchases].each do |p|
       sale = Sale.new(
         user_id: current_user.id,
         item_id: p[:id],
         price_id: p[:current_price_info][:id],
-        payment_id: payment.id
+        payment: payment
       )
-      sale.save if sale.valid?
+      if (!sale.valid?)
+        return render json: {error: sale.errors}, status: 500
+      end
+      sales.push(sale)
     end
 
     params[:upgrades].each do |u|
@@ -43,16 +40,41 @@ class Api::SalesController < ApplicationController
         user_id: current_user.id,
         item_id: u[:upgrade_to_item][:id],
         price_id: u[:upgrade_to_item][:current_price_info][:id],
-        payment_id: payment.id
+        payment: payment
       )
-      sale.save if sale.valid?
-      Sale.find_by(id: u[:prior_sale][:id]).update(void: true)
+      if (!sale.valid?)
+        return render json: {error: sale.errors}, status: 500
+      end
+      sales.push(sale)
+
+      # void prior sale
+      prior_sale = Sale.find_by(id: u[:prior_sale][:id])
+      prior_sale.update_attributes(void: true)
+      if (!prior_sale.valid?) 
+        return render json: {error: prior_sale.errors}, status: 500
+      end
+      void_sales.push(prior_sale)
+    end
+
+    charge = Stripe::Charge.create(
+      :source      => params[:source],
+      :amount      => params[:amount],
+      :description => params[:description],
+      :currency    => 'usd'
+    )
+
+    payment.save
+    sales.each do |sale|
+      sale.save
+    end
+    void_sales.each do |void_sale|
+      void_sale.save
     end
 
     render json: {ok: true}, status: 201 
 
   rescue Stripe::CardError => e
-    render json: {error: e}, status: 500    
+    render json: {error: e}, status: 500
   end
 
   def exchange
