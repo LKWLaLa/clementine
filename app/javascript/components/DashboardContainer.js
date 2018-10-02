@@ -19,7 +19,7 @@ class DashboardContainer extends Component {
 	load() {
 		this.loadData().then(apiArrays => {
 			let user = this.buildDb(apiArrays)
-			console.log(Kindship.getDb())
+			console.log(Kinship.getDb())
 
 			let availableUpgrades = new RecordCollection(Upgrade.all.filter(u => {
 				return user.purchasedItems.has(u.upgradeFromItem)
