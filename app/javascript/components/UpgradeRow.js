@@ -16,7 +16,7 @@ class UpgradeRow extends React.Component {
 
 		let upgradeFromSpan = <span className={className}>{upgradeFrom.name}</span>
 		let upgradeToSpan = <span className={className}>{upgradeTo.name}</span>
-		let priceSpan = <span className={className}>{price}</span>
+		let priceSpan = <span className={className}>{'$'+price}</span>
 		
 		return (
 			<tr className="item-row">
