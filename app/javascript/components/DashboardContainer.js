@@ -19,8 +19,6 @@ class DashboardContainer extends Component {
 	load() {
 		this.loadData().then(apiArrays => {
 			let user = this.buildDb(apiArrays)
-			console.log(Kinship.getDb())
-
 			let availableUpgrades = new RecordCollection(Upgrade.all.filter(u => {
 				return user.purchasedItems.has(u.upgradeFromItem)
 				&& u.upgradeFromItem.itemType != u.upgradeToItem.itemType})
