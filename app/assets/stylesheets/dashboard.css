@@ -1,3 +1,9 @@
+.timer {
+  font-style: italic;
+  margin-bottom: 20px;
+  color: rgb(153,206,167); 
+}
+
 .category-header {
   background-color: rgb(153,206,167); 
   font-size: 1.2em;

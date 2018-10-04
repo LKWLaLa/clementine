@@ -5,6 +5,7 @@ import PurchasedItemsTable from './PurchasedItemsTable.js'
 import ConversionsContainer from './ConversionsContainer.js'
 import CheckoutForm from './CheckoutForm.js'
 import Filter from '../helpers/Filter.js'
+import Timer from './Timer'
 import {User,ItemType,Item,Sale,Exclusion,Upgrade,Qualification} from '../helpers/models.js'
 import {Record, RecordCollection} from '../kinship/Kinship.js'
 
@@ -169,6 +170,7 @@ class PurchaseContainer extends React.Component {
 						/>
 					</div>
 				</div>
+				<Timer />
 				<ConversionsContainer
 					upgrades = {this.props.availableUpgrades}
 					exchanges = {this.props.availableExchanges}
