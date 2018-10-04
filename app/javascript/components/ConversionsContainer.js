@@ -99,7 +99,7 @@ class ConversionsContainer extends React.Component {
 				/>
 
 		const exchangesButton = this.state.exchangesButtonEnabled ?
-			<button onClick={this.submitExchanges}>Confirm Exchange</button> :
+			<button className="submit-button" onClick={this.submitExchanges}>Confirm Exchange</button> :
 			<span>Submitting Exchange...</span>
 
 		const exchangesElement = this.state.showExchangesTable ?

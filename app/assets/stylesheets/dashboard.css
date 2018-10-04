@@ -55,6 +55,11 @@
   border: 1px solid rgb(133,208,164);
 }
 
+.submit-button:not(.disabled):hover {
+  background-color: rgb(113,188,144);
+  background-image: none;
+}
+
 .conversions-container {
   margin-bottom: 100px;
 }
@@ -81,4 +86,9 @@
   background-image: none;
   text-shadow: .5px .5px .5px rgba(0,0,0,.9);
   border: 1px solid rgb(133,208,164);
+}
+
+.return-home-button:not(.disabled):hover {
+  background-color: rgb(113,188,144);
+  background-image: none;
 }
