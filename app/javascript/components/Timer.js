@@ -7,6 +7,13 @@ class Timer extends Component {
     this.timer = 0;
     this.startTimer = this.startTimer.bind(this);
     this.countDown = this.countDown.bind(this);
+    this.pad = this.pad.bind(this);
+  }
+
+  pad(num, size) {
+      var s = num+"";
+      while (s.length < size) s = "0" + s;
+      return s;
   }
 
   secondsToTime(secs){
@@ -16,7 +23,7 @@ class Timer extends Component {
     let minutes = Math.floor(divisor_for_minutes / 60);
 
     let divisor_for_seconds = divisor_for_minutes % 60;
-    let seconds = Math.ceil(divisor_for_seconds);
+    let seconds = this.pad(Math.ceil(divisor_for_seconds),2);
 
     let obj = {
       "h": hours,
