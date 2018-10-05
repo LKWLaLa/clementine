@@ -76,5 +76,5 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # Timeout, in minutes
-  config.timeout = 1.minutes
+  config.timeout = 30.minutes
 end
