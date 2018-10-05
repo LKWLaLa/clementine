@@ -74,7 +74,9 @@ class Api::SalesController < ApplicationController
     render json: {ok: true}, status: 201 
 
   rescue Stripe::CardError => e
-    render json: {error: e}, status: 500
+    body = e.json_body
+    err  = body[:error]
+    render json: {error: err[:message]}, status: 500
   end
 
   def exchange
