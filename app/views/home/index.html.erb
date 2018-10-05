@@ -4,6 +4,6 @@
 </nav>  
 
 <div class="container">
-  <%= react_component 'App' %>
+  <%= react_component 'App', timeout: Rails.configuration.timeout.parts[:minutes]%>
 </div>
 

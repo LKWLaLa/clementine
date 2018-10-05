@@ -156,6 +156,7 @@ class DashboardContainer extends Component {
 					  		availableUpgrades = {this.state.availableUpgrades}
 					  		availableExchanges = {this.state.availableExchanges}
 					  		showTransactionComplete = {this.showTransactionComplete}
+					  		timeout = {this.props.timeout}
 					  	 />
 					  	<Footer /> 
 				    </div>

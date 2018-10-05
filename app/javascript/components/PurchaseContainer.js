@@ -170,7 +170,7 @@ class PurchaseContainer extends React.Component {
 						/>
 					</div>
 				</div>
-				<Timer />
+				<Timer startTime = {this.props.timeout * 60}/>
 				<ConversionsContainer
 					upgrades = {this.props.availableUpgrades}
 					exchanges = {this.props.availableExchanges}
