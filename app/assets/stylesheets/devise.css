@@ -40,3 +40,7 @@ input[type='text']{
   margin-top: 10px;
 }
 
+.error-message {
+  color: #fa755a;
+}
+
