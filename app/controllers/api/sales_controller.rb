@@ -60,7 +60,8 @@ class Api::SalesController < ApplicationController
       :source      => params[:source],
       :amount      => params[:amount],
       :description => params[:description],
-      :currency    => 'usd'
+      :currency    => 'usd',
+      :receipt_email => current_user.email
     )
 
     payment.save
