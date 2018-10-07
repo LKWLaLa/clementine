@@ -1,6 +1,6 @@
 class ItemTypeSerializer < ActiveModel::Serializer
   attributes :id, :name, :current_price, :current_price_type, 
-  :quantity_remaining_at_current_price, :sold_out, :next_price_type
+  :quantity_remaining_at_current_price, :sold_out, :next_price_type, :description
 
   #has_many :items
 

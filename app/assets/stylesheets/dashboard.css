@@ -18,7 +18,7 @@
 }
 
 .items-table {
-  margin-bottom: 20px
+  margin-bottom: 20px;
 }
 
 .item-description{
@@ -26,6 +26,14 @@
   text-overflow: wrap;
   margin-top: 5px;
   margin-bottom: 5px;
+  font-weight: bold;
+}
+
+div.description {
+  font-weight: normal;
+  font-size: .9em;
+  padding: 5px 0 5px 0;
+  max-width: 400px;
 }
 
 .flex-container {

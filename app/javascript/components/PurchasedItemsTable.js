@@ -7,7 +7,7 @@ class PurchasedItemsTable extends React.Component {
 			[...purchasedItems].map(item => (
 				<tr className="item-row" key={item.id}>
 					<div className="item-description">{item.name}<br /> 
-						<small>{item.description}</small>
+						<div className="description">{item.description}</div>
 					</div>
 				</tr>)) :
 			<tr><td>You have not purchased any items yet</td></tr>

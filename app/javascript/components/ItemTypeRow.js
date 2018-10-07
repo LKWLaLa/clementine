@@ -8,11 +8,11 @@ class ItemTypeRow extends React.Component {
 
 		price = isNaN(parseFloat(price)) ? price : '$' + price
 		return (
-			<tr>
+			<tr className="item-type-row">
 				<th>{this.props.itemTypeName}</th>
-				<th>Price: {price}</th>
+				<th>Price: {price}<div className="description">{this.props.itemTypeDescription}</div></th>
 				<th>{quantityRemainingSpan}</th>
-			</tr>
+			</tr>			
 		)
 	}
 }
