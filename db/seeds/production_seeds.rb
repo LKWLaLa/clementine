@@ -1,8 +1,20 @@
 item_types = ItemType.create([
-	{name: 'Weekend Pass'},
-	{name: 'Weekday Workshop'},
-	{name: 'Dance Pass'},
-	{name: 'Contest Entry'}
+	{
+    name: 'Weekend Pass',
+    description: 'Includes admission to one weekend workshop track (8 hours of instruction) on Saturday and Sunday.  Also includes admission to Friday, Saturday, and Sunday evening dances.'
+  },
+  {
+    name: 'Weekday Workshop',
+    description: "Admission to one weekday workshop."
+  },
+  {
+    name: 'Dance Pass',
+    description: 'Admission to the Friday, Saturday, and Sunday evening dances.'
+  },
+  {
+    name: 'Contest Entry',
+    description: 'Entry into the weekend contest.'
+  }
 ])
 
 weekend_pass = item_types[0]
