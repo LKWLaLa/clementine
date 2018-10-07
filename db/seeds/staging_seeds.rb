@@ -486,7 +486,7 @@ upgrades = Upgrade.create(
 ]
 )
 
-AdminUser.create(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
+AdminUser.create(email: ENV['ADMIN_EMAIL'], password: ENV['ADMIN_PASSWORD'], password_confirmation: ENV['ADMIN_PASSWORD'])
 
 user_hashes = [
   {
