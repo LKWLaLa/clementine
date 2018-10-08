@@ -5,6 +5,7 @@ permit_params :name
 
 index do
   column :name
+  column :description
   column :current_price do |it|
     number_to_currency(it.current_price.amount)
   end
@@ -15,6 +16,7 @@ end
 show do
   attributes_table do
     row :name
+    row :description
     row :current_price do |it|
       number_to_currency(it.current_price.amount)
     end
