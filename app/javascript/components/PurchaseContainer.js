@@ -215,15 +215,6 @@ class PurchaseContainer extends React.Component {
 					</div>
 				</div>
 				<Timer startTime = {this.props.timeout * 60}/>
-				{partnershipsHeading}
-				<BuyerPartnershipsTable 
-					partnerships = {this.state.buyerPartnerships}
-					handleInviteeChange = {this.handleInviteeChange}
-					currentUser = {this.props.user}
-				/>
-				<InviteePartnershipsTable
-					partnerships = {this.state.inviteePartnerships}
-				/>
 				<ConversionsContainer
 					upgrades = {this.props.availableUpgrades}
 					exchanges = {this.props.availableExchanges}
