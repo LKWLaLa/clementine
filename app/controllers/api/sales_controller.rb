@@ -72,6 +72,12 @@ class Api::SalesController < ApplicationController
       void_sale.save
     end
 
+    if (params[:partner_id])
+      contest_sale = sales.find{|sale| sale.item.partnered == true}
+      partnership = Partnership.new(sale_id: contest_sale.id, invitee_id: params[:partner_id])
+      partnership.save if partnership.valid?
+    end
+
     render json: {ok: true}, status: 201 
 
   rescue Stripe::CardError => e
