@@ -122,4 +122,7 @@ Rails.application.configure do
 
   # Timeout, in minutes
   config.timeout = 30.minutes
+
+  # force https
+  config.force_ssl = true
 end
