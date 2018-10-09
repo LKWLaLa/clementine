@@ -194,7 +194,7 @@ class PurchaseContainer extends React.Component {
 		let partnershipsHeading = null
 		if (this.state.buyerPartnerships ||
 			this.state.inviteePartnerships) {
-			partnershipsHeading = <h2>Partnerships</h2>
+			partnershipsHeading = <h3 className="partnerships-title">Partnerships</h3>
 		}
 		
 		return (
@@ -234,6 +234,14 @@ class PurchaseContainer extends React.Component {
 					status = {this.itemStatus}
 					showTransactionComplete = {this.props.showTransactionComplete}
 				/>
+				{partnershipsHeading}
+				<BuyerPartnershipsTable 
+					partnerships = {this.state.buyerPartnerships}
+					handlePartnerChange = {this.handlePartnerChange}
+				/>
+				<InviteePartnershipsTable
+					partnerships = {this.state.inviteePartnerships}
+				/><br/><br/><br/>
 				<h3 className="checkout-title"> Checkout</h3> 
 	            <Elements>
 	            	<CheckoutForm 
@@ -243,7 +251,7 @@ class PurchaseContainer extends React.Component {
 	            		purchases = {this.state.selectedPurchaseableItems}
 	            		upgrades = {this.state.selectedUpgrades}
 	            		showTransactionComplete = {this.props.showTransactionComplete}
-	            		partnerId = {3 || false}
+	            		partnerId = {false}
 	            	/>
 	            </Elements>
 			</div>
