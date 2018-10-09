@@ -10,6 +10,7 @@ import BuyerPartnershipsTable from './BuyerPartnershipsTable.js'
 import InviteePartnershipsTable from './InviteePartnershipsTable.js'
 import {User,ItemType,Item,Sale,Exclusion,Upgrade,Qualification} from '../helpers/models.js'
 import {Record, RecordCollection} from '../kinship/Kinship.js'
+import Network from '../helpers/Network.js'
 
 class PurchaseContainer extends React.Component {
 	constructor(props) {
@@ -39,20 +40,9 @@ class PurchaseContainer extends React.Component {
 
 	/******************************** Loading ************************************/
 	loadPartnerships() {
-		let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-		let init = {
-	        method: 'GET',
-	        headers: {'Content-Type': 'application/json',
-		        'Accept': 'application/json',
-		        'X-Requested-With': 'XMLHttpRequest',
-		        'X-CSRF-Token': csrfToken
-        	},
-        	credentials: 'same-origin'
-	    }
-
 		let partnershipPromises = [
-			fetch('/api/buyer_partnerships',init),
-			fetch('/api/invitee_partnerships',init)
+			Network.get_request('/api/buyer_partnerships'),
+			Network.get_request('/api/invitee_partnerships')
 		]
 
 		Promise.all(partnershipPromises)
@@ -103,8 +93,6 @@ class PurchaseContainer extends React.Component {
 		  selection: suggestion
 		})
 	}
-
-
 	
 	updateState(selectedPurchaseableItems,selectedUpgrades) {
 		let priorItems = Filter.priorItems(this.props.user.purchasedItems,
@@ -207,11 +195,11 @@ class PurchaseContainer extends React.Component {
 		let priorItems = Filter.priorItems(this.props.user.purchasedItems,
 			this.state.selectedPurchaseableItems,
 			this.state.selectedUpgrades)
-		let partnershipsHeading = this.state.buyerPartnerships ||
-			this.state.inviteePartnerships ?
-			<h2>Partnerships</h2> :
-			null
-
+		let partnershipsHeading = null
+		if (this.state.buyerPartnerships ||
+			this.state.inviteePartnerships) {
+			partnershipsHeading = <h2>Partnerships</h2>
+		}
 		
 		return (
 			<div className="purchaseable-items-container">
@@ -235,7 +223,7 @@ class PurchaseContainer extends React.Component {
 				<BuyerPartnershipsTable 
 					partnerships = {this.state.buyerPartnerships}
 					handlePartnerChange = {this.handlePartnerChange}
-				/> :
+				/>
 				<InviteePartnershipsTable
 					partnerships = {this.state.inviteePartnerships}
 				/>
