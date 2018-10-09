@@ -26,8 +26,8 @@ class PurchaseContainer extends React.Component {
 		this.purchaseDescriptions = this.purchaseDescriptions.bind(this)
 		this.upgradeDescriptions = this.upgradeDescriptions.bind(this)
 		this.description = this.description.bind(this)
-		this.onPartnerSelected = this.onPartnerSelected.bind(this)
 		this.loadPartnerships = this.loadPartnerships.bind(this)
+		this.handleInviteeChange = this.handleInviteeChange.bind(this)
 		// this.handlePartnerSubmission = this.handlePartnerSubmission.bind(this)
 
 		this.loadPartnerships();
@@ -82,16 +82,12 @@ class PurchaseContainer extends React.Component {
 		this.updateState(this.state.selectedPurchaseableItems,selectedUpgrades)
 	}
 
-	// react-autosuggest
-	onPartnerSelected(event, {
-		suggestion,
-		suggestionValue,
-		suggestionIndex,
-		sectionIndex,
-		method }) {
-		this.setState({
-		  selection: suggestion
-		})
+	handleInviteeChange(partnershipId,invitee) {
+		//debugger;
+		let buyerPartnerships = [...this.state.buyerPartnerships]
+		let partnership = buyerPartnerships.find(bp => bp.id == partnershipId)
+		partnership.invitee = invitee
+		this.setState({buyerPartnerships: buyerPartnerships})
 	}
 	
 	updateState(selectedPurchaseableItems,selectedUpgrades) {
@@ -222,7 +218,8 @@ class PurchaseContainer extends React.Component {
 				{partnershipsHeading}
 				<BuyerPartnershipsTable 
 					partnerships = {this.state.buyerPartnerships}
-					handlePartnerChange = {this.handlePartnerChange}
+					handleInviteeChange = {this.handleInviteeChange}
+					currentUser = {this.props.user}
 				/>
 				<InviteePartnershipsTable
 					partnerships = {this.state.inviteePartnerships}

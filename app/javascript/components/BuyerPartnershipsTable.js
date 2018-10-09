@@ -15,8 +15,9 @@ class BuyerPartnershipsTable extends React.Component {
 			rows.push(
 				<BuyerPartnershipRow
 					key = {p.id}
-					handlePartnerChange = {this.props.handlePartnerChange}
+					handleInviteeChange = {this.props.handleInviteeChange}
 					partnership = {p}
+					currentUser = {this.props.currentUser}
 				/>
 			)
 		})

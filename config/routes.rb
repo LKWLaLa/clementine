@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     get '/buyer_partnerships', to: 'partnerships#buyer_partnerships'
     get '/invitee_partnerships', to: 'partnerships#invitee_partnerships'
     get '/users', to: 'users#all'
+    patch '/partnerships/:id', to: 'partnerships#update'
   end
   
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

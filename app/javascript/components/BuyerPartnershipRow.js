@@ -6,13 +6,13 @@ import Network from '../helpers/Network.js'
 class BuyerPartnershipRow extends React.Component {
 	constructor(props) {
 		super(props)
-		this.handlePartnerSubmission = this.handlePartnerSubmission.bind(this)
 
 		this.loadUsers()
 
 		this.state = {
 	      value: '',
-	      suggestions: []
+	      suggestions: [],
+	      editMode: !this.props.partnership.invitee
 	    }
 	}
 
@@ -26,14 +26,12 @@ class BuyerPartnershipRow extends React.Component {
 	}
 
 	getSuggestions = (value) => {
-		console.log('getting suggestions')
-		console.log(this.state.users)
-
 		const inputValue = value.trim().toLowerCase();
 		const inputLength = inputValue.length;
 
 		return inputLength === 0 ? [] : this.state.users.filter(user =>
-			user.fullName.toLowerCase().slice(0, inputLength) === inputValue
+			user.fullName.toLowerCase().slice(0, inputLength) === inputValue &&
+			user.id != this.props.currentUser.id
 		)
 	}
 
@@ -43,9 +41,9 @@ class BuyerPartnershipRow extends React.Component {
 
 	renderSuggestion = (suggestion) => {
 		return (
-			<div>
+			<span>
 				{suggestion.fullName}
-			</div>
+			</span>
 		)
 	}
 
@@ -69,15 +67,49 @@ class BuyerPartnershipRow extends React.Component {
 		  suggestions: []
 		})
 	}
+
+	// react-autosuggest
+	onSuggestionSelected = (event, {
+		suggestion,
+		suggestionValue,
+		suggestionIndex,
+		sectionIndex,
+		method }) => {
+		this.setState({selection: suggestion})
+	}
 	
-	handlePartnerSubmission() {
-		
+	confirmPartner = () => {
+		if (this.props.partnership.sale) {
+			let res =Network.patch_request(
+				`api/partnerships/${this.props.partnership.id}`,
+				{invitee_id: this.state.selection.id}
+				)
+			console.log(res)
+		}
+		this.props.handleInviteeChange(
+			this.props.partnership.id,
+			this.state.selection
+			)
+		this.leaveEditMode()
+	}
+
+	enterEditMode = () => {
+		this.setState({editMode: true})
+	}
+
+	leaveEditMode = () => {
+		this.setState({editMode: false})
+	}
+
+	cancelChange = () => {
+		this.leaveEditMode()
 	}
 
 	render() {
 		// const item = this.props.item
 		// const partner = this.props.invitee
 		const partnership = this.props.partnership
+		const invitee = partnership.invitee
 		const onPartnerSelected = this.props.onPartnerSelected
 
 		// Autosuggest will pass through all these props to the input.
@@ -87,11 +119,12 @@ class BuyerPartnershipRow extends React.Component {
 			onChange: this.onChange
 		}
 
-		return (
-			<tr>
-				<td>{partnership.item.name}</td>
-				<td>
-					<Autosuggest 
+
+		let inviteeCell
+		let cancelButton
+		let actionButton
+		if (this.state.editMode) {
+			inviteeCell = <td><Autosuggest 
 			          suggestions={this.state.suggestions}
 			          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
 			          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
@@ -101,8 +134,28 @@ class BuyerPartnershipRow extends React.Component {
 			          shouldRenderSuggestions = {(v) => v.trim().length > 1}
 			          renderSuggestionsContainer = {this.renderSuggestionsContainer}
 			          onSuggestionSelected = {this.onSuggestionSelected}
-			        />
-				</td>
+			        /></td>
+			actionButton = <button onClick={this.confirmPartner}>confirm partner</button>
+			cancelButton = <button onClick={this.cancelChange}>cancel</button>
+		} else {
+			let actionLabel
+			if (invitee) {
+				inviteeCell = <td>{invitee.fullName}</td>
+				actionLabel = 'change partner'
+			} else {
+				inviteeCell = <td>tbd</td>
+				actionLabel = 'select partner'
+			}
+			actionButton = <button onClick={this.enterEditMode}>{actionLabel}</button>
+			cancelButton = null
+		}
+
+		return (
+			<tr>
+				<td>{partnership.item.name}</td>
+				{inviteeCell}
+				{actionButton}
+				{cancelButton}
 			</tr>
 		)
 	}
