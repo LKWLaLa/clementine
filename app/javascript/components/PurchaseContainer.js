@@ -6,6 +6,7 @@ import ConversionsContainer from './ConversionsContainer.js'
 import CheckoutForm from './CheckoutForm.js'
 import Filter from '../helpers/Filter.js'
 import Timer from './Timer'
+import BuyerPartnershipsTable from './BuyerPartnershipsTable'
 import {User,ItemType,Item,Sale,Exclusion,Upgrade,Qualification} from '../helpers/models.js'
 import {Record, RecordCollection} from '../kinship/Kinship.js'
 
@@ -23,11 +24,50 @@ class PurchaseContainer extends React.Component {
 		this.purchaseDescriptions = this.purchaseDescriptions.bind(this)
 		this.upgradeDescriptions = this.upgradeDescriptions.bind(this)
 		this.description = this.description.bind(this)
+		this.onPartnerSelected = this.onPartnerSelected.bind(this)
+		this.loadPartnerships = this.loadPartnerships.bind(this)
+		// this.handlePartnerSubmission = this.handlePartnerSubmission.bind(this)
+
+		this.loadPartnerships();
 
 		this.state = {
 			selectedPurchaseableItems: new RecordCollection(),
 			selectedUpgrades: new RecordCollection()
 		}
+	}
+
+	/******************************** Loading ************************************/
+	loadPartnerships() {
+		let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+		let init = {
+	        method: 'GET',
+	        headers: {'Content-Type': 'application/json',
+		        'Accept': 'application/json',
+		        'X-Requested-With': 'XMLHttpRequest',
+		        'X-CSRF-Token': csrfToken
+        	},
+        	credentials: 'same-origin'
+	    }
+
+		let partnershipPromises = [
+			fetch('/api/buyer_partnerships',init),
+			fetch('/api/invitee_partnerships',init)
+		]
+
+		Promise.all(partnershipPromises)
+			.then(values => {
+				let jsonPromises = []
+				values.forEach(value => {
+					jsonPromises.push(value.json())
+				})
+				return Promise.all(jsonPromises)
+			})
+			.then(partnerships => {
+			this.setState({
+				buyerPartnerships: partnerships[0],
+				invitee_partnerships: partnerships[1]
+			})
+		})
 	}
 
 	/********************************* State Updaters ****************************/
@@ -50,6 +90,20 @@ class PurchaseContainer extends React.Component {
 		let selectedUpgrades = this.updateSelection(e,this.state.selectedUpgrades,Upgrade)
 		this.updateState(this.state.selectedPurchaseableItems,selectedUpgrades)
 	}
+
+	// react-autosuggest
+	onPartnerSelected(event, {
+		suggestion,
+		suggestionValue,
+		suggestionIndex,
+		sectionIndex,
+		method }) {
+		this.setState({
+		  selection: suggestion
+		})
+	}
+
+
 	
 	updateState(selectedPurchaseableItems,selectedUpgrades) {
 		let priorItems = Filter.priorItems(this.props.user.purchasedItems,
@@ -149,9 +203,23 @@ class PurchaseContainer extends React.Component {
 	/******************* Render ********************/
 
 	render() {
+		console.log(this.state.buyerPartnerships)
+
 		let priorItems = Filter.priorItems(this.props.user.purchasedItems,
 			this.state.selectedPurchaseableItems,
 			this.state.selectedUpgrades)
+		let buyerPartnershipsElement = this.state.buyerPartnerships ?
+			<BuyerPartnershipsTable 
+				partnerships = {this.state.buyerPartnerships}
+				handlePartnerChange = {this.handlePartnerChange}
+			/> :
+			null
+		let inviteePartnershipsElement = this.state.inviteePartnerships ?
+			<InviteePartnershipsTable
+				inviteePartnership = {this.state.inviteePartnerships}
+			/> :
+			null
+
 		
 		return (
 			<div className="purchaseable-items-container">
@@ -171,6 +239,8 @@ class PurchaseContainer extends React.Component {
 					</div>
 				</div>
 				<Timer startTime = {this.props.timeout * 60}/>
+				{buyerPartnershipsElement}
+				{inviteePartnershipsElement}
 				<ConversionsContainer
 					upgrades = {this.props.availableUpgrades}
 					exchanges = {this.props.availableExchanges}
