@@ -8,7 +8,6 @@ class Api::PartnershipsController < ApplicationController
     end
 
     def update
-    	binding.remote_pry
     	if partnership = Partnership.find_by(id: params[:id])
     		partnership.update(invitee_id: params['invitee_id'])
     		render json: partnership, status: 200
