@@ -72,14 +72,26 @@ class Api::SalesController < ApplicationController
       void_sale.save
     end
 
-    if contest_sale = sales.find{|sale| sale.item.partnered == true}
-      if params[:partner_id].present?
-        partnership = Partnership.new(sale_id: contest_sale.id, invitee_id: params[:partner_id])
+    # if contest_sale = sales.find{|sale| sale.item.partnered == true}
+    #   if params[:partner_id].present?
+    #     partnership = Partnership.new(sale_id: contest_sale.id, invitee_id: params[:partner_id])
+    #   else
+    #     partnership = Partnership.new(sale_id: contest_sale.id, invitee_id: nil)  
+    #   end
+    #   partnership.save if partnership.valid?
+    # end
+
+    partnered_sales = sales.select{|sale| sale.item.partnered}
+    partnered_sales.each do |sale|
+      paramPartnership = params[:new_partnerships].find{|np| np[:item][:id] == sale.item.id}
+      if paramPartnership['invitee']
+        partnership = Partnership.new(sale_id: sale.id, invitee_id: paramPartnership[:invitee][:id])
       else
-        partnership = Partnership.new(sale_id: contest_sale.id, invitee_id: nil)  
+        partnership = Partnership.new(sale_id: sale.id, invitee_id: nil)
       end
       partnership.save if partnership.valid?
     end
+
 
     render json: {ok: true}, status: 201 
 

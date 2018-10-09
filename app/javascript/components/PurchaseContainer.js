@@ -28,6 +28,7 @@ class PurchaseContainer extends React.Component {
 		this.description = this.description.bind(this)
 		this.loadPartnerships = this.loadPartnerships.bind(this)
 		this.handleInviteeChange = this.handleInviteeChange.bind(this)
+		this.newPartnerships = this.newPartnerships.bind(this)
 		// this.handlePartnerSubmission = this.handlePartnerSubmission.bind(this)
 
 		this.loadPartnerships();
@@ -110,10 +111,30 @@ class PurchaseContainer extends React.Component {
 		// 		let uTo = u.upgradeToItem
 		// 		return eligibleItems.has(uTo) && !excludedItems.has(uTo)}))
 
-		// set the state
+		// if buyerPartnerships contains a partnership for an item that is no
+		// longer in priorItems, remove the partnership
+		let buyerPartnerships = this.state.buyerPartnerships.filter(bp => 
+			priorItems.has(Item.byId(bp.item.id)))
+
+		// if priorItems contains any partneredItem for which no buyerPartnership
+		// yet exists, create a new buyer partnership
+		let partneredItems = priorItems.filter(
+			pi => pi.partnered && 
+				!this.state.buyerPartnerships.find(bp => bp.item.id == pi.id)
+		)
+		let newPartnerships = partneredItems.map(pi => ({
+			// random negative id - not in Db yet, but needs key
+			id: Math.ceil(Math.random()*(-1000000)),
+			buyer: this.props.user,
+			item: pi,
+			invitee: null,
+			sale: null
+		}))
+
 		this.setState({
 			selectedPurchaseableItems: selectedPurchaseableItems,
-			selectedUpgrades: selectedUpgrades
+			selectedUpgrades: selectedUpgrades,
+			buyerPartnerships: [...buyerPartnerships,...newPartnerships]
 		})
 	}
 
@@ -185,6 +206,13 @@ class PurchaseContainer extends React.Component {
 		return this.purchaseDescriptions() + '\n' + this.upgradeDescriptions()
 	}
 
+	newPartnerships() {
+		if (this.state.buyerPartnerships) {
+			return this.state.buyerPartnerships.filter(bp => !bp.sale)	
+		}
+		return null
+	}
+
 	/******************* Render ********************/
 
 	render() {
@@ -192,8 +220,8 @@ class PurchaseContainer extends React.Component {
 			this.state.selectedPurchaseableItems,
 			this.state.selectedUpgrades)
 		let partnershipsHeading = null
-		if (this.state.buyerPartnerships ||
-			this.state.inviteePartnerships) {
+		if ((this.state.buyerPartnerships && this.state.buyerPartnerships.length > 0) ||
+			(this.state.inviteePartnerships && this.state.inviteePartnerships.length > 0)) {
 			partnershipsHeading = <h3 className="partnerships-title">Partnerships</h3>
 		}
 		
@@ -228,7 +256,8 @@ class PurchaseContainer extends React.Component {
 				{partnershipsHeading}
 				<BuyerPartnershipsTable 
 					partnerships = {this.state.buyerPartnerships}
-					handlePartnerChange = {this.handlePartnerChange}
+					handleInviteeChange = {this.handleInviteeChange}
+					currentUser = {this.props.user}
 				/>
 				<InviteePartnershipsTable
 					partnerships = {this.state.inviteePartnerships}
@@ -242,7 +271,7 @@ class PurchaseContainer extends React.Component {
 	            		purchases = {this.state.selectedPurchaseableItems}
 	            		upgrades = {this.state.selectedUpgrades}
 	            		showTransactionComplete = {this.props.showTransactionComplete}
-	            		partnerId = {false}
+	            		newPartnerships = {this.newPartnerships()}
 	            	/>
 	            </Elements>
 			</div>

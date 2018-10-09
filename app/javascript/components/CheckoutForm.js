@@ -27,7 +27,7 @@ class CheckoutForm extends Component {
         description: this.props.description(),
         purchases: this.props.purchases,
         upgrades: this.props.upgrades,
-        partner_id: this.props.partnerId
+        newPartnerships: this.props.newPartnerships
       }
       fetch('/api/sales', {
         method: "POST",
