@@ -80,6 +80,26 @@ preserve_default_filters!
           end
         end
       end
+      panel "Buyer Partnerships" do
+        table_for user.buyer_partnerships do
+          column "item" do |partnership|
+            partnership.item.name
+          end
+          column "partner/invitee" do |partnership|
+            partnership.invitee.full_name
+          end
+        end
+      end
+      panel "Invitee Partnerships" do
+        table_for user.invitee_partnerships do
+          column "item" do |partnership|
+            partnership.item.name
+          end
+          column "partner/buyer" do |partnership|
+            partnership.buyer.full_name
+          end
+        end
+      end
     end
     active_admin_comments
   end

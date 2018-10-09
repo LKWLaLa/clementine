@@ -13,7 +13,7 @@ item_types = ItemType.create([
   },
   {
     name: 'Contest Entry',
-    description: 'Entry into the weekend contest.'
+    description: "Entry into the weekend contest. Only one registration per couple required."
   }
 ])
 
@@ -103,10 +103,11 @@ items = Item.create(
    supply: 20
  },
  {
-   name: "Contest Entry",
+   name: "Rendezvous Contest",
    item_type: contest_entry,
-   description: "Entry into the weekend contest",
-   supply: 60
+   description: "Entry into the weekend contest. Only one registration per couple required.",
+   supply: 60,
+   partnered: true
  }
 ])
 

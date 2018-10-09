@@ -26,7 +26,8 @@ class CheckoutForm extends Component {
         amount: Math.round(this.props.amount * 100), // stripe requires cents
         description: this.props.description(),
         purchases: this.props.purchases,
-        upgrades: this.props.upgrades
+        upgrades: this.props.upgrades,
+        newPartnerships: this.props.newPartnerships
       }
       fetch('/api/sales', {
         method: "POST",
