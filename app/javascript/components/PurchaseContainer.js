@@ -6,7 +6,8 @@ import ConversionsContainer from './ConversionsContainer.js'
 import CheckoutForm from './CheckoutForm.js'
 import Filter from '../helpers/Filter.js'
 import Timer from './Timer'
-import BuyerPartnershipsTable from './BuyerPartnershipsTable'
+import BuyerPartnershipsTable from './BuyerPartnershipsTable.js'
+import InviteePartnershipsTable from './InviteePartnershipsTable.js'
 import {User,ItemType,Item,Sale,Exclusion,Upgrade,Qualification} from '../helpers/models.js'
 import {Record, RecordCollection} from '../kinship/Kinship.js'
 
@@ -65,7 +66,7 @@ class PurchaseContainer extends React.Component {
 			.then(partnerships => {
 			this.setState({
 				buyerPartnerships: partnerships[0],
-				invitee_partnerships: partnerships[1]
+				inviteePartnerships: partnerships[1]
 			})
 		})
 	}
@@ -203,11 +204,13 @@ class PurchaseContainer extends React.Component {
 	/******************* Render ********************/
 
 	render() {
-		console.log(this.state.buyerPartnerships)
-
 		let priorItems = Filter.priorItems(this.props.user.purchasedItems,
 			this.state.selectedPurchaseableItems,
 			this.state.selectedUpgrades)
+		let partnershipsHeading = this.state.buyerPartnerships ||
+			this.state.inviteePartnerships ?
+			<h2>Partnerships</h2> :
+			null
 		let buyerPartnershipsElement = this.state.buyerPartnerships ?
 			<BuyerPartnershipsTable 
 				partnerships = {this.state.buyerPartnerships}
@@ -216,7 +219,7 @@ class PurchaseContainer extends React.Component {
 			null
 		let inviteePartnershipsElement = this.state.inviteePartnerships ?
 			<InviteePartnershipsTable
-				inviteePartnership = {this.state.inviteePartnerships}
+				partnerships = {this.state.inviteePartnerships}
 			/> :
 			null
 
@@ -239,6 +242,7 @@ class PurchaseContainer extends React.Component {
 					</div>
 				</div>
 				<Timer startTime = {this.props.timeout * 60}/>
+				{partnershipsHeading}
 				{buyerPartnershipsElement}
 				{inviteePartnershipsElement}
 				<ConversionsContainer

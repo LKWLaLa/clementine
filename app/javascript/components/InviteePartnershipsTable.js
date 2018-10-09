@@ -1,11 +1,17 @@
 import React from 'react'
-import {User,Sale,Item} from '../helpers/models.js'
+import InviteePartnershipRow from './InviteePartnershipRow.js'
 
 class InviteePartnershipsTable extends React.Component {
 
 	render() {
-		let rows = [] // TODO fill in
-
+		let rows = []
+		this.props.partnerships.forEach(p => {
+			rows.push(<InviteePartnershipRow
+				key = {p.id}
+				partnership = {p}
+			/>)
+		})
+			
 		return (
 			<div>
 				<div>You've been selected by another attendee as a partner!</div>
