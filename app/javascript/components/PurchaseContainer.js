@@ -211,17 +211,6 @@ class PurchaseContainer extends React.Component {
 			this.state.inviteePartnerships ?
 			<h2>Partnerships</h2> :
 			null
-		let buyerPartnershipsElement = this.state.buyerPartnerships ?
-			<BuyerPartnershipsTable 
-				partnerships = {this.state.buyerPartnerships}
-				handlePartnerChange = {this.handlePartnerChange}
-			/> :
-			null
-		let inviteePartnershipsElement = this.state.inviteePartnerships ?
-			<InviteePartnershipsTable
-				partnerships = {this.state.inviteePartnerships}
-			/> :
-			null
 
 		
 		return (
@@ -243,8 +232,13 @@ class PurchaseContainer extends React.Component {
 				</div>
 				<Timer startTime = {this.props.timeout * 60}/>
 				{partnershipsHeading}
-				{buyerPartnershipsElement}
-				{inviteePartnershipsElement}
+				<BuyerPartnershipsTable 
+					partnerships = {this.state.buyerPartnerships}
+					handlePartnerChange = {this.handlePartnerChange}
+				/> :
+				<InviteePartnershipsTable
+					partnerships = {this.state.inviteePartnerships}
+				/>
 				<ConversionsContainer
 					upgrades = {this.props.availableUpgrades}
 					exchanges = {this.props.availableExchanges}
