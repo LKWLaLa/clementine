@@ -628,3 +628,9 @@ sales = Sale.create([
   payment: timPaidForFullPass
  }
 ])
+
+jack_invited_jane = Partnership.create(
+  invitee: jane,
+  sale: sales[3]
+)
+
