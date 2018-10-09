@@ -5,5 +5,9 @@ before_action :authenticate_user!
     @user = current_user
     render json: @user, status: 200
   end
+
+  def all
+  	render json: User.all, status: 200
+  end
   
 end
