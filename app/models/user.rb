@@ -6,6 +6,12 @@ class User < ApplicationRecord
   has_many :qualified_items, through: :purchased_items
   has_many :upgrade_to_items, through: :purchased_items
   has_many :upgrade_from_to, through: :purchased_items
+
+  # Partnerships where this user bought the partnered item
+  has_many :buyer_partnerships, through: :sales, source: "partnership"
+  # Partnerships where another user bought the partnered item and listed
+  # this user as her partner
+  has_many :invitee_partnerships, class_name: :Partnership, foreign_key: "invitee_id"
   # Include default devise modules. Others available are:
   # :trackable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,

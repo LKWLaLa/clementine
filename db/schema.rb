@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_08_032530) do
+ActiveRecord::Schema.define(version: 2018_10_08_054117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,14 @@ ActiveRecord::Schema.define(version: 2018_10_08_032530) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "partnered", default: false
+  end
+
+  create_table "partnerships", force: :cascade do |t|
+    t.bigint "sale_id"
+    t.integer "invitee_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sale_id"], name: "index_partnerships_on_sale_id"
   end
 
   create_table "payments", force: :cascade do |t|
@@ -135,4 +143,5 @@ ActiveRecord::Schema.define(version: 2018_10_08_032530) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "partnerships", "sales"
 end
