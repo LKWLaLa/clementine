@@ -82,6 +82,10 @@ div.description {
  margin-bottom: 15px;
 }
 
+.partnerships-title {
+  font-family: 'Josefin Sans', sans-serif;
+}
+
 .transaction-complete {
   text-align: center;
   margin-top: 100px;

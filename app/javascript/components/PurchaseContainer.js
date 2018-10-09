@@ -198,7 +198,7 @@ class PurchaseContainer extends React.Component {
 		let partnershipsHeading = null
 		if (this.state.buyerPartnerships ||
 			this.state.inviteePartnerships) {
-			partnershipsHeading = <h2>Partnerships</h2>
+			partnershipsHeading = <h3 className="partnerships-title">Partnerships</h3>
 		}
 		
 		return (
@@ -219,14 +219,6 @@ class PurchaseContainer extends React.Component {
 					</div>
 				</div>
 				<Timer startTime = {this.props.timeout * 60}/>
-				{partnershipsHeading}
-				<BuyerPartnershipsTable 
-					partnerships = {this.state.buyerPartnerships}
-					handlePartnerChange = {this.handlePartnerChange}
-				/>
-				<InviteePartnershipsTable
-					partnerships = {this.state.inviteePartnerships}
-				/>
 				<ConversionsContainer
 					upgrades = {this.props.availableUpgrades}
 					exchanges = {this.props.availableExchanges}
@@ -237,6 +229,14 @@ class PurchaseContainer extends React.Component {
 					status = {this.itemStatus}
 					showTransactionComplete = {this.props.showTransactionComplete}
 				/>
+				{partnershipsHeading}
+				<BuyerPartnershipsTable 
+					partnerships = {this.state.buyerPartnerships}
+					handlePartnerChange = {this.handlePartnerChange}
+				/>
+				<InviteePartnershipsTable
+					partnerships = {this.state.inviteePartnerships}
+				/><br/><br/><br/>
 				<h3 className="checkout-title"> Checkout</h3> 
 	            <Elements>
 	            	<CheckoutForm 

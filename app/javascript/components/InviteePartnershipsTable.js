@@ -18,11 +18,11 @@ class InviteePartnershipsTable extends React.Component {
 			
 		return (
 			<div>
-				<div>You've been selected by another attendee as a partner!</div>
+				<div>You've been selected by another attendee as a contest partner!</div><br/>
 				<table>
 					<thead>
-						<th>Item</th>
-						<th>Person who selected you as their partner</th>
+						<th className="category-header">Item</th>
+						<th className="category-header">Person who selected you as their partner</th>
 					</thead>
 					<tbody>
 						{rows}
