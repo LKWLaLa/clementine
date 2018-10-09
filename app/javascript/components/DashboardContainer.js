@@ -110,7 +110,7 @@ class DashboardContainer extends Component {
 			fetch('/api/sales',init), // for current user only
 			fetch('/api/exclusions',init),
 			fetch('/api/upgrades', init),
-			fetch('/api/qualifications', init),
+			fetch('/api/qualifications', init)
 			]
 		
 		// return a single promise that is fulfilled when all
@@ -161,9 +161,7 @@ class DashboardContainer extends Component {
 					  	<Footer /> 
 				    </div>
 				)
-			}
-					
-			
+			}		
 		} else {
 			return (null)
 		}

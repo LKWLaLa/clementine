@@ -5,6 +5,7 @@ ActiveAdmin.register Item do
 
   filter :item_type, as: :select
   filter :supply
+  filter :partnered
   filter :created_at
   filter :updated_at
 
@@ -12,6 +13,7 @@ ActiveAdmin.register Item do
     column :name
     column :item_type
     column :description
+    column :partnered
     column :current_price do |item|
       number_to_currency(item.current_price)
     end
@@ -29,6 +31,7 @@ ActiveAdmin.register Item do
     row :name
     row :item_type
     row :description
+    row :partnered
     row :current_price do |item|
       number_to_currency(item.current_price)
     end
