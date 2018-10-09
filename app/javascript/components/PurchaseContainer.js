@@ -246,7 +246,7 @@ class PurchaseContainer extends React.Component {
 	            		purchases = {this.state.selectedPurchaseableItems}
 	            		upgrades = {this.state.selectedUpgrades}
 	            		showTransactionComplete = {this.props.showTransactionComplete}
-	            		partnerId = {3 || false}
+	            		partnerId = {false}
 	            	/>
 	            </Elements>
 			</div>

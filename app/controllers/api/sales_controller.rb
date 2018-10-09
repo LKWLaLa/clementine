@@ -72,9 +72,12 @@ class Api::SalesController < ApplicationController
       void_sale.save
     end
 
-    if (params[:partner_id])
-      contest_sale = sales.find{|sale| sale.item.partnered == true}
-      partnership = Partnership.new(sale_id: contest_sale.id, invitee_id: params[:partner_id])
+    if contest_sale = sales.find{|sale| sale.item.partnered == true}
+      if params[:partner_id].present?
+        partnership = Partnership.new(sale_id: contest_sale.id, invitee_id: params[:partner_id])
+      else
+        partnership = Partnership.new(sale_id: contest_sale.id, invitee_id: nil)  
+      end
       partnership.save if partnership.valid?
     end
 
