@@ -114,7 +114,7 @@ class BuyerPartnershipRow extends React.Component {
 
 		// Autosuggest will pass through all these props to the input.
 		const inputProps = {
-			placeholder: 'Type partner\'s name',
+			placeholder: 'Partner\'s name',
 			value: this.state.value,
 			onChange: this.onChange
 		}
@@ -135,24 +135,24 @@ class BuyerPartnershipRow extends React.Component {
 			          renderSuggestionsContainer = {this.renderSuggestionsContainer}
 			          onSuggestionSelected = {this.onSuggestionSelected}
 			        /></td>
-			actionButton = <button onClick={this.confirmPartner}>confirm partner</button>
-			cancelButton = <button onClick={this.cancelChange}>cancel</button>
+			actionButton = <span className="edit-partner-span" onClick={this.confirmPartner}>Confirm</span>
+			cancelButton = <span className="edit-partner-span" onClick={this.cancelChange}>Cancel</span>
 		} else {
 			let actionLabel
 			if (invitee) {
 				inviteeCell = <td>{invitee.fullName}</td>
-				actionLabel = 'change partner'
+				actionLabel = 'Change'
 			} else {
 				inviteeCell = <td>tbd</td>
-				actionLabel = 'select partner'
+				actionLabel = 'Select partner'
 			}
-			actionButton = <button onClick={this.enterEditMode}>{actionLabel}</button>
+			actionButton = <span className="edit-partner-span" onClick={this.enterEditMode}>{actionLabel}</span>
 			cancelButton = null
 		}
 
 		return (
-			<tr>
-				<td>{partnership.item.name}</td>
+			<tr className="buyer-row">
+				<td className="autosuggest-td">{partnership.item.name}</td>
 				{inviteeCell}
 				{actionButton}
 				{cancelButton}

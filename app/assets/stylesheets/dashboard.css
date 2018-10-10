@@ -46,6 +46,31 @@ div.description {
   margin: 15px 30px 15px 20px;
 }
 
+.buyer-container {
+  max-width: 625px;
+}
+
+.buyer-table {
+  table-layout:fixed;
+  width: 525px;
+}
+
+.buyer-row {
+  text-align: center;
+  height: 50px;
+}
+
+.edit-partner-span {
+  color: white;
+  position: relative;
+  margin: 0 3px;
+  padding: 5px;
+  background: blue;
+  top: 8px;
+  border: 1px solid blue;
+  border-radius: 7px
+}
+
 .checkout-form {
   margin-bottom: 70px;
 }
