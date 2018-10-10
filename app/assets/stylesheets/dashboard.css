@@ -111,6 +111,7 @@ div.description {
 
 .show-hide-exchanges {
  margin-bottom: 15px;
+ cursor: pointer;
 }
 
 .partnerships-title {
