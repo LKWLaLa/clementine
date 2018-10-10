@@ -50,12 +50,13 @@ div.description {
   max-width: 625px;
 }
 
-.buyer-table {
+.partner-table {
   table-layout:fixed;
   width: 525px;
+  margin-bottom: 20px;
 }
 
-.buyer-row {
+.partner-row {
   text-align: center;
   height: 50px;
 }
@@ -64,10 +65,10 @@ div.description {
   color: white;
   position: relative;
   margin: 0 3px;
-  padding: 5px;
-  background: blue;
+  padding: 3px;
+  background-color: #696969;
   top: 8px;
-  border: 1px solid blue;
+  border: 1px solid #696969;
   border-radius: 7px
 }
 

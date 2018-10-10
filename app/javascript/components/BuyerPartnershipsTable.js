@@ -23,9 +23,9 @@ class BuyerPartnershipsTable extends React.Component {
 		})
 
 		return (
-			<div className="buyer-container">
+			<div className="partner-container">
 				<div>Fill in your partner's name for each of these activities. If your partner has not registered for the event, please ask them to do so.  You can leave this box blank and update it once your partner has registered.</div><br/>
-				<table className="buyer-table">
+				<table className="partner-table">
 					<thead>
 						<tr>
 							<th className="category-header">Activity</th>
