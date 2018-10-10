@@ -69,7 +69,12 @@ div.description {
   background-color: #696969;
   top: 8px;
   border: 1px solid #696969;
-  border-radius: 7px
+  border-radius: 7px;
+  cursor: pointer; 
+}
+
+.edit-partner-span:hover{
+  background-color: #474747;
 }
 
 .checkout-form {
