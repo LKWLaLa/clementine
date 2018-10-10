@@ -59,6 +59,8 @@ class CheckoutForm extends Component {
   }
 
   render() {
+    if (this.props.amount <= 0) {return null}
+
     let submitButton;
     if (this.state.processingPayment && !this.state.fieldError) {
       submitButton = <span>processing payment</span>
@@ -69,13 +71,16 @@ class CheckoutForm extends Component {
     }
 
     return (
-      <div className="checkout-form">
-        <h3 className="amount">Total amount: ${this.props.amount}</h3>
-        <form onSubmit={this.handleSubmit}>
-          <CardElement onChange={this.handleChange} style={{base: {fontSize: '15px'}}} /><br />
-          <div id="card-errors" role="alert">{this.state.error} {this.state.fieldError}</div><br />
-          {submitButton}
-        </form>
+      <div>
+        <h3 className="checkout-title"> Checkout</h3> 
+        <div className="checkout-form">
+          <h3 className="amount">Total amount: ${this.props.amount}</h3>
+          <form onSubmit={this.handleSubmit}>
+            <CardElement onChange={this.handleChange} style={{base: {fontSize: '15px'}}} /><br />
+            <div id="card-errors" role="alert">{this.state.error} {this.state.fieldError}</div><br />
+            {submitButton}
+          </form>
+        </div>
       </div>
     );
   }

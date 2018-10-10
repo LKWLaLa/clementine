@@ -262,7 +262,6 @@ class PurchaseContainer extends React.Component {
 				<InviteePartnershipsTable
 					partnerships = {this.state.inviteePartnerships}
 				/><br/><br/><br/>
-				<h3 className="checkout-title"> Checkout</h3> 
 	            <Elements>
 	            	<CheckoutForm 
 	            		user = {this.props.user}
