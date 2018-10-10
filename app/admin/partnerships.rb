@@ -44,7 +44,7 @@ ActiveAdmin.register Partnership do
       partnership.buyer.full_name
     end
     column :invitee do |partnership|
-      partnership.invitee.full_name
+      partnership.invitee ? partnership.invitee.full_name : "TBD"
     end
     column :updated_at do |partnership|
       partnership.updated_at.strftime('%B %-d, %Y')
