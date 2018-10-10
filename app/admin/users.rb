@@ -116,5 +116,15 @@ preserve_default_filters!
     f.actions
   end
 
+  csv do
+    column :id
+    column :first_name
+    column :last_name
+    column :email
+    column :city
+    column :state
+    column :country
+  end
+
 
 end
