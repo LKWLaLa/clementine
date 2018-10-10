@@ -73,6 +73,29 @@ remove_filter :payment
     f.actions
   end
 
+  csv do
+    column :id
+    column :user do |sale|
+      sale.user.full_name
+    end
+    column :item do |sale|
+      sale.item.name
+    end
+    column :price do |sale|
+      number_to_currency(sale.price.amount)
+    end
+    column :price_type do |sale|
+      sale.price.price_type
+    end
+    column :payment do |sale|
+      sale.payment.method
+    end
+    column :date do |sale|
+      sale.payment.created_at.strftime('%B %-d, %Y')
+    end
+    column :void
+  end
+
 
 
 end
