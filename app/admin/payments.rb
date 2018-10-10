@@ -58,5 +58,18 @@ remove_filter :sales
     end
   end
 
+  csv do
+    column :user do |payment|
+      payment.user.full_name
+    end
+    column :amount do |payment|
+      number_to_currency(payment.amount)
+    end
+    column :method 
+    column :date do |payment|
+      payment.created_at.strftime('%B %-d, %Y')
+    end
+  end
+
 end
 
