@@ -86,7 +86,7 @@ preserve_default_filters!
             partnership.item.name
           end
           column "partner/invitee" do |partnership|
-            partnership.invitee.full_name
+            partnership.invitee ? partnership.invitee.full_name : 'TBD' 
           end
         end
       end
