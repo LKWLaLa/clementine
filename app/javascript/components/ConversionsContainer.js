@@ -104,11 +104,11 @@ class ConversionsContainer extends React.Component {
 
 		const exchangesElement = this.state.showExchangesTable ?
 			<div>
-				<div className="show-hide-exchanges" onClick={this.hideExchangesTable}>Sign up for the wrong level or role?  Click here! 🔼 </div>
+				<div className="show-hide-exchanges" onClick={this.hideExchangesTable}>Sign up for the wrong level or role?  Click here! <span className="arrow">🔼</span> </div>
 				{exchangesTable}
 				{exchangesButton}
 			</div> :
-			<div className="show-hide-exchanges" onClick={this.showExchangesTable}>Sign up for the wrong level or role?  Click here! 🔽 </div>
+			<div className="show-hide-exchanges" onClick={this.showExchangesTable}>Sign up for the wrong level or role?  Click here! <span className="arrow">🔽</span> </div>
 
 		return <div className="conversions-container">
 			{upgradesElement}

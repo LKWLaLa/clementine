@@ -110,8 +110,12 @@ div.description {
 }
 
 .show-hide-exchanges {
- margin-bottom: 15px;
- cursor: pointer;
+ margin-bottom: 12px;
+ cursor: default;
+}
+
+.arrow {
+  cursor: pointer;
 }
 
 .partnerships-title {
