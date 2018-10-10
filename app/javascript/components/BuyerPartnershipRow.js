@@ -131,7 +131,7 @@ class BuyerPartnershipRow extends React.Component {
 			          getSuggestionValue={this.getSuggestionValue}
 			          renderSuggestion={this.renderSuggestion}
 			          inputProps={inputProps} 
-			          shouldRenderSuggestions = {(v) => v.trim().length > 1}
+			          shouldRenderSuggestions = {(v) => v.trim().length > 3}
 			          renderSuggestionsContainer = {this.renderSuggestionsContainer}
 			          onSuggestionSelected = {this.onSuggestionSelected}
 			        /></td>

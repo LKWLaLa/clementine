@@ -8,7 +8,7 @@ item_types = ItemType.create([
     description: "Admission to one weekday workshop."
   },
 	{
-    name: 'Dance Pass',
+    name: 'Weekend Dance Pass',
     description: 'Admission to the Friday, Saturday, and Sunday evening dances.'
   },
 	{
@@ -61,7 +61,7 @@ items = Item.create(
    supply: 20
  },
  {
-   name: "Dance Pass",
+   name: "Weekend Dance Pass",
    item_type: dance_pass,
    description: "Admission to the Friday, Saturday, and Sunday evening dances",
    supply: 60
@@ -180,7 +180,7 @@ prices = Price.create([
    item_type: contest_entry,
    price_type: "standard",
    priority: 1,
-   amount: 15,
+   amount: 25,
    supply: 60
  }
 ])
