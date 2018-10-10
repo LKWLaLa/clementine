@@ -12,4 +12,13 @@ actions :index, :show, :new, :create, :destroy
     actions
   end
 
+  csv do
+    column :qualifier_item do |qual|
+      qual.qualifier_item.name
+    end
+    column :qualified_item do |qual|
+      qual.qualified_item.name
+    end
+  end
+
 end

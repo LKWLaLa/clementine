@@ -62,4 +62,22 @@ ActiveAdmin.register Item do
     end
   end
 
+  csv do
+    column :name
+    column :item_type do |item|
+      item.item_type.name
+    end
+    column :description
+    column :partnered
+    column :current_price do |item|
+      number_to_currency(item.current_price)
+    end
+    column :current_price_type do |item|
+      cp = item.item_type.current_price
+      cp ? cp.price_type : nil
+    end
+    column :quantity_remaining
+    column :sold_out
+  end
+
 end

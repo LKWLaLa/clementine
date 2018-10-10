@@ -12,4 +12,13 @@ actions :index, :show, :new, :create, :destroy
     actions
   end
 
+  csv do
+    column :upgrade_from_item do |upgrade|
+      upgrade.upgrade_from_item.name
+    end
+    column :upgrade_to_item do |upgrade|
+      upgrade.upgrade_to_item.name
+    end
+  end
+
 end

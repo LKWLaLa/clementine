@@ -12,4 +12,13 @@ ActiveAdmin.register Exclusion do
     actions
   end
 
+  csv do
+    column :excluder_item do |exclusion|
+      exclusion.excluder_item.name
+    end
+    column :excluded_item do |exclusion|
+      exclusion.excluded_item.name
+    end
+  end
+
 end

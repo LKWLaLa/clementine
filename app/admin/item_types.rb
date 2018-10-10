@@ -35,4 +35,13 @@ show do
     end
   end
 
+  csv do
+    column :name
+    column :description
+    column :current_price do |it|
+      number_to_currency(it.current_price.amount)
+    end
+    column :sold_out
+  end
+
 end
