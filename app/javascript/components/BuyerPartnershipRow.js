@@ -151,7 +151,7 @@ class BuyerPartnershipRow extends React.Component {
 		}
 
 		return (
-			<tr className="buyer-row">
+			<tr className="partner-row">
 				<td className="autosuggest-td">{partnership.item.name}</td>
 				{inviteeCell}
 				{actionButton}
