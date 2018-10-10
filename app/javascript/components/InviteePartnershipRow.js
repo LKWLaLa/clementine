@@ -5,7 +5,7 @@ class InviteePartnershipRow extends React.Component {
 		const partnership = this.props.partnership
 
 		return (
-			<tr>
+			<tr className="partner-row">
 				<td>{partnership.item.name}</td>
 				<td>{partnership.buyer.fullName}</td>
 			</tr>
