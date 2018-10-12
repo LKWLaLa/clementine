@@ -38,6 +38,10 @@ class Timer extends Component {
     this.setState({ time: timeLeftVar }, () => this.startTimer());
   }
 
+  componentWillUnmount(){
+    clearInterval(this.timer)
+  }
+
   startTimer() {
     if (this.timer == 0 && this.state.seconds > 0) {
       this.timer = setInterval(this.countDown, 1000);
