@@ -9,9 +9,9 @@ preserve_default_filters!
   filter :country, as: :select
   filter :city, as: :select
   filter :state, as: :select
+  filter :postal_code, as: :select
   remove_filter :address_line_1
   remove_filter :address_line_2
-  remove_filter :postal_code
   remove_filter :updated_at
   remove_filter :payments
   remove_filter :sales
@@ -25,6 +25,8 @@ preserve_default_filters!
   remove_filter :reset_password_token
   remove_filter :reset_password_sent_at
   remove_filter :remember_created_at
+  remove_filter :buyer_partnerships
+  remove_filter :invitee_partnerships
   
 
   index do |user|
@@ -34,6 +36,7 @@ preserve_default_filters!
     column :email
     column :city
     column :state
+    column :postal_code
     column :country
     actions
   end
@@ -47,6 +50,7 @@ preserve_default_filters!
      row :email
      row :city
      row :state
+     row :postal_code
      row :country
       panel "Payments" do
         table_for user.payments do

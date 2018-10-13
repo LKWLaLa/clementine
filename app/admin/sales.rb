@@ -18,6 +18,8 @@ filter :price, collection: -> {
   Price.all.map{|p| [p.price_type,p.id]}
 }, label: "Price type"
 remove_filter :payment 
+remove_filter :buyer
+remove_filter :partnership
 
 
 
