@@ -1,7 +1,7 @@
 ActiveAdmin.register Item do
 
   actions :index, :show, :new, :create, :edit, :update
-  permit_params :name, :description, :item_type_id, :supply
+  permit_params :name, :description, :item_type_id, :supply, :expiration, :partnered
 
   filter :item_type, as: :select
   filter :supply
@@ -32,6 +32,7 @@ ActiveAdmin.register Item do
     row :item_type
     row :description
     row :partnered
+    row :expiration
     row :current_price do |item|
       number_to_currency(item.current_price)
     end

@@ -54,7 +54,9 @@ class Filter {
 	static purchaseableItems(purchasedItems,items,exclusions,upgrades) {
 	  return new RecordCollection([...items]
 	    .filter(i => !this.excludedItems(purchasedItems,exclusions).has(i))
-	    .filter(i => !this.upgradeToItems(purchasedItems,upgrades).has(i)))
+	    .filter(i => !this.upgradeToItems(purchasedItems,upgrades).has(i))
+	  	.filter(i => !i.expiration || (new Date()) < (new Date(i.expiration)))
+	  	)
 	}
 
 	// Items that appear as enabled on the purchaseable items table
