@@ -62,6 +62,19 @@ describe('Filter', () => {
 	beforeAll(()=>{
 		reset();
 	})
+
+	describe('isExpired', () => {
+		it('should return true if the item is expired', () => {
+			let past = "0000-03-24T17:41:44.564Z"
+			let expiredItem = new Item({id: 11, itemType: type, expiration: past})
+			expect(Filter.isExpired(expiredItem)).toBe(true)
+		})
+		it('should return false if the item is not expired', () => {
+			let future = "5000-03-24T17:41:44.564Z"
+			let unexpiredItem = new Item({id: 12, itemType: type, expiration: future})
+			expect(Filter.isExpired(unexpiredItem)).toBe(false)
+		})
+	})
 	
 	describe('excludedItems', () => {
 		it('should return the excludedItems for the priorItems', () => {

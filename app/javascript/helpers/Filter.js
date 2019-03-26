@@ -1,6 +1,27 @@
 let RecordCollection = require('../kinship/RecordCollection')
 
 class Filter {
+	static isExpired(item) {
+		return(
+			!!(item.expiration && (new Date()) >= (new Date(item.expiration)))
+			)
+	}
+
+	// items that have not expired yet
+	static currentItems(items) {
+		return(
+			items.filter(i => !this.isExpired(i))
+			)
+	}
+
+	// items whose expiration has passed
+	static expiredItems(items) {
+		return(
+			items.filter(i => this.isExpired(i))
+			)
+		
+	}
+
 	static excludedItems(priorItems,exclusions) {
 	  return new RecordCollection(exclusions
 	    .filter(e => priorItems.has(e.excluderItem))
@@ -55,7 +76,7 @@ class Filter {
 	  return new RecordCollection([...items]
 	    .filter(i => !this.excludedItems(purchasedItems,exclusions).has(i))
 	    .filter(i => !this.upgradeToItems(purchasedItems,upgrades).has(i))
-	  	.filter(i => !i.expiration || (new Date()) < (new Date(i.expiration)))
+	  	.filter(i => !this.isExpired(i))
 	  	)
 	}
 

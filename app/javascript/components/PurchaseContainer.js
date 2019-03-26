@@ -224,13 +224,26 @@ class PurchaseContainer extends React.Component {
 			(this.state.inviteePartnerships && this.state.inviteePartnerships.length > 0)) {
 			partnershipsHeading = <h3 className="partnerships-title">Partnerships</h3>
 		}
+		let currentItems = Filter.currentItems(this.props.user.purchasedItems)
+		let expiredItems = Filter.expiredItems(this.props.user.purchasedItems)
+		let expiredItemsTable = expiredItems.size > 0 ?
+			<div className="flex-item">
+				<PurchasedItemsTable
+					purchasedItems = {expiredItems}
+					title = "Past Purchases"
+					msg = "You have not purchased admission to any activities that have passed"
+				/>
+			</div> :
+			null 
 		
 		return (
 			<div className="purchaseable-items-container">
 				<div className="flex-container">
 					<div className="flex-item">
 						<PurchasedItemsTable
-							purchasedItems = {this.props.user.purchasedItems}
+							purchasedItems = {currentItems}
+							title = "Your Purchased Items"
+							msg = "You haven't purchased any items yet"
 						/>
 					</div>
 					<div className="flex-item">
@@ -241,6 +254,7 @@ class PurchaseContainer extends React.Component {
 							status = {this.itemStatus}
 						/>
 					</div>
+					{expiredItemsTable}
 				</div>
 				<Timer startTime = {this.props.timeout * 60}/>
 				<ConversionsContainer

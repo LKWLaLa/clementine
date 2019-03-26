@@ -32,7 +32,9 @@ ActiveAdmin.register Item do
     row :item_type
     row :description
     row :partnered
-    row :expiration
+    row :expiration do |item|
+      item.expiration.to_s
+    end
     row :current_price do |item|
       number_to_currency(item.current_price)
     end
