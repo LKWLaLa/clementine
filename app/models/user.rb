@@ -20,6 +20,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :timeoutable, :lockable
 
   validates_presence_of :first_name, :last_name
+
+  scope :at_least_one_sale, -> { joins(:sales).group(:id) }
+  scope :no_sales, -> { includes(:sales).where(sales: {:id => nil}) }
   
   def purchaseable_items
   	# for now, all the items except those on the excluded list for the items the user has already purchased

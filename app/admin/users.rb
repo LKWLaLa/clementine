@@ -4,6 +4,10 @@ ActiveAdmin.register User do
 #
 actions :index, :show
 
+scope :all
+scope :at_least_one_sale
+scope :no_sales
+
 preserve_default_filters!
   filter :purchased_items, as: :select, label: "Registration item"
   filter :country, as: :select
