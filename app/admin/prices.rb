@@ -24,4 +24,18 @@ index do
   actions
 end
 
+csv do
+  column :price_type
+  column :amount do |price|
+    number_to_currency(price.amount)
+  end
+  column :priority
+  column :item_type do |price|
+    price.item_type.name
+  end
+  column :supply
+  column :quantity_remaining
+  column :sold_out
+end
+
 end

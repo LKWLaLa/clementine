@@ -1,0 +1,10 @@
+.spinner {
+  height: 33px;
+}
+
+.processing-message {
+  font-weight: italic;
+  font-size: 1.1em;
+  margin: 10px 0px 0px 10px;
+  padding-top: 10px;
+}

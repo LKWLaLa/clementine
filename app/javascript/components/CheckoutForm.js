@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {injectStripe, CardElement} from 'react-stripe-elements';
+import loader from 'loader.gif'
 
 class CheckoutForm extends Component {
   constructor(props){
@@ -63,7 +64,7 @@ class CheckoutForm extends Component {
 
     let submitButton;
     if (this.state.processingPayment && !this.state.fieldError) {
-      submitButton = <span>processing payment</span>
+      submitButton = <img className="spinner" src={loader} />
     } else if (this.props.amount > 0 && !this.state.fieldError) {
       submitButton = <button className="submit-button">Submit Payment</button>
     } else {

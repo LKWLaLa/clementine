@@ -36,4 +36,19 @@ ActiveAdmin.register Partnership do
     f.actions
   end
 
+  csv do
+    column :item do |partnership|
+      partnership.item.name
+    end
+    column :buyer do |partnership|
+      partnership.buyer.full_name
+    end
+    column :invitee do |partnership|
+      partnership.invitee ? partnership.invitee.full_name : "TBD"
+    end
+    column :updated_at do |partnership|
+      partnership.updated_at.strftime('%B %-d, %Y')
+    end
+  end
+
 end

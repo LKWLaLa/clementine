@@ -11,11 +11,18 @@ class ConversionsContainer extends React.Component {
 		this.showExchangesTable = this.showExchangesTable.bind(this)
 		this.hideExchangesTable = this.hideExchangesTable.bind(this)
 		this.submitExchanges = this.submitExchanges.bind(this)
+		this.noExchangeSelected = this.noExchangeSelected.bind(this)
 
 		this.state = {
 			showExchangesTable: false,
 			exchangesButtonEnabled: true
 		}
+	}
+
+	noExchangeSelected() {
+		return this.props.exchanges
+			.filter(e => this.props.selectedUpgrades.has(e))
+			.length == 0
 	}
 
 	showExchangesTable() {
@@ -98,17 +105,26 @@ class ConversionsContainer extends React.Component {
 					enabled = {this.enabled}
 				/>
 
-		const exchangesButton = this.state.exchangesButtonEnabled ?
-			<button className="submit-button" onClick={this.submitExchanges}>Confirm Exchange</button> :
-			<span>Submitting Exchange...</span>
-
+		let exchangesButton
+		if (this.state.exchangesButtonEnabled) {
+			if (this.noExchangeSelected()) {
+				exchangesButton = null
+			} else {
+				exchangesButton = <button className="submit-button" 
+					disabled = {this.noExchangeSelected()}
+					onClick={this.submitExchanges}>Confirm Exchange</button>
+			}
+		} else {
+			exchangesButton = <span>Submitting Exchange...</span>
+		}
+			
 		const exchangesElement = this.state.showExchangesTable ?
 			<div>
-				<div className="show-hide-exchanges" onClick={this.hideExchangesTable}>Sign up for the wrong level or role?  Click here! 🔼 </div>
+				<div className="show-hide-exchanges" onClick={this.hideExchangesTable}>Sign up for the wrong level or role?  Click here! <span className="arrow">🔼</span> </div>
 				{exchangesTable}
 				{exchangesButton}
 			</div> :
-			<div className="show-hide-exchanges" onClick={this.showExchangesTable}>Sign up for the wrong level or role?  Click here! 🔽 </div>
+			<div className="show-hide-exchanges" onClick={this.showExchangesTable}>Sign up for the wrong level or role?  Click here! <span className="arrow">🔽</span> </div>
 
 		return <div className="conversions-container">
 			{upgradesElement}

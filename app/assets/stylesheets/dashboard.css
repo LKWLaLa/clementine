@@ -69,7 +69,12 @@ div.description {
   background-color: #696969;
   top: 8px;
   border: 1px solid #696969;
-  border-radius: 7px
+  border-radius: 7px;
+  cursor: pointer; 
+}
+
+.edit-partner-span:hover{
+  background-color: #474747;
 }
 
 .checkout-form {
@@ -101,11 +106,16 @@ div.description {
 }
 
 .conversions-container {
-  margin-bottom: 100px;
+  margin-bottom: 60px;
 }
 
 .show-hide-exchanges {
- margin-bottom: 15px;
+ margin-bottom: 12px;
+ cursor: default;
+}
+
+.arrow {
+  cursor: pointer;
 }
 
 .partnerships-title {

@@ -20,7 +20,7 @@
   </div>
 
    <div class="field">
-    <%= f.select :state, options_for_select(us_states),{}, class: 'form-control'%>
+    <%= f.select :state, options_for_select(us_states), :prompt => "State", class: 'form-control'%>
   </div>
 
   <div class="field">
@@ -28,7 +28,7 @@
   </div>
 
   <div class="field">
-    <%= f.country_select :country, priority_countries: ["US", "CA"], autofocus: true %>
+    <%= f.country_select :country, priority_countries: ["US", "CA"], :prompt => "Country", autofocus: true %>
   </div><br />
 
   <div class="field">
