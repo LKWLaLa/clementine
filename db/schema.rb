@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_25_053558) do
+ActiveRecord::Schema.define(version: 2019_03_27_181010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,15 @@ ActiveRecord::Schema.define(version: 2019_03_25_053558) do
     t.datetime "expiration"
   end
 
+  create_table "offers", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "price_id"
+    t.boolean "overrides_price_inventory"
+    t.boolean "overrides_item_inventory"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "partnerships", force: :cascade do |t|
     t.bigint "sale_id"
     t.integer "invitee_id"
@@ -90,6 +99,7 @@ ActiveRecord::Schema.define(version: 2019_03_25_053558) do
     t.integer "supply"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "private"
   end
 
   create_table "qualifications", force: :cascade do |t|

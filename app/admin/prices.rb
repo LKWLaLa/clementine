@@ -1,6 +1,6 @@
 ActiveAdmin.register Price do
 actions :index, :new, :create, :edit, :update, :show
-permit_params :price_type, :item_type_id, :supply, :priority, :amount
+permit_params :price_type, :item_type_id, :supply, :priority, :amount, :private
 
 filter :price_type, as: :select
 filter :item_type, as: :select

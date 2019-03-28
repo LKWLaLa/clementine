@@ -17,4 +17,8 @@ class ItemType < ApplicationRecord
   def sold_out
   	!self.remaining_prices.any?
   end
+
+  def lowest_price_for_user(user) 
+    user.lowest_price_for_item_type(self)
+  end
 end

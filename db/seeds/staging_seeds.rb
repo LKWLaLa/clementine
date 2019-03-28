@@ -132,56 +132,72 @@ prices = Price.create([
    price_type: "Tier 1",
    priority: 1,
    amount: 180,
-   supply: 10
+   supply: 10,
+   private: false
  },
  {
    item_type: weekend_pass,
    price_type: "Tier 2",
    priority: 2,
    amount: 190,
-   supply: 10
+   supply: 10,
+   private: false
  },
  {
    item_type: weekend_pass,
    price_type: "Tier 3",
    priority: 3,
    amount: 200,
-   supply: 20
+   supply: 20,
+   private: false
  },
  {
    item_type: weekend_pass,
    price_type: "Tier 4",
    priority: 4,
    amount: 210,
-   supply: 20
+   supply: 20,
+   private: false
  },
  {
    item_type: weekend_pass,
    price_type: "Tier 5",
    priority: 5,
    amount: 220,
-   supply: 60
+   supply: 60,
+   private: false
  },
  {
    item_type: dance_pass,
    price_type: "standard",
    priority: 1,
    amount: 75,
-   supply: 50
+   supply: 50,
+   private: false
  },
  {
    item_type: weekday_workshop,
    price_type: "standard",
    priority: 1,
    amount: 30,
-   supply: 120
+   supply: 120,
+   private: false
  },
  {
    item_type: contest_entry,
    price_type: "standard",
    priority: 1,
    amount: 25,
-   supply: 60
+   supply: 60,
+   private: false
+ },
+ {
+  item_type: weekend_pass,
+  price_type: "OldSchool",
+  priority: 0,
+  amount: 140,
+  supply: 0,
+  private: true
  }
 ])
 
@@ -193,6 +209,7 @@ tier_5 = prices[4]
 dance_pass_standard_price = prices[5]
 weekday_workshop_standard_price = prices[6]
 contest_entry_standard_price = prices[7]
+old_school = prices[8]
 
 exclusions = Exclusion.create(
 [
@@ -632,5 +649,12 @@ sales = Sale.create([
 jack_invited_jane = Partnership.create(
   invitee: jane,
   sale: sales[3]
+)
+
+offer_jack_old_school = Offer.create(
+  user: ned,
+  price: old_school,
+  overrides_item_inventory: true,
+  overrides_price_inventory: true
 )
 

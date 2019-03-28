@@ -50,6 +50,7 @@ class PurchaseableItemsTable extends React.Component {
 				currentPriceType = {itemType.currentPriceType}
 				nextPriceType = {itemType.nextPriceType}
 				quantityRemainingAtCurrentPrice = {itemType.quantityRemainingAtCurrentPrice}
+				privatePrice = {itemType.privatePrice}
 				key = {'itemType ' + itemType.id}
 			/>)
 			for (let item of items) {

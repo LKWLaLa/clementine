@@ -15,4 +15,8 @@ class Price < ApplicationRecord
   def sold_out
     self.quantity_remaining <= 0
   end
+
+  def display_name
+    self.price_type + " " + self.item_type.name
+  end
 end

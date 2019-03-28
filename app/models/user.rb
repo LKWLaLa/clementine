@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   has_many :payments
   has_many :sales
+  has_many :offers
+  has_many :offered_prices, through: :offers, source: "price"
   has_many :purchased_items, through: :sales, source: "item"
   has_many :excluded_items, through: :purchased_items
   has_many :qualified_items, through: :purchased_items
@@ -36,5 +38,12 @@ class User < ApplicationRecord
 
   def full_name
     first_name + ' ' + last_name
+  end
+
+  def lowest_price_for_item_type(item_type) 
+    lowest_offered_price = self.offered_prices.where(item_type: item_type).min_by(&:amount)
+    public_price = item_type.current_price
+    all = [lowest_offered_price,public_price].select{|price| !price.nil?}
+    all.min_by(&:amount)
   end
 end

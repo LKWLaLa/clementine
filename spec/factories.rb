@@ -1,4 +1,10 @@
 FactoryBot.define do
+  factory :offer do
+    user_id { 1 }
+    price_id { 1 }
+    overrides_price_inventory { false }
+    overrides_item_inventory { false }
+  end
 	sequence :item_type_name do |n|
 		"type#{n}"
 	end
