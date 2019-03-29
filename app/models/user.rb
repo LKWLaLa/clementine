@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_many :sales
   has_many :offers
   has_many :offered_prices, through: :offers, source: "price"
-  has_many :purchased_items, through: :sales, source: "item"
+  has_many :purchased_items, -> { where 'void = FALSE'}, through: :sales, source: "item"
   has_many :excluded_items, through: :purchased_items
   has_many :qualified_items, through: :purchased_items
   has_many :upgrade_to_items, through: :purchased_items
