@@ -21,9 +21,38 @@ remove_filter :payment
 remove_filter :buyer
 remove_filter :partnership
 
+batch_action :transfer, form: -> {
+  # {'Transfer To User' => User.pluck(:first_name,:last_name,:id).map{|data| [data[0,2].join(" "),data[2]]}}
+  {'Transfer To User' => User.all.map{|u| [u.full_name, u.id]}}
+} do |ids, inputs|
+  to_user_id = inputs['Transfer To User']
+  err = nil
+  batch_action_collection.find(ids).each do |sale|
+    if (sale.void)
+      err = "Cannot transfer void sale"
+    end
+    # Check whether target user already has item
+    target_user = User.find_by_id(to_user_id)
+    if (!target_user.purchaseable_items.any? {|item| item.id == sale.item_id}) 
+      err = "Cannot complete transfer:  target user cannot purchase item"
+    end
+  end
 
+  if (!err) 
+    batch_action_collection.find(ids).each do |sale|
+      new_sale = sale.dup
+      new_sale.user_id = to_user_id
+      sale.void = true
+      sale.save
+      new_sale.save
+      Transfer.create(from_sale: sale, to_sale: new_sale)
+    end
+  end
+  redirect_to collection_path, alert: err || "Transfer Complete"
+end
 
   index do
+    selectable_column
     column :user
     column :item
     column :price do |sale|
