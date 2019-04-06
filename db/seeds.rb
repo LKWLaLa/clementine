@@ -198,6 +198,14 @@ prices = Price.create([
   amount: 140,
   supply: 0,
   private: true
+ },
+ {
+  item_type: weekend_pass,
+  price_type: "Staff Volunteer",
+  priority: 0,
+  amount: 0,
+  supply: 0,
+  private: true
  }
 ])
 
@@ -210,6 +218,7 @@ dance_pass_standard_price = prices[5]
 weekday_workshop_standard_price = prices[6]
 contest_entry_standard_price = prices[7]
 old_school = prices[8]
+staff_volunteer = prices[9]
 
 exclusions = Exclusion.create(
 [
@@ -566,7 +575,7 @@ end
 jane = users[0]
 jack = users[1]
 ned = users[2]
-peter = users[3]
+petyr = users[3]
 tim = users[4]
 
 
@@ -654,6 +663,13 @@ jack_invited_jane = Partnership.create(
 offer_jack_old_school = Offer.create(
   user: ned,
   price: old_school,
+  overrides_item_inventory: true,
+  overrides_price_inventory: true
+)
+
+offer_petyr_staff_volunteer = Offer.create(
+  user: petyr,
+  price: staff_volunteer,
   overrides_item_inventory: true,
   overrides_price_inventory: true
 )

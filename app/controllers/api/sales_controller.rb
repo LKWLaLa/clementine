@@ -13,7 +13,7 @@ class Api::SalesController < ApplicationController
     payment = Payment.new(
       user_id: current_user.id,
       amount: params[:amount] / 100,
-      method: 'Stripe'
+      method: params[:amount] == 0 ? 'None' : 'Stripe'
     )
     if (!payment.valid?)
       return render json: {error: payment.errors}, status: 500 
@@ -56,13 +56,16 @@ class Api::SalesController < ApplicationController
       void_sales.push(prior_sale)
     end
 
-    charge = Stripe::Charge.create(
-      :source      => params[:source],
-      :amount      => params[:amount],
-      :description => params[:description],
-      :currency    => 'usd',
-      :receipt_email => current_user.email
-    )
+
+    if (!payment.amount == 0)
+      charge = Stripe::Charge.create(
+        :source      => params[:source],
+        :amount      => params[:amount],
+        :description => params[:description],
+        :currency    => 'usd',
+        :receipt_email => current_user.email
+      )
+    end
 
     payment.save
     sales.each do |sale|

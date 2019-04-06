@@ -29,9 +29,10 @@ class PurchaseContainer extends React.Component {
 		this.loadPartnerships = this.loadPartnerships.bind(this)
 		this.handleInviteeChange = this.handleInviteeChange.bind(this)
 		this.newPartnerships = this.newPartnerships.bind(this)
+		this.postFreeSale = this.postFreeSale.bind(this)
 		// this.handlePartnerSubmission = this.handlePartnerSubmission.bind(this)
 
-		this.loadPartnerships();
+		this.loadPartnerships()
 
 		this.state = {
 			selectedPurchaseableItems: new RecordCollection(),
@@ -55,11 +56,11 @@ class PurchaseContainer extends React.Component {
 				return Promise.all(jsonPromises)
 			})
 			.then(partnerships => {
-			this.setState({
-				buyerPartnerships: partnerships[0],
-				inviteePartnerships: partnerships[1]
+				this.setState({
+					buyerPartnerships: partnerships[0],
+					inviteePartnerships: partnerships[1]
+				})
 			})
-		})
 	}
 
 	/********************************* State Updaters ****************************/
@@ -184,11 +185,11 @@ class PurchaseContainer extends React.Component {
 	upgradeDescription(upgrade) {
 		let fromItem = upgrade.upgradeFromItem
 		let toItem = upgrade.upgradeToItem
-		return "Upgrade from " + fromItem.name + " to " + toItem.name
+		return 'Upgrade from ' + fromItem.name + ' to ' + toItem.name
 	}
 
 	purchaseDescription(item) {
-		return "Purchase " + item.name
+		return 'Purchase ' + item.name
 	}
 
 	upgradeDescriptions() {
@@ -213,6 +214,26 @@ class PurchaseContainer extends React.Component {
 		return null
 	}
 
+	/******************* Requests ******************/
+	
+	postFreeSale() {
+		let data = {
+			amount: 0,
+			description: this.description(),
+			purchases: this.state.selectedPurchaseableItems,
+			upgrades: this.state.selectedUpgrades,
+			newPartnerships: this.newPartnerships()
+		}
+		Network.post_request('api/sales',data)
+			.then(resp => resp.json())
+			.then(resp => {
+				if (resp.ok) this.props.showTransactionComplete()
+				if (resp.error) this.setState({
+					error: resp.error
+				})
+			})
+	}
+
 	/******************* Render ********************/
 
 	render() {
@@ -234,7 +255,18 @@ class PurchaseContainer extends React.Component {
 					msg = "You have not purchased admission to any activities that have passed"
 				/>
 			</div> :
-			null 
+			null
+		let amount = this.subtotal()
+		let freePurchase = (this.state.selectedPurchaseableItems.size > 0 || this.state.selectedUpgrades.size > 0) && (amount == 0)
+		let freePurchaseButton = null
+		if (freePurchase) {
+			if (this.state.error) {
+				freePurchaseButton = <span> {this.state.error} </span>
+			} else {
+				freePurchaseButton = <button className="submit-button" 
+					onClick={this.postFreeSale}>Complete Free Purchase</button>
+			}
+		}
 		
 		return (
 			<div className="purchaseable-items-container">
@@ -276,10 +308,11 @@ class PurchaseContainer extends React.Component {
 				<InviteePartnershipsTable
 					partnerships = {this.state.inviteePartnerships}
 				/><br/><br/><br/>
+				{freePurchaseButton}
 	            <Elements>
 	            	<CheckoutForm 
 	            		user = {this.props.user}
-	            		amount = {this.subtotal()}
+	            		amount = {amount}
 	            		description = {this.description}
 	            		purchases = {this.state.selectedPurchaseableItems}
 	            		upgrades = {this.state.selectedUpgrades}
