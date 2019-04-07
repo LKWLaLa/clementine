@@ -57,7 +57,7 @@ class Api::SalesController < ApplicationController
     end
 
 
-    if (!payment.amount == 0)
+    if (!(payment.amount == 0))
       charge = Stripe::Charge.create(
         :source      => params[:source],
         :amount      => params[:amount],
