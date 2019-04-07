@@ -45,7 +45,7 @@ class User < ApplicationRecord
 
   def lowest_price_for_item_type(item_type) 
     lowest_offered_price = self.offered_prices.where(item_type: item_type).min_by(&:amount)
-    public_price = item_type.current_price
+    public_price = item_type.current_public_price
     all = [lowest_offered_price,public_price].select{|price| !price.nil?}
     all.min_by(&:amount)
   end

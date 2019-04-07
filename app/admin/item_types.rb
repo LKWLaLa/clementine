@@ -7,7 +7,7 @@ ActiveAdmin.register ItemType do
     column :name
     column :description
     column :current_price do |it|
-      number_to_currency(it.current_price.amount)
+      number_to_currency(it.current_public_price.amount)
     end
     column :sold_out
     actions
@@ -18,7 +18,7 @@ ActiveAdmin.register ItemType do
       row :name
       row :description
       row :current_price do |it|
-        number_to_currency(it.current_price.amount)
+        number_to_currency(it.current_public_price.amount)
       end
       row :sold_out
       row :created_at

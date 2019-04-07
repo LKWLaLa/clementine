@@ -15,10 +15,10 @@ ActiveAdmin.register Item do
     column :description
     column :partnered
     column :current_price do |item|
-      number_to_currency(item.current_price)
+      number_to_currency(item.current_public_price_amount)
     end
     column :current_price_type do |item|
-      cp = item.item_type.current_price
+      cp = item.item_type.current_public_price
       cp ? cp.price_type : nil
     end
     column :quantity_remaining
@@ -36,10 +36,10 @@ ActiveAdmin.register Item do
       item.expiration.to_s
     end
     row :current_price do |item|
-      number_to_currency(item.current_price)
+      number_to_currency(item.current_public_price_amount)
     end
     row :current_price_type do |item|
-      item.item_type.current_price.price_type
+      item.item_type.current_public_price.price_type
     end
     row :supply
     row :quantity_remaining

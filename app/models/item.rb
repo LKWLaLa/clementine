@@ -42,12 +42,20 @@ class Item < ApplicationRecord
   	Item.where.not(:id => Qualification.all.pluck(:qualified_item_id).uniq)
   end
 
-  def current_price
-  	price = self.item_type.current_price
+  def current_public_price_amount
+    self.item_type.current_public_price.amount
+  end
+
+  def current_price(user)
+  	price = self.item_type.current_price(user)
     if (price && self.quantity_sold < self.supply)
       return price.amount
     end 
     return nil
+  end
+
+  def current_public_price
+    return self.item_type.current_public_price
   end
 
   def quantity_sold
