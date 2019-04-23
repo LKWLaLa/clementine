@@ -67,6 +67,6 @@ class Item < ApplicationRecord
   end
 
   def sold_out
-    self.quantity_remaining == 0
+    self.quantity_remaining <= 0
   end
 end
