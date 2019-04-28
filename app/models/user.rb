@@ -21,7 +21,7 @@ class User < ApplicationRecord
 
   validates_presence_of :first_name, :last_name
 
-  scope :at_least_one_sale, -> { joins(:sales).group(:id) }
+  scope :at_least_one_sale, -> { joins(:sales).where(sales: {:void => false}).group(:id) }
   scope :no_sales, -> { includes(:sales).where(sales: {:id => nil}) }
   
   def purchaseable_items
