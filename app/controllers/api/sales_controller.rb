@@ -123,7 +123,7 @@ class Api::SalesController < ApplicationController
   end
  
   def index
-    @sales = Sale.where(user_id: current_user.id).select {|sale| !sale.void}
+    @sales = Sale.where(user_id: current_user.id).select {|sale| !sale.void && sale.event == current_event}
     render json: @sales, status: 200
   end
 

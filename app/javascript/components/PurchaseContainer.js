@@ -11,6 +11,7 @@ import InviteePartnershipsTable from './InviteePartnershipsTable.js'
 import {User,ItemType,Item,Sale,Exclusion,Upgrade,Qualification} from '../helpers/models.js'
 import {Record, RecordCollection} from '../kinship/Kinship.js'
 import Network from '../helpers/Network.js'
+import Volunteer from './Volunteer.js'
 
 class PurchaseContainer extends React.Component {
 	constructor(props) {
@@ -30,11 +31,13 @@ class PurchaseContainer extends React.Component {
 		this.handleInviteeChange = this.handleInviteeChange.bind(this)
 		this.newPartnerships = this.newPartnerships.bind(this)
 		this.postFreeSale = this.postFreeSale.bind(this)
+		this.handleVolunteerChange = this.handleVolunteerChange.bind(this)
 		// this.handlePartnerSubmission = this.handlePartnerSubmission.bind(this)
 
 		this.loadPartnerships()
 
 		this.state = {
+			volunteerChecked: this.props.user.volunteer,
 			selectedPurchaseableItems: new RecordCollection(),
 			selectedUpgrades: new RecordCollection()
 		}
@@ -90,6 +93,17 @@ class PurchaseContainer extends React.Component {
 		let partnership = buyerPartnerships.find(bp => bp.id == partnershipId)
 		partnership.invitee = invitee
 		this.setState({buyerPartnerships: buyerPartnerships})
+	}
+
+	handleVolunteerChange(e) {
+		Network.post_request('api/volunteers',{
+			user_id: this.props.user.id,
+			event_id: this.props.currentEventId,
+			volunteer: e.target.checked
+		})
+		this.setState({
+			volunteerChecked: e.target.checked
+		})
 	}
 	
 	updateState(selectedPurchaseableItems,selectedUpgrades) {
@@ -307,7 +321,13 @@ class PurchaseContainer extends React.Component {
 				/>
 				<InviteePartnershipsTable
 					partnerships = {this.state.inviteePartnerships}
-				/><br/><br/><br/>
+				/><br/>
+				<Volunteer
+					currentEventName = {this.props.currentEventName}
+					currentEventId = {this.props.currentEventId}
+					handleSelection = {this.handleVolunteerChange}
+					selected = {this.state.volunteerChecked}
+				/><br/><br/>
 				{freePurchaseButton}
 	            <Elements>
 	            	<CheckoutForm 

@@ -3,6 +3,7 @@ class Item < ApplicationRecord
   has_many :prices, through: :item_type
   has_many :sales
   has_many :users, through: :sales
+  has_one :event, through: :item_type
 
   # We may think of an item as an "excluder."  When a user purchases an excluder item,
   # some other items are excluded from the list of items the user can purchase
@@ -68,5 +69,9 @@ class Item < ApplicationRecord
 
   def sold_out
     self.quantity_remaining <= 0
+  end
+
+  def self.all_active
+    self.joins(:event).where({events: {active: true}})
   end
 end

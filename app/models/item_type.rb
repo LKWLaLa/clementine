@@ -1,6 +1,7 @@
 class ItemType < ApplicationRecord
   has_many :items
   has_many :prices
+  belongs_to :event
 
   def current_price(user) 
     user.lowest_price_for_item_type(self)
@@ -54,5 +55,9 @@ class ItemType < ApplicationRecord
 
   def sold_out
   	!self.remaining_public_prices.any?
+  end
+
+  def self.all_active
+    self.joins(:event).where({events: {active: true}})
   end
 end
