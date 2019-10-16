@@ -1,10 +1,10 @@
 class Api::PartnershipsController < ApplicationController
 	def buyer_partnerships
-    	render json: current_user.buyer_partnerships, status: 200
+    	render json: current_user.buyer_partnerships.select{|bp| bp.event == current_event}, status: 200
     end
 
     def invitee_partnerships
-    	render json: current_user.invitee_partnerships, status: 200
+    	render json: current_user.invitee_partnerships.select{|bp| bp.event == current_event}, status: 200
     end
 
     def update
