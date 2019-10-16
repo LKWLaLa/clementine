@@ -3,17 +3,20 @@ ActiveAdmin.register Partnership do
   actions :index, :show, :edit, :update  
   permit_params :invitee_id
 
+  filter :event
   filter :item
   filter :buyer
   filter :invitee
   filter :created_at
   filter :updated_at
+  
 
   index do
     column :item
     column :buyer
     column :invitee
     column :updated_at  
+    column :event
     actions
   end
 
@@ -24,6 +27,7 @@ ActiveAdmin.register Partnership do
       row :invitee
       row :created_at
       row :updated_at
+      row :event
     end
   end
 

@@ -3,6 +3,8 @@ ActiveAdmin.register ItemType do
   actions :index, :show, :new, :create, :edit, :update
   permit_params :name
 
+  filter :event
+
   index do
     column :name
     column :description
@@ -10,6 +12,7 @@ ActiveAdmin.register ItemType do
       number_to_currency(it.current_public_price.amount)
     end
     column :sold_out
+    column :event
     actions
   end 
 

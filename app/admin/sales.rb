@@ -5,8 +5,8 @@ ActiveAdmin.register Sale do
 actions :index,:show, :edit, :update
 permit_params :void
 
-
 preserve_default_filters!
+filter :event
 filter :created_at, label: "Date"
 filter :user, collection: -> {
   User.all.sort_by{|u| u.full_name}
@@ -17,6 +17,7 @@ filter :item, collection: -> {
 filter :price, collection: -> {
   Price.all.map{|p| [p.price_type,p.id]}
 }, label: "Price type"
+
 remove_filter :payment 
 remove_filter :buyer
 remove_filter :partnership
@@ -68,11 +69,13 @@ end
       link_to sale.payment.created_at.strftime('%B %-d, %Y'), admin_payment_path(sale.payment)
     end
     column :void
+    column :event
     actions
   end
 
   show do
     attributes_table do
+    row :event
     row :id
     row :user
     row :item

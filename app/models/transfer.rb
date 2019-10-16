@@ -3,5 +3,7 @@ class Transfer < ApplicationRecord
 	belongs_to :to_sale, class_name: 'Sale', foreign_key: 'to_sale_id'
 	has_one :from_user, through: :from_sale, source: :user
 	has_one :to_user, through: :to_sale, source: :user
-	has_one :item, through: :from_sale, source: :item
+	has_one :item, through: :from_sale
+	has_one :item_type, through: :item
+	has_one :event, through: :item_type
 end

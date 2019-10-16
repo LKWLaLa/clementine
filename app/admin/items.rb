@@ -3,6 +3,7 @@ ActiveAdmin.register Item do
   actions :index, :show, :new, :create, :edit, :update
   permit_params :name, :description, :item_type_id, :supply, :expiration, :partnered
 
+  filter :event
   filter :item_type, as: :select
   filter :supply
   filter :partnered
@@ -23,11 +24,13 @@ ActiveAdmin.register Item do
     end
     column :quantity_remaining
     column :sold_out
+    column :event
     actions
   end
 
   show do
   attributes_table do
+    row :event
     row :name
     row :item_type
     row :description

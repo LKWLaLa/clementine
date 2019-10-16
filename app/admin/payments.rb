@@ -6,6 +6,7 @@ ActiveAdmin.register Payment do
 actions :index,:show
 
 preserve_default_filters!
+filter :event
 filter :created_at, label: "Date"
 filter :user, collection: -> {
   User.all.sort_by{|u| u.full_name}
@@ -24,6 +25,7 @@ remove_filter :sales
     column :date do |payment|
       payment.created_at.strftime('%B %-d, %Y')
     end
+    column :event
     actions
   end
 

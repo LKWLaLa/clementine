@@ -3,6 +3,7 @@ ActiveAdmin.register Exclusion do
   permit_params :excluder_item_id, :excluded_item_id
 
   preserve_default_filters!
+  filter :event
   remove_filter :created_at
   remove_filter :updated_at
 

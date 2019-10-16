@@ -6,7 +6,7 @@ class Sale < ApplicationRecord
   belongs_to :buyer, class_name: :User, foreign_key: "user_id"
   has_one :partnership
   has_one :item_type, through: :item
-  has_one :event, through: :item
+  has_one :event, through: :item_type
 
   validates_presence_of :price_id, :user_id, :item_id
 
