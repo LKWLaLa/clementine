@@ -209,7 +209,7 @@ prices = Price.create([
    item_type: rendezvous_type_20,
    price_type: "standard",
    priority: 1,
-   amount: 25,
+   amount: 30,
    supply: 60,
    private: false
  },
@@ -217,7 +217,7 @@ prices = Price.create([
   item_type: draw_type_20,
   price_type: "standard",
   priority: 1,
-  amount: 60,
+  amount: 20,
   supply: 60,
   private: false
  }
