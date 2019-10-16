@@ -13,6 +13,7 @@ class DashboardContainer extends Component {
 		this.load = this.load.bind(this)
 		this.reload = this.reload.bind(this)
 
+		this.state = {}
 		this.load()
 	}
 
@@ -53,6 +54,12 @@ class DashboardContainer extends Component {
 				transactionComplete: false
 			})
 		}) // TODO: add error handling for the data loading
+		this.loadEvent().then(e => {
+			this.setState({
+				currentEventName: e["name"],
+				currentEventId: e["id"]
+			})
+		})
 	}
 
 	buildDb(apiValues) {
@@ -125,17 +132,33 @@ class DashboardContainer extends Component {
 		})
 	}
 
+	loadEvent() {
+		let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+		let init = {
+	        method: 'GET',
+	        headers: {'Content-Type': 'application/json',
+		        'Accept': 'application/json',
+		        'X-Requested-With': 'XMLHttpRequest',
+		        'X-CSRF-Token': csrfToken
+        	},
+        	credentials: 'same-origin'
+	    }
+
+	    return fetch('/api/current_event').then(value => value.json())
+	}
+
 	showTransactionComplete() {
 		this.setState({transactionComplete: true})
 	}
 
 	reload() {
+		this.setState({user: null})
 		Kinship.resetDb()
 		this.load()
 	}
 
 	render(){
-		if (this.state) {
+		if (this.state.user) {
 			let firstName = this.state.user.firstName
 			if (this.state.transactionComplete) {
 				return(
@@ -157,6 +180,8 @@ class DashboardContainer extends Component {
 					  		availableExchanges = {this.state.availableExchanges}
 					  		showTransactionComplete = {this.showTransactionComplete}
 					  		timeout = {this.props.timeout}
+					  		currentEventId = {this.state.currentEventId}
+					  		currentEventName = {this.state.currentEventName}
 					  	 />
 					  	<Footer /> 
 				    </div>

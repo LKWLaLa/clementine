@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_29_221931) do
+ActiveRecord::Schema.define(version: 2019_10_12_222209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,16 @@ ActiveRecord::Schema.define(version: 2019_03_29_221931) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
+  create_table "event_volunteers", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "event_id"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string "name"
+    t.boolean "active"
+  end
+
   create_table "exclusions", force: :cascade do |t|
     t.integer "excluder_item_id"
     t.integer "excluded_item_id"
@@ -53,6 +63,8 @@ ActiveRecord::Schema.define(version: 2019_03_29_221931) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
+    t.bigint "event_id"
+    t.index ["event_id"], name: "index_item_types_on_event_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -159,5 +171,6 @@ ActiveRecord::Schema.define(version: 2019_03_29_221931) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "item_types", "events"
   add_foreign_key "partnerships", "sales"
 end

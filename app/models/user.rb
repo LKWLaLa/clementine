@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :qualified_items, through: :purchased_items
   has_many :upgrade_to_items, through: :purchased_items
   has_many :upgrade_from_to, through: :purchased_items
+  has_many :event_volunteers
 
   # Partnerships where this user bought the partnered item
   has_many :buyer_partnerships, through: :sales, source: "partnership"
@@ -49,4 +50,10 @@ class User < ApplicationRecord
     all = [lowest_offered_price,public_price].select{|price| !price.nil?}
     all.min_by(&:amount)
   end
+
+  def volunteer
+    current_event = Event.find_by(active: true)
+    !EventVolunteer.where(user_id: self.id, event_id: current_event.id).empty?
+  end
+
 end

@@ -7,22 +7,22 @@ bw19 = events[0]
 bw20 = events[1]
 
 item_types = ItemType.create([
-  {
+	{
     name: 'Weekend Pass',
     description: 'Includes admission to one weekend workshop track (8 hours of instruction) on Saturday and Sunday.  Also includes admission to Friday, Saturday, and Sunday evening dances.',
     event: bw19
   },
-  {
+	{
     name: 'Weekday Workshop',
     description: "Admission to one weekday workshop.",
     event: bw19
   },
-  {
+	{
     name: 'Weekend Dance Pass',
     description: 'Admission to the Friday, Saturday, and Sunday evening dances.',
     event: bw19
   },
-  {
+	{
     name: 'Contest Entry',
     description: 'Entry into the weekend contest. Only one registration per couple required.',
     event: bw19
@@ -1163,22 +1163,22 @@ tim = users[4]
 
 payments = Payment.create([
  {
-  # Jane Doe paid for a Full Pass at Tier 1 and one Weekday Workshop
+ 	# Jane Doe paid for a Full Pass at Tier 1 and one Weekday Workshop
    user: jane,
    amount: 220,
    method: 'PayPal'
  },
  {
-  # Jack Black paid for a Dance Pass via Paypal
-  user: jack,
-  amount: 75,
-  method: 'PayPal'
+ 	# Jack Black paid for a Dance Pass via Paypal
+ 	user: jack,
+ 	amount: 75,
+ 	method: 'PayPal'
  },
  {
-  # Jack Black paid for a contest entry in Cash
-  user: jack,
-  amount: 15,
-  method: 'Cash'
+ 	# Jack Black paid for a contest entry in Cash
+ 	user: jack,
+ 	amount: 15,
+ 	method: 'Cash'
  },
  {
   user: tim,
@@ -1200,32 +1200,32 @@ timPaidForFullPass_20 = payments[4]
 
 sales = Sale.create([
  {
-  # sold Jane Doe a Full Pass Masters Follow at Tier 1
+ 	# sold Jane Doe a Full Pass Masters Follow at Tier 1
    user: jane,
    item: weekend_pass_masters_follow_19,
    price: tier_1_19,
    payment: janePaidForFullPassAndWorkshop_19
  },
  {
-  # sold Jane Doe a Thursday Workshop Follow
+ 	# sold Jane Doe a Thursday Workshop Follow
    user: jane,
    item: thursday_workshop_follow_19,
    price: weekday_workshop_standard_price_19,
    payment: janePaidForFullPassAndWorkshop_19
  },
  {
-  # sold Jack Black a Dance Pass
-  user: jack,
-  item: dance_pass_item_19,
-  price: dance_pass_standard_price_19,
-  payment: jackPaidForDancePass_19
+ 	# sold Jack Black a Dance Pass
+ 	user: jack,
+ 	item: dance_pass_item_19,
+ 	price: dance_pass_standard_price_19,
+ 	payment: jackPaidForDancePass_19
  },
  {
-  # sold Jack Black a Contest Entry
-  user: jack,
-  item: contest_entry_item_19,
-  price: contest_entry_standard_price_19,
-  payment: jackPaidForContestEntry_19
+ 	# sold Jack Black a Contest Entry
+ 	user: jack,
+ 	item: contest_entry_item_19,
+ 	price: contest_entry_standard_price_19,
+ 	payment: jackPaidForContestEntry_19
  },
  {
   user: tim,
@@ -1262,7 +1262,7 @@ offer_jack_old_school = Offer.create(
 )
 
 jack_volunteers_20 = EventVolunteer.create(
-  volunteer: jack,
+  user: ned,
   event: bw20
 )
 
