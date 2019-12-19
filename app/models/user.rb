@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :upgrade_to_items, through: :purchased_items
   has_many :upgrade_from_to, through: :purchased_items
   has_many :event_volunteers
+  has_many :volunteer_events, through: :event_volunteers, source: "event"
 
   # Partnerships where this user bought the partnered item
   has_many :buyer_partnerships, through: :sales, source: "partnership"

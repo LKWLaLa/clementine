@@ -10,6 +10,7 @@ scope :no_sales
 
 preserve_default_filters!
   filter :purchased_items, as: :select, label: "Registration item"
+  filter :volunteer_events, as: :select, label: "Offered to volunteer at"
   filter :country, as: :select
   filter :city, as: :select
   filter :state, as: :select
@@ -31,6 +32,7 @@ preserve_default_filters!
   remove_filter :remember_created_at
   remove_filter :buyer_partnerships
   remove_filter :invitee_partnerships
+  remove_filter :event_volunteers
   
 
   index do |user|
@@ -105,6 +107,13 @@ preserve_default_filters!
           end
           column "partner/buyer" do |partnership|
             partnership.buyer.full_name
+          end
+        end
+      end
+      panel "Volunteering" do
+        table_for user.event_volunteers do
+          column "Event" do |event_volunteer|
+            event_volunteer.event.name
           end
         end
       end
